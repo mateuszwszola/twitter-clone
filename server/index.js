@@ -81,7 +81,6 @@ function onListening() {
     typeof addr === 'string' ? addr : addr.port
   }`;
   log(`Server is listening on ${bind}`);
-  log(`Visit: http://localhost:${addr.port}`);
 }
 /**
  * Start server.
