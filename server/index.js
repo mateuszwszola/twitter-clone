@@ -2,11 +2,8 @@
  * Module dependencies.
  */
 const http = require('http');
-const express = require('express');
-/**
- * Express app setup
- */
-const app = express();
+const app = require('../app');
+
 /**
  * Simple logger function.
  */
