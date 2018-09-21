@@ -4,8 +4,8 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
-const routes = require('./routes');
 const createError = require('http-errors');
+const routes = require('./routes/api');
 
 // use dotenv
 dotenv.config({
@@ -17,7 +17,7 @@ const app = express();
 
 // Handle static assets placed in public directory
 app.use(express.static(path.join(__dirname, './public')));
-app.use(logger('combined'));
+app.use(logger('dev'));
 // body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
