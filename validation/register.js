@@ -6,14 +6,24 @@ module.exports = (data) => {
   let errors = {};
 
   // Validator accepts only string, so if some property of req.body are empty, set it to empty string
+  data.name = _.isEmpty(data.name) ? '' : data.name;
   data.username = _.isEmpty(data.username) ? '' : data.username;
   data.email = _.isEmpty(data.email) ? '' : data.email;
   data.password = _.isEmpty(data.password) ? '' : data.password;
   data.password2 = _.isEmpty(data.password2) ? '' : data.password2;
 
+  // Name validation
+  if (!validator.isLength(data.name, { min: 2, max: 30 })) {
+    errors.name = 'Name must be between 2 and 30 characters';
+  }
+
+  if (validator.isEmpty(data.name)) {
+    errors.name = 'Name field is required';
+  }
+
   // Username validation
-  if (!validator.isLength(data.username, { min: 2, max: 30 })) {
-    errors.username = 'Username must be between 2 and 30 characters';
+  if (!validator.isLength(data.username, { min: 2, max: 15 })) {
+    errors.username = 'Username must be between 2 and 15 characters';
   }
   if (!validator.isAlphanumeric(data.username)) {
     errors.username = 'Invalid username';
