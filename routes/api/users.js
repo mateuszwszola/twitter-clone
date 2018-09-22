@@ -124,4 +124,17 @@ router.post('/login', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// @route   GET api/users/current
+// @desc    Return current user
+// @access  Private
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log('req user in current route', req.user);
+  res.json({
+    id: req.user._id,
+    name: req.user.name,
+    username: req.user.username,
+    email: req.user.email
+  });
+});
+
 module.exports = router;
