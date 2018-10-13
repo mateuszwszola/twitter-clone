@@ -8,12 +8,14 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const mongoURI = require('./config/keys').mongoURI;
+// const rateLimit = require('express-rate-limit');
 
 const usersRouter = require('./routes/api/users');
+const profilesRouter = require('./routes/api/profiles');
 
 // use dotenv
 dotenv.config({
-  silent: true,
+  silent: true
 });
 
 // Express app setup
@@ -29,7 +31,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // MongoDB setup
-mongoose.connect(mongoURI, { useNewUrlParser: true });
+mongoose.connect(
+  mongoURI,
+  { useNewUrlParser: true }
+);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 
@@ -44,6 +49,7 @@ require('./config/passport')(passport);
 
 // Handle routes
 app.use('/api/users', usersRouter);
+app.use('/api/profiles', profilesRouter);
 
 // Handle 404 errors
 app.use((req, res, next) => {
@@ -55,9 +61,8 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
     message: err.message,
-    error: process.env.NODE_ENV === 'development' ? err : {},
+    error: process.env.NODE_ENV === 'development' ? err : {}
   });
-  next();
 });
 
 module.exports = app;

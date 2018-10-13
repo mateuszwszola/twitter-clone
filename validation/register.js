@@ -2,7 +2,7 @@ const validator = require('validator');
 const _ = require('lodash');
 
 // Data -> req.body object from register user request
-module.exports = (data) => {
+module.exports = data => {
   let errors = {};
 
   // Validator accepts only string, so if some property of req.body are empty, set it to empty string
@@ -13,20 +13,21 @@ module.exports = (data) => {
   data.password2 = _.isEmpty(data.password2) ? '' : data.password2;
 
   // Name validation
+  data.name = data.name.trim();
   if (!validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.name = 'Name must be between 2 and 30 characters';
   }
-
+  if (!validator.isAlphanumeric(data.name.split(' ').join(''))) {
+    errors.name = 'Invalid name';
+  }
   if (validator.isEmpty(data.name)) {
     errors.name = 'Name field is required';
   }
 
   // Username validation
+  data.username = data.username.trim();
   if (!validator.isLength(data.username, { min: 2, max: 15 })) {
     errors.username = 'Username must be between 2 and 15 characters';
-  }
-  if (!validator.isAlphanumeric(data.username)) {
-    errors.username = 'Invalid username';
   }
   if (validator.isEmpty(data.username)) {
     errors.username = 'Username field is required';
@@ -41,7 +42,7 @@ module.exports = (data) => {
   }
 
   // Password validation
-  if (!validator.isLength(data.password, { min: 2, max: 30})) {
+  if (!validator.isLength(data.password, { min: 2, max: 30 })) {
     errors.password = 'Password must be between 2 and 30 characters';
   }
   if (validator.isEmpty(data.password)) {
@@ -57,5 +58,5 @@ module.exports = (data) => {
   return {
     errors,
     isValid: _.isEmpty(errors)
-  }
+  };
 };
