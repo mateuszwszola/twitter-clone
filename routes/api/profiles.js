@@ -119,4 +119,31 @@ router.post(
   }
 );
 
+// @route   DELETE api/profiles/
+// @desc    Delete user account (profile and user)
+// @access  Private
+router.delete(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    const errors = {};
+    // Find profile, delete it, find user, delete if
+    const response = {};
+    Profile.findOneAndDelete({ user: req.user._id })
+      .then(deletedProfile => {
+        response['deletedProfile'] = deletedProfile;
+        User.findOneAndDelete({ _id: req.user._id })
+          .then(deletedUser => {
+            response['deletedUser'] = deletedUser;
+            res.json({
+              message: 'Successfully deleted the user account!',
+              data: response
+            });
+          })
+          .catch(err => next(err));
+      })
+      .catch(err => next(err));
+  }
+);
+
 module.exports = router;

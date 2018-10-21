@@ -20,6 +20,7 @@ module.exports = data => {
   const entries = Object.entries(data);
   console.log('entries', entries);
   entries.forEach(([property, value]) => {
+    data[property] = value.trim();
     data[property] = _.isEmpty(value) ? '' : value.toString();
 
     // I do not specify isEmpty for things like bio, because user can fill empty bio to reset bio
