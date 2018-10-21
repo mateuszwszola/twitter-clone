@@ -26,9 +26,8 @@ router.post('/register', (req, res, next) => {
   const { name, email, password } = req.body;
   let { username } = req.body;
 
-  if (username.split(' ').length > 1) {
-    username = username.split(' ').join('');
-  }
+  // In case that the username consists of more than 1 word
+  username = username.split(' ').join('');
   // Check if user with that email/username already exists in db
   User.findOne({ email })
     .then(userByEmail => {
