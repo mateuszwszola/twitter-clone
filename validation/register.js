@@ -19,8 +19,8 @@ module.exports = data => {
   // errors = _.isEmpty(nameErrors) ? errors : nameErrors;
 
   data.name = data.name.trim();
-  if (!validator.isLength(data.name, { min: 6, max: 30 })) {
-    errors.name = 'Name must be between 6 and 30 characters';
+  if (!validator.isLength(data.name, { min: 2, max: 30 })) {
+    errors.name = 'Name must be between 2 and 30 characters';
   }
   if (!validator.isAlphanumeric(data.name.split(' ').join(''))) {
     errors.name = 'Invalid name';

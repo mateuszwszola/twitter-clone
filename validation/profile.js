@@ -17,6 +17,13 @@ module.exports = data => {
     'name' // This is an extra property which is placed in User model (but I would like to be able to change it with profile)
   ];
 
+  const lengthForProps = {
+    bio: { min: 2, max: 50 },
+    location: { min: 2, max: 25 },
+    website: { min: 3, max: 25 },
+    name: { min: 2, max: 30 }
+  };
+
   const entries = Object.entries(data);
   console.log('entries', entries);
   entries.forEach(([property, value]) => {
@@ -26,6 +33,21 @@ module.exports = data => {
     // I do not specify isEmpty for things like bio, because user can fill empty bio to reset bio
     // If req.body has a value, and the value is not empty, user do not want to clear the input, so I validate it
 
+    if (
+      property === 'bio' ||
+      property === 'location' ||
+      property === 'website' ||
+      property === 'name'
+    ) {
+      if (!_.isEmpty(value)) {
+        if (!validator.isLength(value, lengthForProps[property])) {
+          errors[property] = `${property} must be between ${
+            lengthForProps[property].min
+          } and ${lengthForProps[property].max}`;
+        }
+      }
+    }
+
     if (property === 'name') {
       if (_.isEmpty(value)) {
         errors.name = 'You need to specify a value for name field';
@@ -33,11 +55,16 @@ module.exports = data => {
         if (!validator.isAlphanumeric(value.split(' ').join(''), 'pl-PL')) {
           errors.name = 'Invalid name format';
         }
-        if (!validator.isLength(value, { min: 6, max: 25 })) {
-          errors.name = 'Name must be between 6 and 25 characters';
-        }
       }
     }
+
+    // if (property === 'bio') {
+    //   if (!_.isEmpty(value)) {
+    //     if (!validator.isLength(value, { min: 2, max: 50 })) {
+    //       errors.bio = 'Bio must be between 2 and 50 characters';
+    //     }
+    //   }
+    // }
 
     if (property === 'location') {
       if (!_.isEmpty(value)) {
