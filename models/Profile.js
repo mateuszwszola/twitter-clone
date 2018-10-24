@@ -20,7 +20,7 @@ const ProfileSchema = new Schema({
   },
   following: [
     {
-      profile: {
+      user: {
         type: Schema.Types.ObjectId,
         ref: 'profiles'
       }
@@ -28,7 +28,7 @@ const ProfileSchema = new Schema({
   ],
   followers: [
     {
-      profile: {
+      user: {
         type: Schema.Types.ObjectId,
         ref: 'profiles'
       }

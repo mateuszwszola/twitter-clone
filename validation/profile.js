@@ -27,8 +27,8 @@ module.exports = data => {
   const entries = Object.entries(data);
   console.log('entries', entries);
   entries.forEach(([property, value]) => {
-    data[property] = value.trim();
-    data[property] = _.isEmpty(value) ? '' : value.toString();
+    value = value.trim();
+    value = _.isEmpty(value) ? '' : value.toString();
 
     // I do not specify isEmpty for things like bio, because user can fill empty bio to reset bio
     // If req.body has a value, and the value is not empty, user do not want to clear the input, so I validate it
