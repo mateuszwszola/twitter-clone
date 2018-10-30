@@ -21,7 +21,7 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user._id })
-      .populate('user', ['name', 'username', 'date'])
+      .populate('user', ['name', 'username'])
       .then(profile => {
         if (!profile) {
           errors.noprofile = 'There is no profile for this user';
@@ -30,9 +30,7 @@ router.get(
 
         res.json(profile);
       })
-      .catch(err => {
-        next(err);
-      });
+      .catch(err => next(err));
   }
 );
 
@@ -43,7 +41,7 @@ router.get('/all', (req, res, next) => {
   const errors = {};
 
   Profile.find({})
-    .populate('user', ['name', 'username', 'date'])
+    .populate('user', ['name', 'username'])
     .then(profiles => {
       if (!profiles) {
         errors.noprofiles = 'There is no profiles';
@@ -52,9 +50,7 @@ router.get('/all', (req, res, next) => {
 
       res.json(profiles);
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(err => next(err));
 });
 
 // @route   GET api/profiles/:user_id
@@ -70,7 +66,7 @@ router.get('/:user_id', (req, res, next) => {
   }
 
   Profile.findOne({ user: user_id })
-    .populate('user', ['name', 'username', 'date'])
+    .populate('user', ['name', 'username'])
     .then(profile => {
       if (!profile) {
         errors.noprofile = 'There is no profile for this user';
@@ -113,7 +109,7 @@ router.post(
       )
         .then(updatedUser => {
           if (!updatedUser) {
-            errors.name = 'There was a problem with updating the name';
+            errors.name = 'There was a problem with updating the user name';
             return res.status(400).json(errors);
           }
           console.log('Name in user profile has been updated');
@@ -151,6 +147,10 @@ router.post(
         newProfile
           .save()
           .then(createdProfile => {
+            if (!createdProfile) {
+              errors.profilenotcreated =
+                'There was a problem with creating new profile';
+            }
             response['createdProfile'] = createdProfile;
             res.json(response);
           })
@@ -178,7 +178,7 @@ router.delete(
           .then(deletedUser => {
             // But if there is no deletedUser I want to inform about it
             if (!deletedUser) {
-              errors.user = 'User with that id does not exists';
+              errors.nouser = 'User with that ID does not exists';
               return res.status(404).json(errors);
             }
             response['deletedUser'] = deletedUser;
@@ -222,7 +222,7 @@ router.post(
 
     if (req.user._id === user_id) {
       return res.status(400).json({
-        message: 'You cannot follow or unfollow your own profile'
+        message: 'You cannot follow and unfollow your own profile'
       });
     }
 
@@ -230,16 +230,18 @@ router.post(
       .then(profile => {
         Profile.findOne({ user: user_id }).then(someoneProfile => {
           if (!someoneProfile) {
-            errors.noprofile = 'There is no profile with that user ID';
+            errors.nouser = 'That user does not exists';
             return res.status(400).json(errors);
           }
 
           const index = profile.following.findIndex(
-            follow => follow.user == user_id
+            follow => follow._id == user_id
           );
           if (index > -1) {
             // Index was found => unfollow
-            profile.following.splice(index, 1);
+            profile.following = profile.following.filter(follow => {
+              return follow._id !== user_id;
+            });
             profile
               .save()
               .then(savedProfile => {
@@ -254,7 +256,7 @@ router.post(
               .catch(err => next(err));
           } else {
             // Index was not found => follow that profile
-            profile.following.push(user_id);
+            profile.following.unshift(user_id);
             profile
               .save()
               .then(savedProfile => {
