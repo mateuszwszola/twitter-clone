@@ -19,8 +19,8 @@ module.exports = data => {
 
   const lengthForProps = {
     bio: { min: 2, max: 50 },
-    location: { min: 2, max: 25 },
-    website: { min: 3, max: 25 },
+    location: { min: 2, max: 30 },
+    website: { min: 3, max: 30 },
     name: { min: 2, max: 30 }
   };
 
@@ -33,12 +33,7 @@ module.exports = data => {
     // I do not specify isEmpty for things like bio, because user can fill empty bio to reset bio
     // If req.body has a value, and the value is not empty, user do not want to clear the input, so I validate it
 
-    if (
-      property === 'bio' ||
-      property === 'location' ||
-      property === 'website' ||
-      property === 'name'
-    ) {
+    if (profileInformation.includes(property)) {
       if (!_.isEmpty(value)) {
         if (!validator.isLength(value, lengthForProps[property])) {
           errors[property] = `${property} must be between ${
@@ -58,17 +53,9 @@ module.exports = data => {
       }
     }
 
-    // if (property === 'bio') {
-    //   if (!_.isEmpty(value)) {
-    //     if (!validator.isLength(value, { min: 2, max: 50 })) {
-    //       errors.bio = 'Bio must be between 2 and 50 characters';
-    //     }
-    //   }
-    // }
-
     if (property === 'location') {
       if (!_.isEmpty(value)) {
-        if (!validator.isAlphanumeric(value.split(' ').join(''), 'pl-PL')) {
+        if (!validator.isAlphanumeric(value.split(' ').join(''))) {
           errors.location = 'Invalid location';
         }
       }

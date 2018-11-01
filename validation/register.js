@@ -42,6 +42,7 @@ module.exports = data => {
   }
 
   // Email validation
+  data.email = data.email.trim();
   if (!validator.isEmail(data.email)) {
     errors.email = 'Invalid email';
   }

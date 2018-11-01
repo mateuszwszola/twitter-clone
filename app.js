@@ -39,7 +39,7 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'MongoDB connection error: '));
-db.once('open', () => console.log('MongoDB connected!'));
+db.once('open', console.log.bind(console, 'MongoDB connected!'));
 
 // Passport middleware
 app.use(passport.initialize());
