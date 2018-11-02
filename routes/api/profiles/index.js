@@ -112,7 +112,7 @@ router.post(
         .then(updatedUser => {
           if (!updatedUser) {
             errors.name = 'There was a problem with updating the user name';
-            return res.status(400).json(errors);
+            return res.status(500).json(errors);
           }
           console.log('Name in user profile has been updated');
           response['updatedUser'] = updatedUser;
@@ -160,6 +160,7 @@ router.post(
             if (!createdProfile) {
               errors.profilenotcreated =
                 'There was a problem with creating new profile';
+              return res.status(500).json(errors);
             }
             response['createdProfile'] = createdProfile;
             res.json(response);

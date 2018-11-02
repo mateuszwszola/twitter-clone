@@ -32,7 +32,7 @@ router.post(
       return res.status(400).json(idErrors);
     }
 
-    if (req.user._id == user_id) {
+    if (req.user._id.equals(user_id)) {
       return res.status(400).json({
         message: 'You cannot follow and unfollow your own profile'
       });
@@ -47,16 +47,16 @@ router.post(
             return res.status(400).json(errors);
           }
           // Determine to follow or unfollow
-          const index = profile.following.findIndex(
-            follow => follow._id == user_id
+          const index = profile.following.findIndex(follow =>
+            follow._id.equals(user_id)
           );
           if (index > -1) {
             // Index was found => unfollow
             profile.following = profile.following.filter(
-              follow => follow._id != user_id
+              follow => follow._id.toString() !== user_id.toString()
             );
             someoneProfile.followers = someoneProfile.followers.filter(
-              follower => follower._id != profile.user
+              follower => follower._id.toString() !== profile.user.toString()
             );
             // Save your profile
             profile
@@ -65,7 +65,7 @@ router.post(
                 if (!savedProfile) {
                   errors.notsaved =
                     'There was a problem with saving your profile';
-                  return res.status(400).json(errors);
+                  return res.status(500).json(errors);
                 }
                 // Save someone's profile
                 someoneProfile
@@ -74,7 +74,7 @@ router.post(
                     if (!someoneSavedProfile) {
                       errors.profilenotsaved =
                         'There was a problem with saving someones profile';
-                      return res.status(400).json(errors);
+                      return res.status(500).json(errors);
                     }
                     res.json({
                       savedProfile,
@@ -96,7 +96,7 @@ router.post(
                 if (!savedProfile) {
                   errors.noprofile =
                     'There was a problem with saving your profile';
-                  return res.status(400).json(errors);
+                  return res.status(500).json(errors);
                 }
                 someoneProfile
                   .save()
@@ -104,7 +104,7 @@ router.post(
                     if (!someoneSavedProfile) {
                       errors.profilenotsaved =
                         'There was a problem with saving someones profile';
-                      return res.status(400).json(errors);
+                      return res.status(500).json(errors);
                     }
                     res.json({
                       savedProfile,
