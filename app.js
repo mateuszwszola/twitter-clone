@@ -12,6 +12,7 @@ const mongoURI = require('./config/keys').mongoURI;
 
 const usersRouter = require('./routes/api/users');
 const profilesRouter = require('./routes/api/profiles');
+const tweetsRouter = require('./routes/api/tweets');
 
 // use dotenv
 dotenv.config({
@@ -50,6 +51,7 @@ require('./config/passport')(passport);
 // Handle routes
 app.use('/api/users', usersRouter);
 app.use('/api/profiles', profilesRouter);
+app.use('/api/tweets', tweetsRouter);
 
 // Handle 404 errors
 app.use((req, res, next) => {
