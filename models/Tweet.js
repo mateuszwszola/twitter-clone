@@ -13,8 +13,7 @@ const TweetSchema = new Schema({
   // 6. Retweets -> array of tweets_ids
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
-    required: true
+    ref: 'users'
   },
   created: {
     type: Date,

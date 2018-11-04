@@ -18,10 +18,12 @@ module.exports = data => {
   ];
 
   const lengthForProps = {
-    bio: { min: 2, max: 50 },
+    bio: { min: 2, max: 70 },
     location: { min: 2, max: 30 },
     website: { min: 3, max: 30 },
     name: { min: 2, max: 30 }
+    // TODO: Include min/max for the rest of profile information
+    // Figure out how to handle this, because right now I get an error when I send these properties, because below I am checking if profileInformation includes property sent to the server, if yes I am accesing min/max here which does not exists yet
   };
 
   const entries = Object.entries(data);
