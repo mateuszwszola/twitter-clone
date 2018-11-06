@@ -1,11 +1,11 @@
 const validator = require('validator');
-const _ = require('lodash');
+const isEmpty = require('./is-empty');
 
-module.exports = (data) => {
-  let errors = {};
+module.exports = data => {
+  const errors = {};
 
-  data.username = _.isEmpty(data.username) ? '' : data.username;
-  data.password = _.isEmpty(data.password) ? '' : data.password;
+  data.username = isEmpty(data.username) ? '' : data.username;
+  data.password = isEmpty(data.password) ? '' : data.password;
 
   if (validator.isEmpty(data.username)) {
     errors.username = 'Username field is required';
@@ -17,6 +17,6 @@ module.exports = (data) => {
 
   return {
     errors,
-    isValid: _.isEmpty(errors)
-  }
-}
+    isValid: isEmpty(errors)
+  };
+};

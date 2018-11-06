@@ -17,7 +17,7 @@ const TweetSchema = new Schema({
   },
   created: {
     type: Date,
-    required: true
+    default: Date.now
   },
   text: {
     type: String,

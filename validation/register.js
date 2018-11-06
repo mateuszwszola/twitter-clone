@@ -1,22 +1,18 @@
 const validator = require('validator');
-const _ = require('lodash');
+const isEmpty = require('./is-empty');
 
 // const validateName = require('./name');
 
 // Data -> req.body object from register user request
 module.exports = data => {
-  let errors = {};
+  const errors = {};
 
   // Validator accepts only string, so if some property of req.body are empty, set it to empty string
-  data.name = _.isEmpty(data.name) ? '' : data.name;
-  data.username = _.isEmpty(data.username) ? '' : data.username;
-  data.email = _.isEmpty(data.email) ? '' : data.email;
-  data.password = _.isEmpty(data.password) ? '' : data.password;
-  data.password2 = _.isEmpty(data.password2) ? '' : data.password2;
-
-  // Name validation
-  // const { nameErrors } = validateName(data.name, errors);
-  // errors = _.isEmpty(nameErrors) ? errors : nameErrors;
+  data.name = isEmpty(data.name) ? '' : data.name;
+  data.username = isEmpty(data.username) ? '' : data.username;
+  data.email = isEmpty(data.email) ? '' : data.email;
+  data.password = isEmpty(data.password) ? '' : data.password;
+  data.password2 = isEmpty(data.password2) ? '' : data.password2;
 
   data.name = data.name.trim();
   if (!validator.isLength(data.name, { min: 2, max: 30 })) {
@@ -66,6 +62,6 @@ module.exports = data => {
 
   return {
     errors,
-    isValid: _.isEmpty(errors)
+    isValid: isEmpty(errors)
   };
 };

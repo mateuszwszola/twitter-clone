@@ -1,8 +1,9 @@
 const validator = require('validator');
-const _ = require('lodash');
+const isEmpty = require('./is-empty');
 
 module.exports = (name, nameErrors) => {
-  name = _.isEmpty(name) ? '' : name;
+  name = isEmpty(name) ? '' : name;
+  const nameErrors = {};
 
   name = name.trim();
   if (!validator.isLength(name, { min: 6, max: 30 })) {
@@ -17,6 +18,6 @@ module.exports = (name, nameErrors) => {
 
   return {
     nameErrors,
-    isNameValid: _.isEmpty(nameErrors)
+    isNameValid: isEmpty(nameErrors)
   };
 };

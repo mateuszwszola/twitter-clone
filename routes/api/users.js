@@ -26,8 +26,7 @@ router.post('/register', (req, res, next) => {
     return res.status(400).json(errors);
   }
 
-  const { name, email, password } = req.body;
-  let { username } = req.body;
+  const { name, email, password, username } = req.body;
 
   // Check if user with that email/username already exists in db
   User.findOne({ email })
@@ -58,9 +57,15 @@ router.post('/register', (req, res, next) => {
 
           // Hash the password
           bcrypt.genSalt(10, (err, salt) => {
-            if (err) return next(err);
+            if (err) {
+              return next(err);
+            }
+
             bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) return next(err);
+              if (err) {
+                return next(err);
+              }
+
               newUser.password = hash;
               newUser
                 .save()
@@ -130,7 +135,7 @@ router.post('/login', (req, res, next) => {
 
             // Sign token
             jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
-              if (err) next(err);
+              if (err) return next(err);
               res.json({
                 success: true,
                 token: `Bearer ${token}`

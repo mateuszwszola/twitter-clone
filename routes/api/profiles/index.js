@@ -64,8 +64,8 @@ router.get('/:user_id', (req, res, next) => {
   const { user_id } = req.params;
   const errors = {};
 
-  const { idErrors, isValid } = validateObjectId(user_id);
-  if (!isValid) {
+  const { idErrors, isValidObjectId } = validateObjectId(user_id);
+  if (!isValidObjectId) {
     return res.status(400).json(idErrors);
   }
 

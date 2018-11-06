@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const isEmpty = require('./is-empty');
 
 module.exports = id => {
   const idErrors = {};
@@ -10,6 +10,6 @@ module.exports = id => {
 
   return {
     idErrors,
-    isValid: _.isEmpty(idErrors)
+    isValidObjectId: isEmpty(idErrors)
   };
 };

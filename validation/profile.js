@@ -3,7 +3,7 @@ const validator = require('validator');
 const _ = require('lodash');
 
 module.exports = data => {
-  let errors = {};
+  const errors = {};
 
   // I don't know exactly what req.body will contain. Sometimes it will be full information about profile, and sometimes just some properties to update so I need to loop through every property in req.body object, make sure it is a string, and then validate it
 
