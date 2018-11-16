@@ -55,7 +55,7 @@ router.get('/all/:user_id', (req, res, next) => {
 });
 
 // @route   POST api/tweets
-// @desc    Create or update tweet
+// @desc    Create tweet
 // @access  Private
 router.post(
   '/',
@@ -73,7 +73,7 @@ router.post(
 
     newTweet.save().then(savedTweet => {
       if (!savedTweet) {
-        errors.tweet = 'Cannot save new tweet';
+        errors.tweet = 'Cannot save tweet';
         return res.status(500).json(errors);
       }
 
@@ -95,7 +95,7 @@ router.put(
     // 4. If tweet does not exists, return with appropriate message and status code
     // 5. If user is not author of this tweet, also send appropriate content
     const { tweet_id } = req.params;
-    let { idErrors, isValidObjectId } = validateObjectId(tweet_id);
+    const { idErrors, isValidObjectId } = validateObjectId(tweet_id);
     if (!isValidObjectId) {
       return res.status(400).json(idErrors);
     }
@@ -111,12 +111,13 @@ router.put(
         return res.status(404).json(errors);
       }
       // Make sure user is the owner of this tweet, if it is, then validate and update it
-      if (req.user._id.equals(tweet.user)) {
-        errors.notowner = 'You can change only your tweets';
+      if (!req.user._id.equals(tweet.user)) {
+        errors.notowner = 'You cannot update someone else tweets';
         return res.status(401).json(errors);
       }
 
       tweet.text = req.body.text;
+      tweet.editted = true;
       if (req.body['media']) {
         tweet.media = req.body.media;
       }
@@ -132,6 +133,41 @@ router.put(
           res.json(savedTweet);
         })
         .catch(err => next(err));
+    });
+  }
+);
+
+// @route   DELETE api/tweets/:tweet_id
+// @desc    Delete tweet
+// @access  Private
+router.delete(
+  '/:tweet_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    const { tweet_id } = req.params;
+    const { idErrors, isValidObjectId } = validateObjectId(tweet_id);
+    const errors = {};
+
+    if (!isValidObjectId) {
+      return res.status(400).json(idErrors);
+    }
+
+    // Make sure tweet does exists
+    Tweet.findOne({ _id: tweet_id }).then(tweet => {
+      // Tweet does not exists
+      if (!tweet) {
+        errors.tweetnotfound = 'That tweet does not exists';
+        return res.status(404).json(errors);
+      }
+      // Tweet does exists
+      // Make sure the user is the owner of that tweet
+      if (!req.user._id.equals(tweet.user)) {
+        errors.notowner = 'You cannot delete someone else tweet';
+        return res.status(401).json(errors);
+      }
+
+      // Delete tweet
+      Tweet.remove({ _id: tweet._id }, true).then(tweet => console.log(tweet));
     });
   }
 );

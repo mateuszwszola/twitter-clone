@@ -3,21 +3,18 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
 const createError = require('http-errors');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const mongoURI = require('./config/keys').mongoURI;
 // const rateLimit = require('express-rate-limit');
+
+// use dotenv
+require('dotenv').config();
+const { mongoURI } = require('./config/keys');
 
 const usersRouter = require('./routes/api/users');
 const profilesRouter = require('./routes/api/profiles');
 const tweetsRouter = require('./routes/api/tweets');
-
-// use dotenv
-dotenv.config({
-  silent: true
-});
 
 // Express app setup
 const app = express();

@@ -49,7 +49,11 @@ const TweetSchema = new Schema({
         ref: 'tweets'
       }
     }
-  ]
+  ],
+  editted: {
+    type: Boolean,
+    default: false
+  }
 });
 
 module.exports = Tweet = mongoose.model('tweets', TweetSchema);

@@ -1,4 +1,5 @@
 /node_modules
+/config/keys.js
 package-lock.json
 .env
 NOTES

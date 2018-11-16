@@ -13,10 +13,8 @@ module.exports = data => {
   if (validator.isEmpty(data.text)) {
     errors.text = 'Text field is required';
   }
-  if (!validator.isEmpty(data.media)) {
-    if (!validator.isURL(data.media)) {
-      errors.media = 'Not a valid media url';
-    }
+  if (!validator.isEmpty(data.media) && !validator.isURL(data.media)) {
+    errors.media = 'Not a valid media url';
   }
 
   return {

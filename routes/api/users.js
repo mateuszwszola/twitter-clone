@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const secret = require('../../config/keys').secretOrKey;
+const { jwtSecret } = require('../../config/keys');
 const passport = require('passport');
 const validator = require('validator');
 
@@ -134,7 +134,7 @@ router.post('/login', (req, res, next) => {
             };
 
             // Sign token
-            jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
+            jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
               if (err) return next(err);
               res.json({
                 success: true,

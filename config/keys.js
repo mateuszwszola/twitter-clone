@@ -1,4 +1,4 @@
 module.exports = {
-  mongoURI: "mongodb://localhost/twitter-clone",
-  secretOrKey: "Twitter clone with Node"
+  mongoURI: process.env.MONGO_URI,
+  jwtSecret: process.env.JWT_SECRET
 };
