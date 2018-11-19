@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const Tweet = require('../../models/Tweet');
+const Tweet = require('../../../models/Tweet');
+const likeRouter = require('./like');
 
-const validateObjectId = require('../../validation/objectId');
-const validateTweet = require('../../validation/createTweet');
+const validateObjectId = require('../../../validation/objectId');
+const validateTweet = require('../../../validation/createTweet');
+
+router.use('/like', likeRouter);
 
 // @route   GET api/tweets/:tweet_id
 // @desc    Get tweet by tweet ID
@@ -18,7 +21,7 @@ router.get('/:tweet_id', (req, res, next) => {
     return res.status(400).json(idErrors);
   }
 
-  Tweet.findOne({ _id: tweet_id })
+  Tweet.findById(tweet_id)
     .then(tweet => {
       if (!tweet) {
         errors.notweet = 'Tweet does not exists';
@@ -67,18 +70,30 @@ router.post(
       return res.status(400).json(errors);
     }
 
+    const tweetContent = {
+      text: req.body.text
+    };
+
+    if (req.body.media) {
+      tweetContent.media = req.body.media;
+    }
+
     // 1. Create new tweet
-    const newTweet = new Tweet(req.body);
+    const newTweet = new Tweet(tweetContent);
+
     newTweet.user = req.user._id;
 
-    newTweet.save().then(savedTweet => {
-      if (!savedTweet) {
-        errors.tweet = 'Cannot save tweet';
-        return res.status(500).json(errors);
-      }
+    newTweet
+      .save()
+      .then(savedTweet => {
+        if (!savedTweet) {
+          errors.tweet = 'Cannot save tweet';
+          return res.status(500).json(errors);
+        }
 
-      res.json(savedTweet);
-    });
+        res.json(savedTweet);
+      })
+      .catch(err => next(err));
   }
 );
 
@@ -105,7 +120,7 @@ router.put(
       return res.status(400).json(errors);
     }
 
-    Tweet.findOne({ _id: tweet_id }).then(tweet => {
+    Tweet.findById(tweet_id).then(tweet => {
       if (!tweet) {
         errors.tweet = 'This tweet does not exists';
         return res.status(404).json(errors);
@@ -153,22 +168,24 @@ router.delete(
     }
 
     // Make sure tweet does exists
-    Tweet.findOne({ _id: tweet_id }).then(tweet => {
-      // Tweet does not exists
-      if (!tweet) {
-        errors.tweetnotfound = 'That tweet does not exists';
-        return res.status(404).json(errors);
-      }
-      // Tweet does exists
-      // Make sure the user is the owner of that tweet
-      if (!req.user._id.equals(tweet.user)) {
-        errors.notowner = 'You cannot delete someone else tweet';
-        return res.status(401).json(errors);
-      }
+    Tweet.findById(tweet_id)
+      .then(tweet => {
+        // Tweet does not exists
+        if (!tweet) {
+          errors.tweetnotfound = 'That tweet does not exists';
+          return res.status(404).json(errors);
+        }
+        // Tweet does exists
+        // Make sure the user is the owner of that tweet
+        if (!req.user._id.equals(tweet.user)) {
+          errors.notowner = 'You cannot delete someone else tweet';
+          return res.status(401).json(errors);
+        }
 
-      // Delete tweet
-      Tweet.remove({ _id: tweet._id }, true).then(tweet => console.log(tweet));
-    });
+        // Delete tweet
+        tweet.remove().then(() => res.json({ success: true }));
+      })
+      .catch(err => next(err));
   }
 );
 

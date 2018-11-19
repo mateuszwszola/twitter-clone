@@ -6,15 +6,12 @@ const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 const mongoose = require('mongoose');
 const passport = require('passport');
+require('./config/config');
 // const rateLimit = require('express-rate-limit');
 
-// use dotenv
-require('dotenv').config();
 const { mongoURI } = require('./config/keys');
 
-const usersRouter = require('./routes/api/users');
-const profilesRouter = require('./routes/api/profiles');
-const tweetsRouter = require('./routes/api/tweets');
+const apiRoutes = require('./routes/api');
 
 // Express app setup
 const app = express();
@@ -46,9 +43,7 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 
 // Handle routes
-app.use('/api/users', usersRouter);
-app.use('/api/profiles', profilesRouter);
-app.use('/api/tweets', tweetsRouter);
+app.use('/api', apiRoutes);
 
 // Handle 404 errors
 app.use((req, res, next) => {

@@ -10,8 +10,8 @@ const followRouter = require('./follow');
 // Load validation functions
 const validateProfileInput = require('../../../validation/profile');
 const validateObjectId = require('../../../validation/objectId');
-// Load utils functions
-const formatName = require('../../../utils/formatName');
+// Load helper functions
+const startCase = require('../../../helpers/startCase');
 
 router.use('/follow', followRouter);
 
@@ -25,7 +25,7 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user._id })
-      .populate('user', ['name', 'username'])
+      .populate('user', ['name', 'username', 'avatar'])
       .then(profile => {
         if (!profile) {
           errors.noprofile = 'There is no profile for this user';
@@ -45,7 +45,7 @@ router.get('/all', (req, res, next) => {
   const errors = {};
 
   Profile.find({})
-    .populate('user', ['name', 'username'])
+    .populate('user', ['name', 'username', 'avatar'])
     .then(profiles => {
       if (!profiles) {
         errors.noprofiles = 'There is no profiles';
@@ -70,7 +70,7 @@ router.get('/:user_id', (req, res, next) => {
   }
 
   Profile.findOne({ user: user_id })
-    .populate('user', ['name', 'username'])
+    .populate('user', ['name', 'username', 'avatar'])
     .then(profile => {
       if (!profile) {
         errors.noprofile = 'There is no profile for this user';
@@ -106,7 +106,7 @@ router.post(
     if (req.body['name']) {
       User.findOneAndUpdate(
         { _id: req.user._id },
-        { $set: { name: formatName(req.body['name']) } },
+        { $set: { name: startCase(req.body['name']) } },
         { new: true }
       )
         .then(updatedUser => {
@@ -127,7 +127,6 @@ router.post(
       'location',
       'website',
       'birthday',
-      'avatar',
       'backgroundPicture',
       'created'
     ];

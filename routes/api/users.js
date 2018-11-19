@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../../config/keys');
 const passport = require('passport');
@@ -9,12 +9,14 @@ const validator = require('validator');
 // Load validation functions
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
-// Load utils functions
-const formatName = require('../../utils/formatName');
+// Load helper functions
+const startCase = require('../../helpers/startCase');
 
 // Load Models
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+
+const saltRounds = 10;
 
 // @route   POST api/users/register
 // @desc    Register new user
@@ -46,7 +48,7 @@ router.post('/register', (req, res, next) => {
 
           // There is no user with that email/username in db, create the user
           const newUser = new User({
-            name: formatName(name),
+            name: startCase(name), // (start case, john doe -> John Doe)
             username,
             email,
             password
@@ -56,7 +58,7 @@ router.post('/register', (req, res, next) => {
           const newProfile = new Profile({});
 
           // Hash the password
-          bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.genSalt(saltRounds, (err, salt) => {
             if (err) {
               return next(err);
             }
@@ -117,36 +119,36 @@ router.post('/login', (req, res, next) => {
     .then(user => {
       if (!user) {
         errors.login = 'Incorrect username and password combination';
-        return res.status(404).json(errors);
+        return res.status(400).json(errors);
       }
 
       // Check passwords
-      bcrypt
-        .compare(password, user.password)
-        .then(isMatch => {
-          if (isMatch) {
-            // User matched
-            // Create JWT Payload
-            const payload = {
-              id: user._id,
-              name: user.name,
-              username: user.username
-            };
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          return next(err);
+        }
 
-            // Sign token
-            jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
-              if (err) return next(err);
-              res.json({
-                success: true,
-                token: `Bearer ${token}`
-              });
+        if (isMatch) {
+          // User matched
+          // Create JWT Payload
+          const payload = {
+            id: user._id,
+            name: user.name,
+            username: user.username
+          };
+          // Sign token
+          jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
+            if (err) return next(err);
+            res.json({
+              success: true,
+              token: `Bearer ${token}`
             });
-          } else {
-            errors.login = 'Incorrect username and password combination';
-            return res.status(400).json(errors);
-          }
-        })
-        .catch(err => next(err));
+          });
+        } else {
+          errors.login = 'Incorrect username and password combination';
+          return res.status(400).json(errors);
+        }
+      });
     })
     .catch(err => next(err));
 });

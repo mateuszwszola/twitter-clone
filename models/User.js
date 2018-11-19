@@ -19,7 +19,11 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true
+  },
+  // User avatar - uploaded by user
+  avatar: {
+    type: String
   }
 });
 
-module.exports = User = mongoose.model('users', UserSchema);
+module.exports = User = mongoose.model('User', UserSchema);

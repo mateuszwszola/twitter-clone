@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "bad-words": "^1.6.4",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "concurrently": "^4.0.1",
     "cookie-parser": "^1.4.3",

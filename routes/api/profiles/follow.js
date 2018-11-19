@@ -34,7 +34,7 @@ router.post(
 
     if (req.user._id.equals(user_id)) {
       return res.status(400).json({
-        message: 'You cannot follow and unfollow your own profile'
+        message: 'You cannot follow your own profile'
       });
     }
 
@@ -53,10 +53,10 @@ router.post(
           if (index > -1) {
             // Index was found => unfollow
             profile.following = profile.following.filter(
-              follow => follow._id.toString() !== user_id.toString()
+              follow => !follow._id.equals(user_id)
             );
             someoneProfile.followers = someoneProfile.followers.filter(
-              follower => follower._id.toString() !== profile.user.toString()
+              follower => !follower._id.equals(profile.user)
             );
             // Save your profile
             profile

@@ -51,10 +51,6 @@ const ProfileSchema = new Schema({
       }
     }
   ],
-  // User avatar - uploaded by user
-  avatar: {
-    type: String
-  },
   // User background picture - uploaded by user
   backgroundPicture: {
     type: String
@@ -62,7 +58,10 @@ const ProfileSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
+  },
+  verified: {
+    type: Boolean
   }
 });
 
-module.exports = Profile = mongoose.model('profiles', ProfileSchema);
+module.exports = Profile = mongoose.model('Profile', ProfileSchema);

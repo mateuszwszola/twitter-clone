@@ -3,14 +3,14 @@ const router = express.Router();
 const passport = require('passport');
 
 const Profile = require('../../../models/Profile');
-const Tweet = requier('../../../models/Tweet');
+const Tweet = require('../../../models/Tweet');
 const validateObjectId = require('../../../validation/objectId');
 
-// @route   POST api/profiles/like/:tweet_id
-// @desc    Like tweet
+// @route   POST api/tweets/like/:tweet_id
+// @desc    Like or unlike tweet
 // @access  Private
 router.post(
-  '/like/:tweet_id',
+  '/:tweet_id',
   passport.authenticate('jwt', { session: false }),
   (req, res, next) => {
     /*
@@ -35,7 +35,29 @@ router.post(
           return res.status(404).json(errors);
         }
         // Tweet exists
+        // Determine if like or unlike tweet
+        if (
+          tweet.likes.filter(like => like._id.equals(profile.user)).length > 0
+        ) {
+          // User already like this tweet, unlike
+          tweet.likes = tweet.likes.filter(
+            like => !like._id.equals(profile.user)
+          );
+          tweet
+            .save()
+            .then(updatedTweet => res.json(updatedTweet))
+            .catch(err => next(err));
+        } else {
+          // Like
+          tweet.likes.unshift(profile.user);
+          tweet
+            .save()
+            .then(updatedTweet => res.json(updatedTweet))
+            .catch(err => next(err));
+        }
       });
     });
   }
 );
+
+module.exports = router;

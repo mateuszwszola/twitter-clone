@@ -42,18 +42,18 @@ const TweetSchema = new Schema({
       }
     }
   ],
+  // retweets are ids of people how retweeted
   retweets: [
     {
-      tweet: {
+      user: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'users'
       }
     }
   ],
   editted: {
-    type: Boolean,
-    default: false
+    type: Boolean
   }
 });
 
-module.exports = Tweet = mongoose.model('tweets', TweetSchema);
+module.exports = Tweet = mongoose.model('Tweet', TweetSchema);
