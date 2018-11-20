@@ -23,6 +23,9 @@ const UserSchema = new Schema({
   // User avatar - uploaded by user
   avatar: {
     type: String
+  },
+  verified: {
+    type: Boolean
   }
 });
 

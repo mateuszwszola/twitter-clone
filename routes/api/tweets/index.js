@@ -3,11 +3,13 @@ const router = express.Router();
 const passport = require('passport');
 const Tweet = require('../../../models/Tweet');
 const likeRouter = require('./like');
+const commentRouter = require('./comment');
 
 const validateObjectId = require('../../../validation/objectId');
 const validateTweet = require('../../../validation/createTweet');
 
 router.use('/like', likeRouter);
+router.use('/comment', commentRouter);
 
 // @route   GET api/tweets/:tweet_id
 // @desc    Get tweet by tweet ID

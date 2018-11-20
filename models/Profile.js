@@ -58,9 +58,6 @@ const ProfileSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
-  },
-  verified: {
-    type: Boolean
   }
 });
 
