@@ -1,15 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import * as ROUTES from '../../constants/routes';
+
 export default () => (
   <nav className="main-nav">
-    <ul>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
-      <li>
-        <Link to="/register">Register</Link>
-      </li>
-    </ul>
+    <Link to={ROUTES.HOME}>Home</Link>
+    <Link to={ROUTES.SIGN_IN}>Sign In</Link>
+    <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </nav>
 );
