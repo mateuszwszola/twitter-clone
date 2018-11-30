@@ -11,7 +11,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="wrapper">
+        <div>
           <Header />
           <Switch>
             <Route path="/" exact component={Landing} />

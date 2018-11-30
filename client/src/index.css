@@ -3,12 +3,6 @@
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -20,15 +14,10 @@ body {
 .container {
   width: 100%;
   padding: 10px 15px;
-  margin: 0 auto;
-}
-
-.wrapper {
-  height: 100%;
 }
 
 .landing-container {
-  background-color: green;
+  background-color: papayawhip;
 }
 
 /* <- Header and Nav -> */
@@ -36,30 +25,24 @@ body {
   overflow: hidden;
   background-color: #fff;
   padding: 10px 15px;
-}
-
-.main-nav {
-  float: right;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-nav a {
-  float: left;
-  text-align: center;
   color: #29a3ef;
   padding: 12px;
   text-decoration: none;
   font-size: 18px;
-  line-height: 25px;
   border-radius: 4px;
+  display: block;
 }
 
 .header-logo {
-  float: left;
   font-size: 25px;
-  line-height: 25px;
   color: #29a3ef;
   padding: 12px;
-  text-align: center;
+  display: block;
 }
 
 .main-nav a:hover {
@@ -70,6 +53,27 @@ body {
 .main-nav a:active {
   background-color: dodgerblue;
   color: white;
+}
+
+/* Form */
+form {
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  margin: 10px 0;
+  padding: 5px;
+  width: 100%;
+}
+
+input[type='submit'] {
+  padding: 5px;
+  border-radius: 3px;
 }
 
 /* <- Footer -> */
@@ -89,15 +93,14 @@ body {
 }
 
 /* <- Media Queries -> */
-@media screen and (max-width: 500px) {
-  .header-logo,
-  .main-header a {
-    float: none;
-    display: block;
-    text-align: left;
+@media screen and (min-width: 500px) {
+  .main-header {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  .main-nav {
-    float: none;
+  .header-logo,
+  .main-header a {
+    display: inline-block;
   }
 }
