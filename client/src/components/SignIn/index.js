@@ -1,61 +1,47 @@
-import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import InputGroup from '../UI/InputGroup';
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 
-class SignIn extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      login: '',
-      password: ''
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (!this.state.login || !this.state.password) {
-      return;
-    }
-    console.log('The form has been submitted!');
-  }
-
-  render() {
-    const { login, password } = this.state;
-
-    return (
-      <div className="container">
-        <h2>SignIn</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="login">Login</label>
-          <input
+function SignIn({ login, password, onChange, onSubmit }) {
+  return (
+    <div className="container">
+      <div className="auth__container">
+        <h1 className="auth__logo">Sign in to Twitter</h1>
+        <form className="auth__form" onSubmit={onSubmit}>
+          <InputGroup
             type="text"
-            id="login"
             name="login"
             value={login}
-            onChange={this.handleChange}
+            onChange={onChange}
+            placeholder="Email or username"
           />
-          <label htmlFor="password">Password</label>
-          <input
+          <InputGroup
             type="password"
-            id="password"
             name="password"
             value={password}
-            onChange={this.handleChange}
+            onChange={onChange}
+            placeholder="Password"
           />
-          <input type="submit" value="Submit" />
+          <PrimaryButton type="submit" text="Log in" />
         </form>
+        <p className="signup-helper">
+          New to Twitter?
+          <Link to="/signup" className="login-signup-link">
+            Sign up now <i className="fas fa-angle-double-right" />
+          </Link>
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+SignIn.propTypes = {
+  login: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired
+};
 
 export default SignIn;
