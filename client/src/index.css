@@ -17,10 +17,6 @@ body {
   padding: 10px 15px;
 }
 
-.landing-container {
-  background-color: papayawhip;
-}
-
 /* <- Header and Nav -> */
 .main-header {
   overflow: hidden;
@@ -57,6 +53,12 @@ body {
 .main-nav a:active {
   background-color: dodgerblue;
   color: white;
+}
+
+/* Landing */
+.landing-container {
+  text-align: center;
+  margin-top: 50px;
 }
 
 /* Auth, Form */

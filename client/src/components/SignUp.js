@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import InputGroup from '../UI/InputGroup';
-import PrimaryButton from '../UI/Buttons/PrimaryButton';
+import InputGroup from './UI/InputGroup';
+import PrimaryButton from './UI/Buttons/PrimaryButton';
 
 function SignUp({
   name,
