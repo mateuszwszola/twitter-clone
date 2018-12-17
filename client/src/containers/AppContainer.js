@@ -11,9 +11,9 @@ class AppContainer extends Component {
     profile: {}
   };
 
-  componentDidMount() {
-    // Check if token exists
+  handleAuthentication = () => {
     const decoded = checkForToken();
+
     if (isEmpty(decoded)) {
       this.setState(() => ({
         isAuthenticated: false,
@@ -26,10 +26,15 @@ class AppContainer extends Component {
         user: decoded
       }));
     }
+  };
+
+  componentDidMount() {
+    console.log('AppContainer did mount! \n Handle authentication');
+    this.handleAuthentication();
   }
 
   render() {
-    return <App {...this.state} />;
+    return <App auth={this.handleAuthentication} {...this.state} />;
   }
 }
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
 import PrimaryButton from './UI/Buttons/PrimaryButton';
 
-function SignIn({ login, password, onChange, onSubmit }) {
+function SignIn({ username, password, onChange, onSubmit }) {
   return (
     <div className="container">
       <div className="auth__container">
@@ -12,8 +12,8 @@ function SignIn({ login, password, onChange, onSubmit }) {
         <form className="auth__form" onSubmit={onSubmit}>
           <InputGroup
             type="text"
-            name="login"
-            value={login}
+            name="username"
+            value={username}
             onChange={onChange}
             placeholder="Email or username"
           />
@@ -38,7 +38,7 @@ function SignIn({ login, password, onChange, onSubmit }) {
 }
 
 SignIn.propTypes = {
-  login: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired

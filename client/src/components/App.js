@@ -9,25 +9,43 @@ import SignUpContainer from '../containers/SignUpContainer';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 
-function App(props) {
+function App(data) {
   return (
     <Router>
-      <div>
-        <Header />
+      <>
+        <Header
+          isAuthenticated={data.isAuthenticated}
+          user={data.user}
+          auth={data.auth}
+        />
         <Switch>
-          <Route path="/" exact component={Landing} />
-          <Route path="/signin" exact component={SignInContainer} />
-          <Route path="/signup" exact component={SignUpContainer} />
+          <Route
+            path="/"
+            exact
+            render={props => <Landing {...props} {...data} />}
+          />
+          <Route
+            path="/signin"
+            exact
+            render={props => <SignInContainer {...props} {...data} />}
+          />
+          <Route
+            path="/signup"
+            exact
+            render={props => <SignUpContainer {...props} {...data} />}
+          />
         </Switch>
         <Footer />
-      </div>
+      </>
     </Router>
   );
 }
 
 App.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  auth: PropTypes.func.isRequired
 };
 
 export default App;

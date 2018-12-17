@@ -77,10 +77,7 @@ router.post('/register', (req, res, next) => {
                   newProfile
                     .save()
                     .then(profile => {
-                      res.json({
-                        user,
-                        profile
-                      });
+                      res.json({ message: 'Successfully created an account!' });
                     })
                     .catch(err => next(err));
                 })

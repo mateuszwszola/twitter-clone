@@ -1,11 +1,24 @@
 import React from 'react';
 import Nav from './Nav';
+import PropTypes from 'prop-types';
 
-export default function Header(props) {
+function Header(props) {
   return (
     <header className="main-header">
       <i className="fab fa-twitter header-logo" />
-      <Nav />
+      <Nav
+        isAuthenticated={props.isAuthenticated}
+        user={props.user}
+        auth={props.auth}
+      />
     </header>
   );
 }
+
+Header.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+  auth: PropTypes.func.isRequired
+};
+
+export default Header;
