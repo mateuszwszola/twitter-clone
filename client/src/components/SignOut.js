@@ -5,12 +5,10 @@ import logoutUser from '../functions/logoutUser';
 import { Link } from 'react-router-dom';
 
 class SignOut extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    return <Link onClick={() => logoutUser(this.props.auth)}>Sign Out</Link>;
+    return (
+      <button onClick={() => logoutUser(this.props.auth)}>Sign Out</button>
+    );
   }
 }
 

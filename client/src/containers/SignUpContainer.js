@@ -20,6 +20,12 @@ class SignUpContainer extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isAuthenticated === true) {
+      this.props.history.push('/');
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
