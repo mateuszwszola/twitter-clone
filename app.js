@@ -1,13 +1,16 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
-const mongoose = require('mongoose');
 const passport = require('passport');
 require('./config/config');
 // const rateLimit = require('express-rate-limit');
+require('./models/User');
+require('./models/Profile');
+require('./models/Tweet');
 
 const { mongoURI } = require('./config/keys');
 

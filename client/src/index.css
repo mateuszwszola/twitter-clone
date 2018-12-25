@@ -97,8 +97,10 @@ body {
 
 .button {
   font-size: 1em;
-  margin: 10px 0;
+  margin: 10px 15px;
+  padding: 10px 15px;
   outline: 0;
+  border-radius: 3px;
   cursor: pointer;
   text-align: center;
 }
@@ -139,6 +141,12 @@ body {
 .invalid-feedback {
   color: red;
   font-size: 0.8rem;
+}
+
+.success-feedback {
+  color: #db3545;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 /* <- Footer -> */

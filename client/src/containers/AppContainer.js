@@ -28,13 +28,27 @@ class AppContainer extends Component {
     }
   };
 
+  setUserProfile = profile => {
+    this.setState(() => ({
+      profile: {
+        ...profile
+      }
+    }));
+  };
+
   componentDidMount() {
     console.log('AppContainer did mount! \n Handle authentication');
     this.handleAuthentication();
   }
 
   render() {
-    return <App auth={this.handleAuthentication} {...this.state} />;
+    return (
+      <App
+        auth={this.handleAuthentication}
+        setUserProfile={this.setUserProfile}
+        {...this.state}
+      />
+    );
   }
 }
 

@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import logoutUser from '../functions/logoutUser';
 
-import { Link } from 'react-router-dom';
-
-class SignOut extends Component {
-  render() {
-    return (
-      <button onClick={() => logoutUser(this.props.auth)}>Sign Out</button>
-    );
-  }
+function SignOut(props) {
+  return (
+    <button
+      className="button button--logout"
+      onClick={() => logoutUser(props.auth)}
+    >
+      Sign Out
+    </button>
+  );
 }
 
 SignOut.propTypes = {

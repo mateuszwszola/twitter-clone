@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Landing from './Landing';
 import SignInContainer from '../containers/SignInContainer';
 import SignUpContainer from '../containers/SignUpContainer';
+import ProfileContainer from '../containers/ProfileContainer';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
@@ -34,6 +35,11 @@ function App(data) {
             exact
             render={props => <SignUpContainer {...props} {...data} />}
           />
+          <Route
+            path="/profile"
+            exact
+            render={props => <ProfileContainer {...props} {...data} />}
+          />
         </Switch>
         <Footer />
       </>
@@ -45,7 +51,8 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-  auth: PropTypes.func.isRequired
+  auth: PropTypes.func.isRequired,
+  setUserProfile: PropTypes.func.isRequired
 };
 
 export default App;

@@ -11,7 +11,8 @@ class SignUpContainer extends Component {
     username: '',
     password: '',
     password2: '',
-    errors: {}
+    errors: {},
+    successRegister: false
   };
 
   componentDidMount() {
@@ -22,7 +23,7 @@ class SignUpContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isAuthenticated === true) {
-      this.props.history.push('/');
+      this.setState({ successRegister: true });
     }
   }
 
@@ -57,7 +58,15 @@ class SignUpContainer extends Component {
   };
 
   render() {
-    const { name, email, username, password, password2, errors } = this.state;
+    const {
+      name,
+      email,
+      username,
+      password,
+      password2,
+      errors,
+      successRegister
+    } = this.state;
     return (
       <SignUp
         name={name}
@@ -68,6 +77,7 @@ class SignUpContainer extends Component {
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
         errors={errors}
+        successRegister={successRegister}
       />
     );
   }
