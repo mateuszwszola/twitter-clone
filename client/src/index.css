@@ -87,12 +87,17 @@ body {
   border-radius: 3px;
 }
 
+.input--error {
+  border-color: red;
+}
+
 .input:focus {
   border-color: #cadae4;
 }
 
 .button {
   font-size: 1em;
+  margin: 10px 0;
   outline: 0;
   cursor: pointer;
   text-align: center;
@@ -129,6 +134,11 @@ body {
 
 .login-signin-link {
   margin: 0 10px;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.8rem;
 }
 
 /* <- Footer -> */

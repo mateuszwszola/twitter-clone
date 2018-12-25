@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
 import PrimaryButton from './UI/Buttons/PrimaryButton';
 
-function SignIn({ username, password, onChange, onSubmit }) {
+function SignIn({ username, password, onChange, onSubmit, errors }) {
   return (
     <div className="container">
       <div className="auth__container">
@@ -16,6 +16,8 @@ function SignIn({ username, password, onChange, onSubmit }) {
             value={username}
             onChange={onChange}
             placeholder="Email or username"
+            error={errors.login || errors.username ? true : false}
+            errorMsg={errors.username ? errors.username : null}
           />
           <InputGroup
             type="password"
@@ -23,7 +25,12 @@ function SignIn({ username, password, onChange, onSubmit }) {
             value={password}
             onChange={onChange}
             placeholder="Password"
+            error={errors.login || errors.password ? true : false}
+            errorMsg={errors.password ? errors.password : null}
           />
+          {errors.login ? (
+            <div className="invalid-feedback">{errors.login}</div>
+          ) : null}
           <PrimaryButton type="submit" text="Log in" />
         </form>
         <p className="signup-helper">
@@ -41,7 +48,8 @@ SignIn.propTypes = {
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 export default SignIn;

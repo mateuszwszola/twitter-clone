@@ -8,19 +8,22 @@ export default function InputGroup({
   value,
   onChange,
   placeholder,
-  error
+  error,
+  errorMsg
 }) {
   return (
     <div className="input-group">
       <input
-        className={classnames('input', `input--${type}`)}
+        className={classnames('input', `input--${type}`, {
+          'input--error': error
+        })}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
       />
-      {error && <div className="invalid-feedback">{error}</div>}
+      {errorMsg ? <div className="invalid-feedback">{errorMsg}</div> : null}
     </div>
   );
 }
@@ -30,7 +33,8 @@ InputGroup.propTypes = {
   name: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  placeholder: PropTypes.string
+  placeholder: PropTypes.string,
+  error: PropTypes.bool.isRequired
 };
 
 InputGroup.defaultProps = {

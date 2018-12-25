@@ -13,7 +13,7 @@ class SignInContainer extends Component {
 
   componentDidMount() {
     const { isAuthenticated, history } = this.props;
-    if (isAuthenticated) {
+    if (isAuthenticated === true) {
       history.push('/');
     }
   }
@@ -38,21 +38,16 @@ class SignInContainer extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { username, password } = this.state;
-    if (!username || !password) {
-      return;
-    }
-
     const userData = {
       username,
       password
     };
 
-    console.log('The form has been submitted!');
     loginUser(userData, this.props.auth, this.handleErrors);
   };
 
   render() {
-    const { username, password } = this.state;
+    const { username, password, errors } = this.state;
 
     return (
       <SignIn
@@ -60,6 +55,7 @@ class SignInContainer extends Component {
         password={password}
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
+        errors={errors}
       />
     );
   }

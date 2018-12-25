@@ -15,7 +15,7 @@ class SignUpContainer extends Component {
   };
 
   componentDidMount() {
-    if (this.props.isAuthenticated) {
+    if (this.props.isAuthenticated === true) {
       this.props.history.push('/');
     }
   }
@@ -44,9 +44,6 @@ class SignUpContainer extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, email, username, password, password2 } = this.state;
-    if (!name || !email || !username || !password || !password2) {
-      return;
-    }
 
     const newUser = {
       name,

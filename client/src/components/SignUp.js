@@ -11,7 +11,8 @@ function SignUp({
   password,
   password2,
   onChange,
-  onSubmit
+  onSubmit,
+  errors
 }) {
   return (
     <div className="container">
@@ -24,6 +25,8 @@ function SignUp({
             value={name}
             onChange={onChange}
             placeholder="Name"
+            error={errors.name ? true : false}
+            errorMsg={errors.name ? errors.name : null}
           />
           <InputGroup
             type="text"
@@ -31,6 +34,8 @@ function SignUp({
             value={username}
             onChange={onChange}
             placeholder="Username"
+            error={errors.username ? true : false}
+            errorMsg={errors.username ? errors.username : null}
           />
           <InputGroup
             type="email"
@@ -38,6 +43,8 @@ function SignUp({
             value={email}
             onChange={onChange}
             placeholder="Email"
+            error={errors.email ? true : false}
+            errorMsg={errors.email ? errors.email : null}
           />
           <InputGroup
             type="password"
@@ -45,6 +52,8 @@ function SignUp({
             value={password}
             onChange={onChange}
             placeholder="Password"
+            error={errors.password ? true : false}
+            errorMsg={errors.password ? errors.password : null}
           />
           <InputGroup
             type="password"
@@ -52,6 +61,8 @@ function SignUp({
             value={password2}
             onChange={onChange}
             placeholder="Repeat password"
+            error={errors.password2 ? true : false}
+            errorMsg={errors.password2 ? errors.password2 : null}
           />
           <PrimaryButton type="submit" text="Sign Up" />
         </form>
@@ -73,7 +84,8 @@ SignUp.propTypes = {
   password: PropTypes.string.isRequired,
   password2: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 export default SignUp;
