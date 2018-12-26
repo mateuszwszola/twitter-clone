@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Landing from './Landing';
+import Homepage from './Homepage';
 import SignInContainer from '../containers/SignInContainer';
 import SignUpContainer from '../containers/SignUpContainer';
 import ProfileContainer from '../containers/ProfileContainer';
+import PrivateRoute from '../components/PrivateRoute';
 
 import Header from './layout/Header';
 import Footer from './layout/Footer';
@@ -23,22 +24,33 @@ function App(data) {
           <Route
             path="/"
             exact
-            render={props => <Landing {...props} {...data} />}
+            render={props => <Homepage {...props} {...data} />}
           />
           <Route
             path="/signin"
             exact
-            render={props => <SignInContainer {...props} {...data} />}
+            render={props => (
+              <SignInContainer
+                {...props}
+                isAuthenticated={data.isAuthenticated}
+                auth={data.auth}
+              />
+            )}
           />
           <Route
             path="/signup"
             exact
-            render={props => <SignUpContainer {...props} {...data} />}
+            render={props => (
+              <SignUpContainer
+                {...props}
+                isAuthenticated={data.isAuthenticated}
+              />
+            )}
           />
-          <Route
+          <PrivateRoute
             path="/profile"
-            exact
-            render={props => <ProfileContainer {...props} {...data} />}
+            component={ProfileContainer}
+            apiData={data}
           />
         </Switch>
         <Footer />

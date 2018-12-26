@@ -4,10 +4,22 @@ import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
 import PrimaryButton from './UI/Buttons/PrimaryButton';
 
-function SignIn({ username, password, onChange, onSubmit, errors }) {
+function SignIn({
+  username,
+  password,
+  onChange,
+  onSubmit,
+  errors,
+  registered
+}) {
   return (
     <div className="container">
       <div className="auth__container">
+        {registered ? (
+          <div className="success-feedback">
+            You have successfully registered, please log in
+          </div>
+        ) : null}
         <h1 className="auth__logo">Sign in to Twitter</h1>
         <form className="auth__form" onSubmit={onSubmit}>
           <InputGroup
@@ -49,7 +61,8 @@ SignIn.propTypes = {
   password: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  registered: PropTypes.bool.isRequired
 };
 
 export default SignIn;

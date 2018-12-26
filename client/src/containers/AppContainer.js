@@ -29,15 +29,20 @@ class AppContainer extends Component {
   };
 
   setUserProfile = profile => {
-    this.setState(() => ({
-      profile: {
-        ...profile
-      }
-    }));
+    if (profile) {
+      this.setState(() => ({
+        profile: {
+          ...profile
+        }
+      }));
+    } else {
+      this.setState(() => ({
+        profile: {}
+      }));
+    }
   };
 
   componentDidMount() {
-    console.log('AppContainer did mount! \n Handle authentication');
     this.handleAuthentication();
   }
 

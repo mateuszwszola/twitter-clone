@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { Redirect } from 'react-router-dom';
 import SignIn from '../components/SignIn';
 import loginUser from '../functions/loginUser';
+import isEmpty from '../utils/isEmpty';
 
 class SignInContainer extends Component {
   state = {
     username: '',
     password: '',
-    errors: {}
+    errors: {},
+    redirectToRefferer: false
   };
 
   componentDidMount() {
-    const { isAuthenticated, history } = this.props;
-    if (isAuthenticated === true) {
-      history.push('/');
+    if (this.props.isAuthenticated === true) {
+      this.setState(() => ({
+        redirectToRefferer: true
+      }));
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isAuthenticated === true) {
-      this.props.history.push('/');
+      this.setState(() => ({
+        redirectToRefferer: true
+      }));
     }
   }
 
@@ -43,12 +48,27 @@ class SignInContainer extends Component {
       password
     };
 
+    const fields = Object.keys(userData);
+    const errors = {};
+    for (const field of fields) {
+      if (!userData[field].trim()) {
+        errors[field] = `${field} field is required`;
+      }
+    }
+    if (!isEmpty(errors)) {
+      this.handleErrors(errors);
+      return;
+    }
+
     loginUser(userData, this.props.auth, this.handleErrors);
   };
 
   render() {
-    const { username, password, errors } = this.state;
-
+    const { username, password, errors, redirectToRefferer } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    if (redirectToRefferer === true) {
+      return <Redirect to={from} />;
+    }
     return (
       <SignIn
         username={username}
@@ -56,6 +76,9 @@ class SignInContainer extends Component {
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
         errors={errors}
+        registered={
+          (this.props.location.state && this.props.location.state.info) || false
+        }
       />
     );
   }
@@ -63,8 +86,6 @@ class SignInContainer extends Component {
 
 SignInContainer.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
   auth: PropTypes.func.isRequired
 };
 

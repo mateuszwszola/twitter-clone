@@ -15,7 +15,7 @@ export default function Nav({ auth, isAuthenticated, user }) {
 
   const basicLinks = (
     <>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.HOMEPAGE}>Homepage</Link>
       <Link to={ROUTES.SIGN_IN}>Sign In</Link>
       <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
     </>

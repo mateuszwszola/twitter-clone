@@ -10,18 +10,14 @@ class ProfileContainer extends Component {
   };
 
   componentDidMount() {
-    if (this.props.isAuthenticated === false) {
-      this.props.history.push('/signin');
-    } else {
-      fetchUserProfile(
-        this.props.setUserProfile,
-        this.handleFetchUserError,
-        this.fetchedProfile
-      );
-    }
+    fetchUserProfile(
+      this.props.setUserProfile,
+      this.handleFetchUserError,
+      this.profileFetched
+    );
   }
 
-  fetchedProfile = () => {
+  profileFetched = () => {
     this.setState(() => ({
       loading: false
     }));

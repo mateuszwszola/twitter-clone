@@ -12,17 +12,11 @@ function SignUp({
   password2,
   onChange,
   onSubmit,
-  errors,
-  successRegister
+  errors
 }) {
   return (
     <div className="container">
       <div className="auth__container">
-        {successRegister ? (
-          <div className="success-feedback">
-            You have successfully created an account, please login
-          </div>
-        ) : null}
         <h1 className="auth__logo">Sign Up to Twitter</h1>
         <form className="auth__form" onSubmit={onSubmit}>
           <InputGroup

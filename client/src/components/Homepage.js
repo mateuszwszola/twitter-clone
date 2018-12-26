@@ -1,11 +1,16 @@
 import React from 'react';
+import Landing from './Landing';
 
-function Home() {
+function Homepage(props) {
+  if (!props.isAuthenticated) {
+    return <Landing />;
+  }
+
   return (
-    <div>
-      <h1>Home</h1>
+    <div className="container">
+      <h1>Homepage for authenticated users</h1>
     </div>
   );
 }
 
-export default Home;
+export default Homepage;
