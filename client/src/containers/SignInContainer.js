@@ -59,7 +59,6 @@ class SignInContainer extends Component {
       this.handleErrors(errors);
       return;
     }
-
     loginUser(userData, this.props.auth, this.handleErrors);
   };
 

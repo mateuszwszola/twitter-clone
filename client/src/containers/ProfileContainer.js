@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import fetchUserProfile from '../functions/fetchUserProfile';
 import Profile from '../components/Profile';
+import Loading from '../components/Loading';
 
 class ProfileContainer extends Component {
   state = {
@@ -34,7 +35,7 @@ class ProfileContainer extends Component {
     return (
       <div>
         {this.state.loading ? (
-          <div>Loading...</div>
+          <Loading />
         ) : (
           <Profile
             fetchError={this.state.fetchError}
