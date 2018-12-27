@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import SignUp from '../components/SignUp';
-import registerUser from '../functions/registerUser';
+import { registerUser } from '../utils/api';
 import isEmpty from '../utils/isEmpty';
+import { UserContext } from '../UserContext';
 
 class SignUpContainer extends Component {
+  static contextType = UserContext;
   state = {
     name: '',
     email: '',
@@ -19,17 +20,7 @@ class SignUpContainer extends Component {
   };
 
   componentDidMount() {
-    console.log('Comp did mount');
-    if (this.props.isAuthenticated === true) {
-      this.setState(() => ({
-        redirect: true,
-        redirectPath: '/'
-      }));
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.isAuthenticated === true) {
+    if (this.context.isAuthenticated === true) {
       this.setState(() => ({
         redirect: true,
         redirectPath: '/'
@@ -96,15 +87,8 @@ class SignUpContainer extends Component {
       redirectPath,
       successRegister
     } = this.state;
-    if (redirect === true) {
-      return (
-        <Redirect
-          to={{
-            pathname: redirectPath,
-            state: { info: successRegister }
-          }}
-        />
-      );
+    if (this.context.isAuthenticated === true) {
+      return <Redirect to="/" />;
     }
     return (
       <SignUp
@@ -120,9 +104,5 @@ class SignUpContainer extends Component {
     );
   }
 }
-
-SignUpContainer.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired
-};
 
 export default SignUpContainer;

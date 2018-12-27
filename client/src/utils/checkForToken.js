@@ -1,4 +1,4 @@
-import setAuthToken from '../utils/setAuthToken';
+import setAuthToken from './setAuthToken';
 import jwt_decode from 'jwt-decode';
 
 function checkForToken() {

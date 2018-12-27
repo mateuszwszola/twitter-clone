@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Profile({ profile, fetchError }) {
+function Profile({ profile, error }) {
   console.log(profile);
-  if (fetchError) {
-    return <p className="invalid-feedback">{fetchError}</p>;
+  if (error) {
+    return <p className="invalid-feedback">{error}</p>;
   }
   return (
     <div>

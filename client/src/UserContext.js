@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import checkForToken from './functions/checkForToken';
+import checkForToken from './utils/checkForToken';
 import isEmpty from './utils/isEmpty';
 
-const { Provider, Consumer } = React.createContext();
+let UserContext;
+const { Provider, Consumer } = UserContext = React.createContext();
 
 class UserProvider extends Component {
   state = {
@@ -39,4 +40,14 @@ class UserProvider extends Component {
   }
 }
 
-export { UserProvider, Consumer as UserConsumer };
+function withUserContext(Component) {
+  return function (props) {
+    return (
+      <Consumer>
+        {authProps => <Component {...props} {...authProps} />}
+      </Consumer>
+    );
+  };
+}
+
+export { UserProvider, Consumer as UserConsumer, withUserContext, UserContext };

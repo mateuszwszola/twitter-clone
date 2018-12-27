@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-const { Provider, Consumer } = React.createContext();
+let ProfileContext;
+const { Provider, Consumer } = ProfileContext = React.createContext();
 
-class ProfileContext extends Component {
+class ProfileProvider extends Component {
   state = {
     currentProfile: null,
     profiles: []
@@ -33,4 +34,19 @@ class ProfileContext extends Component {
   }
 }
 
-export { ProfileContext, Consumer as ProfileConsumer };
+function withProfileContext(Component) {
+  return function (props) {
+    return (
+      <Consumer>
+        {profileProps => <Component {...props} {...profileProps} />}
+      </Consumer>
+    );
+  };
+}
+
+export {
+  ProfileProvider,
+  Consumer as ProfileConsumer,
+  ProfileContext,
+  withProfileContext
+};

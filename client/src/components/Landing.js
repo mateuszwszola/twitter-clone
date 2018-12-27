@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Landing(props) {
+function Landing() {
   return (
     <div className="container">
       <div className="landing-container">

@@ -1,58 +1,48 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import fetchUserProfile from '../functions/fetchUserProfile';
+import { fetchUserProfile } from '../utils/api';
 import Profile from '../components/Profile';
 import Loading from '../components/Loading';
+import { ProfileContext } from '../ProfileContext';
 
 class ProfileContainer extends Component {
+  static contextType = ProfileContext;
   state = {
-    fetchError: null,
-    loading: true
+    loading: true,
+    error: null
   };
 
   componentDidMount() {
-    fetchUserProfile(
-      this.props.setUserProfile,
-      this.handleFetchUserError,
-      this.profileFetched
-    );
+    fetchUserProfile(this.handleSuccess, this.handleError);
   }
 
-  profileFetched = () => {
+  handleSuccess = profile => {
+    this.context.setCurrentUserProfile(profile);
     this.setState(() => ({
+      error: null,
       loading: false
     }));
   };
 
-  handleFetchUserError = fetchError => {
+  handleError = error => {
     this.setState(() => ({
-      fetchError,
+      error,
       loading: false
     }));
   };
 
   render() {
+    const { loading, error } = this.state;
+    console.log(this.context);
     return (
       <div>
-        {this.state.loading ? (
+        {loading ? (
           <Loading />
         ) : (
-          <Profile
-            fetchError={this.state.fetchError}
-            profile={this.props.profile}
-          />
+          <Profile error={error} profile={this.context.currentProfile} />
         )}
       </div>
     );
   }
 }
-
-ProfileContainer.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
-  auth: PropTypes.func.isRequired,
-  setUserProfile: PropTypes.func.isRequired
-};
 
 export default ProfileContainer;

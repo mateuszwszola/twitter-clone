@@ -1,33 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import SignIn from '../components/SignIn';
-import loginUser from '../functions/loginUser';
+import { loginUser } from '../utils/api';
 import isEmpty from '../utils/isEmpty';
+import { UserContext } from '../UserContext';
 
 class SignInContainer extends Component {
+  static contextType = UserContext;
   state = {
     username: '',
     password: '',
-    errors: {},
-    redirectToRefferer: false
+    errors: {}
   };
-
-  componentDidMount() {
-    if (this.props.isAuthenticated === true) {
-      this.setState(() => ({
-        redirectToRefferer: true
-      }));
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.isAuthenticated === true) {
-      this.setState(() => ({
-        redirectToRefferer: true
-      }));
-    }
-  }
 
   handleChange = e => {
     const { name, value } = e.target;
@@ -59,14 +43,14 @@ class SignInContainer extends Component {
       this.handleErrors(errors);
       return;
     }
-    loginUser(userData, this.props.auth, this.handleErrors);
+    loginUser(userData, this.context.authenticateUser, this.handleErrors);
   };
 
   render() {
-    const { username, password, errors, redirectToRefferer } = this.state;
+    const { username, password, errors } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
-    if (redirectToRefferer === true) {
-      return <Redirect to={from} />;
+    if (this.context.isAuthenticated === true) {
+      return <Redirect to="/" />;
     }
     return (
       <SignIn
@@ -82,10 +66,5 @@ class SignInContainer extends Component {
     );
   }
 }
-
-SignInContainer.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  auth: PropTypes.func.isRequired
-};
 
 export default SignInContainer;

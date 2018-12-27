@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Landing from './Landing';
+import { withUserContext } from '../UserContext';
 
-function Homepage(props) {
-  if (!props.isAuthenticated) {
+function Homepage({ isAuthenticated }) {
+  if (!isAuthenticated) {
     return <Landing />;
   }
 
@@ -13,4 +15,8 @@ function Homepage(props) {
   );
 }
 
-export default Homepage;
+Homepage.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+export default withUserContext(Homepage);

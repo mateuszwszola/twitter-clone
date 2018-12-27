@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import logoutUser from '../functions/logoutUser';
+import { logoutUser } from '../utils/api';
+import { withUserContext } from '../UserContext';
 
-function SignOut(props) {
+function SignOut({ authenticateUser }) {
   return (
     <button
       className="button button--logout"
-      onClick={() => logoutUser(props.auth)}
+      onClick={() => logoutUser(authenticateUser)}
     >
       Sign Out
     </button>
@@ -14,7 +15,7 @@ function SignOut(props) {
 }
 
 SignOut.propTypes = {
-  auth: PropTypes.func.isRequired
+  authenticateUser: PropTypes.func.isRequired
 };
 
-export default SignOut;
+export default withUserContext(SignOut);
