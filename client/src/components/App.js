@@ -20,6 +20,7 @@ function App() {
           <Route exact path="/signin" component={SignInContainer} />
           <Route exact path="/signup" component={SignUpContainer} />
           <PrivateRoute path="/profile" component={ProfileContainer} />
+          <Route render={() => <div>404 Not Found</div>} />
         </Switch>
         <Footer />
       </>

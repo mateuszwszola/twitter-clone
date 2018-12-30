@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import SignUp from '../components/SignUp';
 import { registerUser } from '../utils/api';
 import isEmpty from '../utils/isEmpty';
+import validateForm from '../utils/validateForm';
 import { UserContext } from '../UserContext';
 
 class SignUpContainer extends Component {
@@ -19,14 +20,14 @@ class SignUpContainer extends Component {
     successRegister: false
   };
 
-  componentDidMount() {
-    if (this.context.isAuthenticated === true) {
-      this.setState(() => ({
-        redirect: true,
-        redirectPath: '/'
-      }));
-    }
-  }
+  // componentDidMount() {
+  //   if (this.context.isAuthenticated === true) {
+  //     this.setState(() => ({
+  //       redirect: true,
+  //       redirectPath: '/'
+  //     }));
+  //   }
+  // }
 
   handleChange = e => {
     const { name, value } = e.target;
@@ -59,14 +60,7 @@ class SignUpContainer extends Component {
       password2
     };
 
-    // Front end validation - check if field is not empty
-    const fields = Object.keys(newUser);
-    const errors = {};
-    for (const field of fields) {
-      if (!newUser[field].trim()) {
-        errors[field] = `${field} field is required`;
-      }
-    }
+    const errors = validateForm(newUser);
     if (!isEmpty(errors)) {
       this.handleErrors(errors);
       return;
@@ -87,8 +81,17 @@ class SignUpContainer extends Component {
       redirectPath,
       successRegister
     } = this.state;
-    if (this.context.isAuthenticated === true) {
-      return <Redirect to="/" />;
+    if (redirect === true || this.context.isAuthenticated === true) {
+      return (
+        <Redirect
+          to={{
+            pathname: redirectPath,
+            state: {
+              successRegister
+            }
+          }}
+        />
+      );
     }
     return (
       <SignUp

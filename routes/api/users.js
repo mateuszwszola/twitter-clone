@@ -131,7 +131,8 @@ router.post('/login', (req, res, next) => {
           const payload = {
             id: user._id,
             name: user.name,
-            username: user.username
+            username: user.username,
+            email: user.email
           };
           // Sign token
           jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {

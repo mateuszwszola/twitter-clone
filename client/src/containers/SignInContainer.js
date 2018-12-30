@@ -50,7 +50,7 @@ class SignInContainer extends Component {
     const { username, password, errors } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     if (this.context.isAuthenticated === true) {
-      return <Redirect to="/" />;
+      return <Redirect to={from} />;
     }
     return (
       <SignIn
@@ -60,7 +60,9 @@ class SignInContainer extends Component {
         onSubmit={this.handleSubmit}
         errors={errors}
         registered={
-          (this.props.location.state && this.props.location.state.info) || false
+          (this.props.location.state &&
+            this.props.location.state.successRegister) ||
+          false
         }
       />
     );
