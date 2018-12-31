@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
-import PrimaryButton from './UI/Buttons/PrimaryButton';
+import Button from './UI/Button';
 
 function SignUp({
   name,
@@ -64,7 +64,9 @@ function SignUp({
             error={errors.password2 ? true : false}
             errorMsg={errors.password2 ? errors.password2 : null}
           />
-          <PrimaryButton type="submit" text="Sign Up" />
+          <Button primary type="submit">
+            Sign Up
+          </Button>
         </form>
         <p className="signin-helper">
           Already have an account?

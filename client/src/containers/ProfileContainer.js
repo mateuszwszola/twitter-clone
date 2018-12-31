@@ -32,7 +32,6 @@ class ProfileContainer extends Component {
 
   render() {
     const { loading, error } = this.state;
-    console.log(this.context);
     return (
       <div>
         {loading ? (

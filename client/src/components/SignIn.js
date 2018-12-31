@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
-import PrimaryButton from './UI/Buttons/PrimaryButton';
+import Button from './UI/Button';
 
 function SignIn({
   username,
@@ -43,7 +43,9 @@ function SignIn({
           {errors.login ? (
             <div className="invalid-feedback">{errors.login}</div>
           ) : null}
-          <PrimaryButton type="submit" text="Log in" />
+          <Button type="submit" primary>
+            Log In
+          </Button>
         </form>
         <p className="signup-helper">
           New to Twitter?
