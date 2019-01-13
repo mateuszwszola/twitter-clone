@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AuthNav from './AuthNav';
-import BasicNav from './BasicNav';
+import AuthNav from './Nav/AuthNav';
+import BasicNav from './Nav/BasicNav';
 import { withUserContext } from '../../UserContext';
 
 function Header({ isAuthenticated, user, authenticateUser }) {

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import Button from '../UI/Button';
+import PropTypes from 'prop-types';
+import { Button } from '../../UI/Button';
+import { StyledLink } from '../../UI/Link';
+import DropdownMenu from './DropdownMenu';
 
 class AuthNav extends Component {
   state = {
@@ -36,7 +38,9 @@ class AuthNav extends Component {
     return (
       <nav className="main-nav">
         <li className="nav__item">
-          <Link to="/">Home</Link>
+          <StyledLink to="/">
+            <i className="fas fa-home" /> Home
+          </StyledLink>
         </li>
         <li className="nav__item">
           <Button primary type="text">
@@ -60,33 +64,9 @@ class AuthNav extends Component {
   }
 }
 
-function DropdownMenu({ user, authenticateUser }) {
-  return (
-    <div className="dropdown-content">
-      <ul className="dropdown-menu">
-        <div className="dropdown__user-info">
-          <li className="dropdown-menu__item dropdown__name">{user.name}</li>
-          <li className="dropdown-menu__item dropdown__username">
-            @{user.username}
-          </li>
-        </div>
-        <li className="dropdown-menu__item">
-          <Link to="/profile">Profile</Link>
-        </li>
-        <li className="dropdown-menu__item">
-          <Link to="/settings">Settings</Link>
-        </li>
-        <li className="dropdown-menu__item">
-          <Link to="/notfound">404 not found</Link>
-        </li>
-        <li className="dropdown-menu__item">
-          <Link to="/logout" onClick={() => console.log('Log out')}>
-            Log Out
-          </Link>
-        </li>
-      </ul>
-    </div>
-  );
-}
+AuthNav.propTypes = {
+  user: PropTypes.object.isRequired,
+  authenticateUser: PropTypes.func.isRequired
+};
 
 export default AuthNav;

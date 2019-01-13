@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const Button = styled.button`
+export const Button = styled.button`
   font-size: 1rem;
   padding: 0.7em 1em;
   margin: 5px;
@@ -21,4 +21,20 @@ const Button = styled.button`
     `}
 `;
 
-export default Button;
+export const SignoutButton = styled.button`
+  color: #29a3ef;
+  padding: 12px;
+  border-radius: 4px;
+  display: block;
+  color: black;
+  display: block;
+  width: 100%;
+  border-radius: 0px;
+`;
+
+export const EditProfileButton = styled(Button)`
+  border: 1px solid #67757f;
+  color: #67757f;
+  background-color: #fff;
+  align-self: flex-end;
+`;

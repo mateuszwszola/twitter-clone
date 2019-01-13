@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
 let ProfileContext;
-const { Provider, Consumer } = ProfileContext = React.createContext();
+const { Provider, Consumer } = (ProfileContext = React.createContext());
 
 class ProfileProvider extends Component {
   state = {
-    currentProfile: null,
+    currentUserProfile: null,
     profiles: []
   };
 
   setCurrentUserProfile = profile => {
     this.setState(() => ({
-      currentProfile: profile
+      currentUserProfile: profile
     }));
   };
 
@@ -35,7 +35,7 @@ class ProfileProvider extends Component {
 }
 
 function withProfileContext(Component) {
-  return function (props) {
+  return function(props) {
     return (
       <Consumer>
         {profileProps => <Component {...props} {...profileProps} />}

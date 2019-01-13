@@ -1,17 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { StyledLink } from '../../UI/Link';
 
 export default function BasicNav() {
   return (
     <nav className="main-nav">
       <li className="nav__item">
-        <Link to="/">Home</Link>
+        <StyledLink to="/">
+          <i className="fas fa-home" /> Home
+        </StyledLink>
       </li>
       <li className="nav__item">
-        <Link to="/signin">Sign In</Link>
+        <StyledLink to="/signin">Sign In</StyledLink>
       </li>
       <li className="nav__item">
-        <Link to="/signup">Sign Up</Link>
+        <StyledLink to="/signup">Sign Up</StyledLink>
       </li>
     </nav>
   );

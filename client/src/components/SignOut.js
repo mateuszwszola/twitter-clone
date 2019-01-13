@@ -1,17 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../utils/api';
 import { withUserContext } from '../UserContext';
 
-function SignOut({ authenticateUser }) {
-  return (
-    <button
-      className="button button--logout"
-      onClick={() => logoutUser(authenticateUser)}
-    >
-      Sign Out
-    </button>
-  );
+class SignOut extends Component {
+  componentDidMount() {
+    logoutUser(this.props.authenticateUser);
+  }
 }
 
 SignOut.propTypes = {

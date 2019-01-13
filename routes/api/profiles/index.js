@@ -83,6 +83,33 @@ router.get('/:user_id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// @route   GET api/profiles/profile/:username
+// @desc    Get profile by username
+// @access  Public
+router.get('/profile/:username', (req, res, next) => {
+  const { username } = req.params;
+  const errors = {};
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        errors.nouser = `User ${username} does no exists`;
+        return res.status(404).json(errors);
+      }
+
+      Profile.findOne({ user: user._id })
+        .populate('user', ['name', 'username', 'avatar'])
+        .then(profile => {
+          if (!profile) {
+            errors.noprofile = `Profile for ${username} does not exists`;
+            return res.status(404).json(errors);
+          }
+          res.json(profile);
+        });
+    })
+    .catch(err => next(err));
+});
+
 // @route   POST api/profiles/
 // @desc    Create or update user PROFILE
 // @access  Private

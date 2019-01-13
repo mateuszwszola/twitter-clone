@@ -13,7 +13,7 @@
   "author": "Mateusz Wszola",
   "license": "MIT",
   "dependencies": {
-    "bad-words": "^1.6.4",
+    "bad-words": "^3.0.0",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "concurrently": "^4.0.1",
@@ -34,6 +34,6 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.9"
   }
 }

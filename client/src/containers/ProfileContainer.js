@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchUserProfile } from '../utils/api';
+import { fetchProfile } from '../utils/api';
 import Profile from '../components/Profile';
 import Loading from '../components/Loading';
 import { ProfileContext } from '../ProfileContext';
@@ -12,14 +12,15 @@ class ProfileContainer extends Component {
   };
 
   componentDidMount() {
-    fetchUserProfile(this.handleSuccess, this.handleError);
+    const { username } = this.props.match.params;
+    fetchProfile(username, this.handleSuccess, this.handleError);
   }
 
   handleSuccess = profile => {
     this.context.setCurrentUserProfile(profile);
     this.setState(() => ({
-      error: null,
-      loading: false
+      loading: false,
+      error: null
     }));
   };
 
@@ -32,13 +33,18 @@ class ProfileContainer extends Component {
 
   render() {
     const { loading, error } = this.state;
+
+    if (error) {
+      return <p className="invalid-feedback">{Object.values(error)[0]}</p>;
+    }
+
+    if (loading || !this.context.currentUserProfile) {
+      return <Loading />;
+    }
+
     return (
       <div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <Profile error={error} profile={this.context.currentProfile} />
-        )}
+        <Profile profile={this.context.currentUserProfile} />
       </div>
     );
   }

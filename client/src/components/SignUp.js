@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
-import Button from './UI/Button';
+import { Button } from './UI/Button';
 
 function SignUp({
   name,

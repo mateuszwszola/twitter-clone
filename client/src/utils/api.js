@@ -45,3 +45,12 @@ export function fetchUserProfile(successCb, errorCb) {
       errorCb(err.response.data);
     });
 }
+
+export function fetchProfile(username, successCb, errorCb) {
+  axios
+    .get(`/api/profiles/profile/${username}`)
+    .then(res => successCb(res.data))
+    .catch(err => {
+      errorCb(err.response.data);
+    });
+}
