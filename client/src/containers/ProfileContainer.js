@@ -3,6 +3,7 @@ import { fetchProfile } from '../utils/api';
 import Profile from '../components/Profile';
 import Loading from '../components/Loading';
 import { ProfileContext } from '../ProfileContext';
+import { withUserContext } from '../UserContext';
 
 class ProfileContainer extends Component {
   static contextType = ProfileContext;
@@ -32,13 +33,15 @@ class ProfileContainer extends Component {
   };
 
   render() {
+    const { isAuthenticated, user } = this.props;
+    const { currentUserProfile } = this.context;
     const { loading, error } = this.state;
 
     if (error) {
       return <p className="invalid-feedback">{Object.values(error)[0]}</p>;
     }
 
-    if (loading || !this.context.currentUserProfile) {
+    if (loading) {
       return <Loading />;
     }
 
@@ -50,4 +53,4 @@ class ProfileContainer extends Component {
   }
 }
 
-export default ProfileContainer;
+export default withUserContext(ProfileContainer);

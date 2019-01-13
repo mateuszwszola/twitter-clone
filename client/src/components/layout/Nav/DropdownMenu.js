@@ -5,6 +5,7 @@ import { SignoutButton } from '../../UI/Button';
 import { logoutUser } from '../../../utils/api';
 
 function DropdownMenu({ user, authenticateUser }) {
+  let link = user.username ? '/' + user.username.toString() : '/';
   return (
     <div className="dropdown-content">
       <ul className="dropdown-menu">
@@ -15,9 +16,7 @@ function DropdownMenu({ user, authenticateUser }) {
           </li>
         </div>
         <li className="dropdown-menu__item">
-          <DropdownLink to={'/' + user.username.toString()}>
-            Profile
-          </DropdownLink>
+          <DropdownLink to={link}>Profile</DropdownLink>
         </li>
         <li className="dropdown-menu__item">
           <DropdownLink to="/settings">Settings</DropdownLink>
