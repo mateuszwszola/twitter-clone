@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '../../UI/Button';
-import { StyledLink } from '../../UI/Link';
+import { StyledNavLink } from '../../UI/Links';
 import DropdownMenu from './DropdownMenu';
 
 class AuthNav extends Component {
@@ -34,13 +34,13 @@ class AuthNav extends Component {
   };
 
   render() {
-    const { user, authenticateUser } = this.props;
+    const { user } = this.props;
     return (
       <nav className="main-nav">
         <li className="nav__item">
-          <StyledLink to="/">
+          <StyledNavLink to="/">
             <i className="fas fa-home" /> Home
-          </StyledLink>
+          </StyledNavLink>
         </li>
         <li className="nav__item">
           <Button primary type="text">
@@ -54,9 +54,7 @@ class AuthNav extends Component {
               className="fas fa-user-circle nav__avatar dropdown-button"
               ref={this.avatarRef}
             />
-            {this.state.showMenu ? (
-              <DropdownMenu user={user} authenticateUser={authenticateUser} />
-            ) : null}
+            {this.state.showMenu ? <DropdownMenu user={user} /> : null}
           </div>
         </li>
       </nav>

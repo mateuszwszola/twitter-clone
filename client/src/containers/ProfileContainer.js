@@ -33,10 +33,7 @@ class ProfileContainer extends Component {
   };
 
   render() {
-    const { isAuthenticated, user } = this.props;
-    const { currentUserProfile } = this.context;
     const { loading, error } = this.state;
-
     if (error) {
       return <p className="invalid-feedback">{Object.values(error)[0]}</p>;
     }
@@ -47,7 +44,11 @@ class ProfileContainer extends Component {
 
     return (
       <div>
-        <Profile profile={this.context.currentUserProfile} />
+        <Profile
+          profile={this.context.currentUserProfile}
+          user={this.props.user}
+          isAuthenticated={this.props.isAuthenticated}
+        />
       </div>
     );
   }

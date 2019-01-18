@@ -1,16 +1,3 @@
-export const profileData = {
-  created: '2018-12-30T14:29:19.341Z',
-  followers: [],
-  following: [],
-  likes: [],
-  tweets: [],
-  user: {
-    id: '5c28d63f90062ff8bd1dba8e',
-    name: 'Dennis Doe',
-    username: 'dennisdoe'
-  }
-};
-
 export const tweetsData = [
   {
     id: 1,
@@ -42,3 +29,16 @@ export const tweetsData = [
     retweets: [{}, {}, {}, {}]
   }
 ];
+
+export const profileData = {
+  created: '2018-12-30T14:29:19.341Z',
+  followers: [],
+  following: [],
+  likes: [],
+  tweets: tweetsData,
+  user: {
+    id: '5c28d63f90062ff8bd1dba8e',
+    name: 'Dennis Doe',
+    username: 'dennisdoe'
+  }
+};

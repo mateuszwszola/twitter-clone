@@ -1,19 +1,19 @@
 import React from 'react';
-import { StyledLink } from '../../UI/Link';
+import { StyledNavLink } from '../../UI/Links';
 
 export default function BasicNav() {
   return (
     <nav className="main-nav">
       <li className="nav__item">
-        <StyledLink to="/">
+        <StyledNavLink to="/">
           <i className="fas fa-home" /> Home
-        </StyledLink>
+        </StyledNavLink>
       </li>
       <li className="nav__item">
-        <StyledLink to="/signin">Sign In</StyledLink>
+        <StyledNavLink to="/signin">Sign In</StyledNavLink>
       </li>
       <li className="nav__item">
-        <StyledLink to="/signup">Sign Up</StyledLink>
+        <StyledNavLink to="/signup">Sign Up</StyledNavLink>
       </li>
     </nav>
   );

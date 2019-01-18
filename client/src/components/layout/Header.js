@@ -7,12 +7,14 @@ import { withUserContext } from '../../UserContext';
 function Header({ isAuthenticated, user, authenticateUser }) {
   return (
     <header className="main-header">
-      <i className="fab fa-twitter header__logo" />
-      {isAuthenticated ? (
-        <AuthNav user={user} authenticateUser={authenticateUser} />
-      ) : (
-        <BasicNav />
-      )}
+      <div className="header-container">
+        <i className="fab fa-twitter header__logo" />
+        {isAuthenticated ? (
+          <AuthNav user={user} authenticateUser={authenticateUser} />
+        ) : (
+          <BasicNav />
+        )}
+      </div>
     </header>
   );
 }

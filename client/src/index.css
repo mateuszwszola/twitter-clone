@@ -8,6 +8,8 @@ body,
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -49,15 +51,21 @@ body {
 /* <- Header and Nav -> */
 .main-header {
   background-color: #fff;
-  display: flex;
+  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.header-container {
   min-height: 50px;
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .header__logo {
@@ -78,14 +86,7 @@ body {
 
 .nav__item {
   color: #67757f;
-  border-bottom: 2px solid #fff;
   margin-right: 5px;
-  font-weight: bold;
-}
-
-.nav__item:hover {
-  border-color: #29a3ef;
-  color: #29a3ef;
 }
 
 .nav__avatar {
@@ -113,7 +114,6 @@ body {
   color: #67757f;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
@@ -149,10 +149,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 15px;
 }
 
 .user-info-name {
   margin: 5px;
+  color: #000;
 }
 
 .user-info-name .user-info-link {
@@ -161,6 +163,11 @@ body {
 
 .user-info-username {
   margin: 5px;
+  color: #67757f;
+}
+
+.user-info-joined {
+  margin: 10px 5px;
 }
 
 .profile-user-info p {
@@ -171,12 +178,12 @@ body {
   border-bottom: 2px solid;
 }
 
-.profile-board-container {
+.tweets-board-container {
   height: 100%;
   margin-top: 15px;
 }
 
-.profile-board {
+.tweets-board {
   width: 90%;
   max-width: 800px;
   margin: 15px auto;
@@ -187,27 +194,27 @@ body {
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
 }
 
-.profile-board-content span {
+.tweets-board-content span {
   margin: 5px;
 }
 
-.profile-board-header {
+.tweets-board-header {
   padding: 5px;
   border-bottom: 1px solid #eee;
 }
 
-.profile-board-header h3 {
+.tweets-board-header h3 {
   margin: 5px;
 }
 
-.profile-board-list-item {
+.tweets-board-list-item {
   display: flex;
   flex-direction: row;
   padding: 10px 15px;
   border-bottom: 1px solid #eee;
 }
 
-.profile-board-list-item-content {
+.tweets-board-list-item-content {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -258,6 +265,7 @@ body {
 }
 
 .dropdown__name {
+  color: #000;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -269,17 +277,6 @@ body {
 .dropdown-menu__item {
   width: 100%;
 }
-
-/* .dropdown-content a {
-  color: black;
-  display: block;
-  width: 100%;
-  border-radius: 0px;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-} */
 
 .dropdown-content a:hover {
   background-color: #29a3ef;
@@ -400,9 +397,7 @@ body {
 
 /* <- Media Queries -> */
 @media screen and (min-width: 500px) {
-  .main-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  .header-container {
+    width: 90%;
   }
 }

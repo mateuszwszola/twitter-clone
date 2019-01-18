@@ -1,22 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Landing from './Landing';
-import { withUserContext } from '../UserContext';
+import TweetsBoard from './layout/TweetsBoard';
+import UserPreview from './layout/User/UserPreview';
 
-function Homepage({ isAuthenticated }) {
-  if (!isAuthenticated) {
-    return <Landing />;
-  }
-
+function Homepage({ profile }) {
   return (
-    <div className="container">
-      <h1>Homepage for authenticated users</h1>
+    <div className="homepage-container">
+      <div className="homepage-left">
+        <UserPreview profile={profile} />
+      </div>
+      <div className="homepage-mid">
+        <TweetsBoard tweets={profile.tweets} />
+      </div>
     </div>
   );
 }
 
 Homepage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired
+  profile: PropTypes.object.isRequired
 };
 
-export default withUserContext(Homepage);
+export default Homepage;

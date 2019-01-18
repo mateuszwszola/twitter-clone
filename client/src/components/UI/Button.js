@@ -24,10 +24,8 @@ export const Button = styled.button`
 export const SignoutButton = styled.button`
   color: #29a3ef;
   padding: 12px;
-  border-radius: 4px;
   display: block;
   color: black;
-  display: block;
   width: 100%;
   border-radius: 0px;
 `;

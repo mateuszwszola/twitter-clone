@@ -1,23 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import { UserAvatar } from './UserAvatar';
+import { UserAvatar } from '../UI/UserAvatar';
 import avatar from '../../img/tiger-avatar-example.jpg';
 // import { tweetsData } from './dummydata';
 
-const Board = ({ tweets }) => (
-  <div className="profile-board-container">
-    <div className="profile-board">
-      <div className="profile-board-header">
+const TweetsBoard = ({ tweets }) => (
+  <div className="tweets-board-container">
+    <div className="tweets-board">
+      <div className="tweets-board-header">
         <h3>Tweets</h3>
       </div>
-      <div className="profile-board-content">
-        <ul className="profile-board-list">
+      <div className="tweets-board-content">
+        <ul className="tweets-board-list">
           {tweets.length > 0 ? (
             tweets.map(tweet => (
-              <li key={tweet.id} className="profile-board-list-item">
+              <li key={tweet.id} className="tweets-board-list-item">
                 <UserAvatar small src={avatar} alt="User Avatar" />
-                <div className="profile-board-list-item-content">
+                <div className="tweets-board-list-item-content">
                   <div className="tweet-user-group">
                     <span className="tweet-user-name-group">
                       <strong className="tweet-user-name">
@@ -59,8 +59,8 @@ const Board = ({ tweets }) => (
   </div>
 );
 
-Board.propTypes = {
+TweetsBoard.propTypes = {
   tweets: PropTypes.array.isRequired
 };
 
-export default Board;
+export default TweetsBoard;

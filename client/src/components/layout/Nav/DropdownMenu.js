@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DropdownLink } from '../../UI/Link';
-import { SignoutButton } from '../../UI/Button';
-import { logoutUser } from '../../../utils/api';
+import { DropdownLink } from '../../UI/Links';
 
-function DropdownMenu({ user, authenticateUser }) {
+function DropdownMenu({ user }) {
   let link = user.username ? '/' + user.username.toString() : '/';
   return (
     <div className="dropdown-content">
@@ -16,23 +14,22 @@ function DropdownMenu({ user, authenticateUser }) {
           </li>
         </div>
         <li className="dropdown-menu__item">
-          <DropdownLink to={link}>Profile</DropdownLink>
+          <DropdownLink to={link}>
+            <i className="far fa-user" /> Profile
+          </DropdownLink>
         </li>
         <li className="dropdown-menu__item">
-          <DropdownLink to="/settings">Settings</DropdownLink>
+          <DropdownLink to="/settings">
+            <i className="fas fa-cog" /> Settings
+          </DropdownLink>
         </li>
         <li className="dropdown-menu__item">
           <DropdownLink to="/notfound">404 not found</DropdownLink>
         </li>
         <li className="dropdown-menu__item">
-          <SignoutButton
-            onClick={e => {
-              e.preventDefault();
-              logoutUser(authenticateUser);
-            }}
-          >
-            Sign Out
-          </SignoutButton>
+          <DropdownLink to="/signout">
+            <i className="fas fa-sign-out-alt" /> Sign Out
+          </DropdownLink>
         </li>
       </ul>
     </div>
@@ -40,8 +37,7 @@ function DropdownMenu({ user, authenticateUser }) {
 }
 
 DropdownMenu.propTypes = {
-  user: PropTypes.object.isRequired,
-  authenticateUser: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired
 };
 
 export default DropdownMenu;
