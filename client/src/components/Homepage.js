@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TweetsBoard from './layout/TweetsBoard';
-import UserPreview from './layout/User/UserPreview';
+import UserPreview from './layout/UserPreview';
 
 function Homepage({ profile }) {
   return (

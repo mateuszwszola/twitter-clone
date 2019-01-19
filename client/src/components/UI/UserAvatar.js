@@ -6,12 +6,13 @@ export const UserAvatar = styled.img`
   border-radius: 50%;
   border: 2px solid #fff;
   flex-shrink: 0;
+  margin: 0.7rem;
 
   ${props =>
     props.small &&
     css`
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
     `}
 
   ${props =>
