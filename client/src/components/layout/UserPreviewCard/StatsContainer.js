@@ -5,7 +5,7 @@ const StatsContainer = styled.div`
   flex-direction: row;
   justify-content: center;
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 1170px) {
     justify-content: flex-start;
   }
 `;

@@ -38,12 +38,14 @@ body {
   flex-direction: column;
 }
 
+/* For sticky footer */
 .content {
   flex: 1 0 auto;
 }
 
 .container {
   width: 100%;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 10px 15px;
 }
@@ -180,13 +182,9 @@ body {
 
 .tweets-board-container {
   height: 100%;
-  margin-top: 15px;
 }
 
 .tweets-board {
-  width: 90%;
-  max-width: 800px;
-  margin: 15px auto;
   background-color: #fff;
   min-height: 200px;
   -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
@@ -194,8 +192,14 @@ body {
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
 }
 
+.tweet-user-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .tweets-board-content span {
-  margin: 5px;
+  margin: 0 5px;
 }
 
 .tweets-board-header {
@@ -210,7 +214,7 @@ body {
 .tweets-board-list-item {
   display: flex;
   flex-direction: row;
-  padding: 10px 15px;
+  padding: 7px 12px;
   border-bottom: 1px solid #eee;
 }
 
@@ -285,6 +289,36 @@ body {
 
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+/* Homepage */
+.homepage-container {
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.homepage-flex-item {
+  margin: 0.7rem;
+}
+
+.homepage-left {
+  flex: 290px;
+  max-width: 500px;
+}
+
+.homepage-mid {
+  flex: 500px;
+  max-width: 800px;
+}
+
+.homepage-right {
+  background-color: papayawhip;
+  min-height: 200px;
+  flex: 290px;
+  max-width: 500px;
 }
 
 /* Landing */
@@ -399,5 +433,12 @@ body {
 @media screen and (min-width: 500px) {
   .header-container {
     width: 90%;
+  }
+}
+
+@media screen and (min-width: 1170px) {
+  .homepage-container {
+    flex-direction: row;
+    justify-content: center;
   }
 }
