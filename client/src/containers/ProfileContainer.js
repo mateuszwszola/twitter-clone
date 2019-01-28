@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fetchProfile } from '../utils/api';
 import Profile from '../components/Profile';
 import Loading from '../components/Loading';
+import DisplayError from '../components/DisplayError';
 import { ProfileContext } from '../ProfileContext';
 import { withUserContext } from '../UserContext';
 
@@ -35,7 +36,7 @@ class ProfileContainer extends Component {
   render() {
     const { loading, error } = this.state;
     if (error) {
-      return <p className="invalid-feedback">{Object.values(error)[0]}</p>;
+      return <DisplayError error={Object.values(error)[0].toString()} />;
     }
 
     if (loading) {

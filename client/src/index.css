@@ -106,16 +106,21 @@ body {
 }
 
 .profile-background-place {
-  min-height: 100px;
+  min-height: 150px;
   background: #29a3ef;
+}
+
+.profile-tweets-board {
+  padding: 7px 12px;
+  margin-bottom: 10px;
 }
 
 .profile-header-menu {
   background-color: #fff;
-  margin-top: 10px;
   color: #67757f;
   display: flex;
   flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);

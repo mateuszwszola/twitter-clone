@@ -1,21 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const ErrorWrapper = styled.div`
-  margin: 15px auto;
+  margin: 30px auto;
   text-align: center;
 `;
 
 const ErrorMsg = styled.p`
-  color: red,
-  font-weight: bold,
+  color: red;
+  font-weight: bold;
   font-size: 1.5rem;
 `;
 
-export default function DisplayError(error) {
+export default function DisplayError({ error }) {
   return (
     <ErrorWrapper>
-      <ErrorMsg>{JSON.stringify(error)}</ErrorMsg>
+      <ErrorMsg>{error}</ErrorMsg>
     </ErrorWrapper>
   );
 }
+
+DisplayError.propTypes = {
+  error: PropTypes.string.isRequired
+};

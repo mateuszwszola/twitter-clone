@@ -54,3 +54,12 @@ export function fetchProfile(username, successCb, errorCb) {
       errorCb(err.response.data);
     });
 }
+
+export function createTweet(tweet, handleError) {
+  axios
+    .post('/api/tweets', tweet)
+    .then(res => console.log(res.data))
+    .catch(err => {
+      handleError(err.response.data);
+    });
+}

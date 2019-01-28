@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { EditProfileButton } from '../UI/Button';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from '../layout/User/UserStatsHeader';
 import TweetsBoard from '../layout/TweetsBoard';
@@ -11,12 +10,18 @@ function Profile({ profile, user, isAuthenticated }) {
   return (
     <div className="profile-container">
       <div className="profile-background-place" />
-      {owner ? (
-        <EditProfileButton primary>Edit Profile</EditProfileButton>
-      ) : null}
-      <ProfileUserGroup profile={profile} />
-      <UserStatsHeader profile={profile} />
-      <TweetsBoard tweets={profile.tweets} />
+      <div className="profile-user-stats-header">
+        <UserStatsHeader profile={profile} owner={owner} />
+      </div>
+      <div className="profile-mid-flex">
+        <div className="profile-user-group">
+          <ProfileUserGroup profile={profile} />
+        </div>
+        <div className="profile-tweets-board">
+          <TweetsBoard tweets={profile.tweets} />
+        </div>
+        <div className="profile-right-sidebar">Right sidebar</div>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { UserAvatar } from '../UI/UserAvatar';
 import avatar from '../../img/tiger-avatar-example.jpg';
-// import { tweetsData } from './dummydata';
 
 const TweetsBoard = ({ tweets }) => (
   <div className="tweets-board-container">
