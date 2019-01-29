@@ -1,7 +1,7 @@
 import React from 'react';
 import Homepage from '../components/Homepage';
 import Loading from '../components/Loading';
-import DisplayError from '../components/DisplayError';
+import DisplayErrors from '../components/DisplayErrors';
 import { fetchUserProfile } from '../utils/api';
 
 class HomepageContainer extends React.Component {
@@ -39,7 +39,7 @@ class HomepageContainer extends React.Component {
     }
 
     if (error) {
-      return <DisplayError error={error} />;
+      return <DisplayErrors error={error} />;
     }
 
     return <Homepage profile={profile} />;

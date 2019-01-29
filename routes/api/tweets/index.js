@@ -24,6 +24,7 @@ router.get('/:tweet_id', (req, res, next) => {
   }
 
   Tweet.findById(tweet_id)
+    .populate('user', ['name', 'username', 'avatar'])
     .then(tweet => {
       if (!tweet) {
         errors.notweet = 'Tweet does not exists';
@@ -48,6 +49,7 @@ router.get('/all/:user_id', (req, res, next) => {
   }
 
   Tweet.find({ user: user_id })
+    .populate('user', ['name', 'username', 'avatar'])
     .then(tweets => {
       if (!tweets) {
         errors.notweets = 'That user does not have any tweets';

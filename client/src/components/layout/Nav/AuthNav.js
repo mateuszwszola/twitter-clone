@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from '../../UI/Button';
 import { StyledNavLink } from '../../UI/Links';
@@ -43,9 +44,11 @@ class AuthNav extends Component {
           </StyledNavLink>
         </li>
         <li className="nav__item">
-          <Button primary type="text">
-            Tweet
-          </Button>
+          <Link to="/create-tweet">
+            <Button primary type="text">
+              Tweet
+            </Button>
+          </Link>
         </li>
         <li className="nav__item">
           <div className="dropdown">

@@ -4,7 +4,7 @@ import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from '../layout/User/UserStatsHeader';
 import TweetsBoard from '../layout/TweetsBoard';
 
-function Profile({ profile, user, isAuthenticated }) {
+function Profile({ profile, tweets, user, isAuthenticated }) {
   const owner =
     isAuthenticated && user.username && profile.user.username === user.username;
   return (
@@ -18,7 +18,7 @@ function Profile({ profile, user, isAuthenticated }) {
           <ProfileUserGroup profile={profile} />
         </div>
         <div className="profile-tweets-board">
-          <TweetsBoard tweets={profile.tweets} />
+          <TweetsBoard tweets={tweets} />
         </div>
         <div className="profile-right-sidebar">Right sidebar</div>
       </div>
@@ -28,6 +28,7 @@ function Profile({ profile, user, isAuthenticated }) {
 
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
+  tweets: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 };

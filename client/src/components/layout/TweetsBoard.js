@@ -14,7 +14,7 @@ const TweetsBoard = ({ tweets }) => (
         <ul className="tweets-board-list">
           {tweets.length > 0 ? (
             tweets.map(tweet => (
-              <li key={tweet.id} className="tweets-board-list-item">
+              <li key={tweet._id} className="tweets-board-list-item">
                 <UserAvatar small src={avatar} alt="User Avatar" />
                 <div className="tweets-board-list-item-content">
                   <div className="tweet-user-group">

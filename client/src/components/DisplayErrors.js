@@ -13,14 +13,16 @@ const ErrorMsg = styled.p`
   font-size: 1.5rem;
 `;
 
-export default function DisplayError({ error }) {
+export default function DisplayErrors({ errors }) {
   return (
     <ErrorWrapper>
-      <ErrorMsg>{error}</ErrorMsg>
+      {errors.map((error, index) => (
+        <ErrorMsg key={index}>{error}</ErrorMsg>
+      ))}
     </ErrorWrapper>
   );
 }
 
-DisplayError.propTypes = {
+DisplayErrors.propTypes = {
   error: PropTypes.string.isRequired
 };
