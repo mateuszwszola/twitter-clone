@@ -1,33 +1,27 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { registerUser } from '../actions/authActions';
 import SignUp from '../components/SignUp';
-import { registerUser } from '../utils/api';
-import isEmpty from '../utils/isEmpty';
 import validateForm from '../utils/validateForm';
-import { UserContext } from '../UserContext';
+import isEmpty from '../utils/isEmpty';
 
 class SignUpContainer extends Component {
-  static contextType = UserContext;
   state = {
     name: '',
     email: '',
     username: '',
     password: '',
     password2: '',
-    errors: {},
-    redirect: false,
-    redirectPath: '/',
-    successRegister: false
+    errors: {}
   };
 
-  // componentDidMount() {
-  //   if (this.context.isAuthenticated === true) {
-  //     this.setState(() => ({
-  //       redirect: true,
-  //       redirectPath: '/'
-  //     }));
-  //   }
-  // }
+  componentWillReceiveProps({ errors }) {
+    if (errors) {
+      this.handleErrors(errors);
+    }
+  }
 
   handleChange = e => {
     const { name, value } = e.target;
@@ -38,14 +32,6 @@ class SignUpContainer extends Component {
 
   handleErrors = errors => {
     this.setState(() => ({ errors }));
-  };
-
-  handleRegister = () => {
-    this.setState(() => ({
-      redirect: true,
-      redirectPath: '/signin',
-      successRegister: true
-    }));
   };
 
   handleSubmit = e => {
@@ -62,37 +48,19 @@ class SignUpContainer extends Component {
 
     const errors = validateForm(newUser);
     if (!isEmpty(errors)) {
-      this.handleErrors(errors);
-      return;
+      return this.handleErrors(errors);
     }
 
-    registerUser(newUser, this.handleRegister, this.handleErrors);
+    this.props.registerUser(newUser, this.props.history);
   };
 
   render() {
-    const {
-      name,
-      email,
-      username,
-      password,
-      password2,
-      errors,
-      redirect,
-      redirectPath,
-      successRegister
-    } = this.state;
-    if (redirect === true || this.context.isAuthenticated === true) {
-      return (
-        <Redirect
-          to={{
-            pathname: redirectPath,
-            state: {
-              successRegister
-            }
-          }}
-        />
-      );
+    const { name, email, username, password, password2, errors } = this.state;
+
+    if (this.props.auth.isAuthenticated) {
+      return <Redirect to="/" />;
     }
+
     return (
       <SignUp
         name={name}
@@ -108,4 +76,18 @@ class SignUpContainer extends Component {
   }
 }
 
-export default SignUpContainer;
+SignUpContainer.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  error: PropTypes.object.isRequired
+};
+
+const mapStateToProps = ({ auth, errors }) => ({
+  auth,
+  errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(withRouter(SignUpContainer));

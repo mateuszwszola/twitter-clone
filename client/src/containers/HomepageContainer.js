@@ -1,49 +1,43 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Homepage from '../components/Homepage';
 import Loading from '../components/Loading';
 import DisplayErrors from '../components/DisplayErrors';
-import { fetchUserProfile } from '../utils/api';
+import { fetchUserProfile } from '../actions/profileActions';
 
-class HomepageContainer extends React.Component {
+class HomepageContainer extends Component {
   state = {
-    profile: null,
-    loading: true,
-    error: null
+    errors: null
   };
 
   componentDidMount() {
-    fetchUserProfile(this.handleSuccess, this.handleError);
+    fetchUserProfile();
   }
 
-  handleSuccess = profile => {
-    this.setState(() => ({
-      profile,
-      loading: false,
-      error: null
-    }));
-  };
-
-  handleError = error => {
-    this.setState(() => ({
-      profile: null,
-      loading: false,
-      error
-    }));
-  };
+  componentWillReceiveProps({ errors }) {
+    this.setState(() => ({ errors }));
+  }
 
   render() {
-    const { profile, loading, error } = this.state;
-
-    if (loading) {
+    if (this.props.profile.loading) {
       return <Loading />;
     }
 
-    if (error) {
-      return <DisplayErrors error={error} />;
+    if (this.state.errors) {
+      return <DisplayErrors error={this.state.errors} />;
     }
 
-    return <Homepage profile={profile} />;
+    return <Homepage profile={this.props.profile.currentProfile} />;
   }
 }
 
-export default HomepageContainer;
+const mapStateToProps = ({ profile, errors }) => ({
+  profile,
+  errors
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchUserProfile }
+)(withRouter(HomepageContainer));

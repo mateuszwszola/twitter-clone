@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { loginUser } from '../actions/authActions';
 import SignIn from '../components/SignIn';
-import { loginUser } from '../utils/api';
 import isEmpty from '../utils/isEmpty';
-import { UserContext } from '../UserContext';
+import validateForm from '../utils/validateForm';
 
 class SignInContainer extends Component {
-  static contextType = UserContext;
   state = {
     username: '',
     password: '',
@@ -32,24 +33,18 @@ class SignInContainer extends Component {
       password
     };
 
-    const fields = Object.keys(userData);
-    const errors = {};
-    for (const field of fields) {
-      if (!userData[field].trim()) {
-        errors[field] = `${field} field is required`;
-      }
-    }
+    const errors = validateForm(userData);
     if (!isEmpty(errors)) {
-      this.handleErrors(errors);
-      return;
+      return this.handleErrors(errors);
     }
-    loginUser(userData, this.context.authenticateUser, this.handleErrors);
+
+    loginUser(userData);
   };
 
   render() {
     const { username, password, errors } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
-    if (this.context.isAuthenticated === true) {
+    if (this.props.auth.isAuthenticated) {
       return <Redirect to={from} />;
     }
     return (
@@ -69,4 +64,18 @@ class SignInContainer extends Component {
   }
 }
 
-export default SignInContainer;
+SignInContainer.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = ({ auth, errors }) => ({
+  auth,
+  errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(withRouter(SignInContainer));
