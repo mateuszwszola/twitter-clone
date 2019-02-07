@@ -57,7 +57,9 @@ class AuthNav extends Component {
               className="fas fa-user-circle nav__avatar dropdown-button"
               ref={this.avatarRef}
             />
-            {this.state.showMenu ? <DropdownMenu user={user} /> : null}
+            {this.state.showMenu ? (
+              <DropdownMenu user={user} onLogout={this.props.onLogout} />
+            ) : null}
           </div>
         </li>
       </nav>
@@ -67,7 +69,7 @@ class AuthNav extends Component {
 
 AuthNav.propTypes = {
   user: PropTypes.object.isRequired,
-  authenticateUser: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired
 };
 
 export default AuthNav;

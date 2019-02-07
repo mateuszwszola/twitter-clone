@@ -14,6 +14,12 @@ class SignInContainer extends Component {
     errors: {}
   };
 
+  componentWillReceiveProps({ errors }) {
+    if (errors) {
+      this.handleErrors(errors);
+    }
+  }
+
   handleChange = e => {
     const { name, value } = e.target;
     this.setState({
@@ -38,7 +44,7 @@ class SignInContainer extends Component {
       return this.handleErrors(errors);
     }
 
-    loginUser(userData);
+    this.props.loginUser(userData);
   };
 
   render() {
@@ -54,11 +60,6 @@ class SignInContainer extends Component {
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
         errors={errors}
-        registered={
-          (this.props.location.state &&
-            this.props.location.state.successRegister) ||
-          false
-        }
       />
     );
   }

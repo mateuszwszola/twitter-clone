@@ -13,7 +13,6 @@ import SignUpContainer from './containers/SignUpContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import SettingsContainer from './containers/SettingsContainer';
 import CreateTweetContainer from './containers/CreateTweetContainer';
-import SignOut from './components/SignOut';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -35,7 +34,6 @@ function App() {
               <Route exact path="/" component={PrivateHomepage} />
               <Route exact path="/signin" component={SignInContainer} />
               <Route exact path="/signup" component={SignUpContainer} />
-              <Route exact path="/signout" component={SignOut} />
               <Route exact path="/settings" component={SettingsContainer} />
               <Route exact path="/:username" component={ProfileContainer} />
               <Route render={() => <div>404 Not Found</div>} />

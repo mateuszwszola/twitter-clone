@@ -79,7 +79,7 @@ class SignUpContainer extends Component {
 SignUpContainer.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
-  error: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({ auth, errors }) => ({

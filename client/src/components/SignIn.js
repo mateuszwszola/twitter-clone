@@ -4,22 +4,10 @@ import { Link } from 'react-router-dom';
 import InputGroup from './UI/InputGroup';
 import { Button } from './UI/Button';
 
-function SignIn({
-  username,
-  password,
-  onChange,
-  onSubmit,
-  errors,
-  registered
-}) {
+function SignIn({ username, password, onChange, onSubmit, errors }) {
   return (
     <div className="container">
       <div className="auth__container">
-        {registered ? (
-          <div className="success-feedback">
-            You have successfully registered, please log in
-          </div>
-        ) : null}
         <h1 className="auth__logo">Sign in to Twitter</h1>
         <form className="auth__form" onSubmit={onSubmit}>
           <InputGroup
@@ -29,7 +17,7 @@ function SignIn({
             onChange={onChange}
             placeholder="Email or username"
             error={errors.login || errors.username ? true : false}
-            errorMsg={errors.username ? errors.username : null}
+            errorMsg={errors.username || errors.login || null}
           />
           <InputGroup
             type="password"
@@ -38,7 +26,7 @@ function SignIn({
             onChange={onChange}
             placeholder="Password"
             error={errors.login || errors.password ? true : false}
-            errorMsg={errors.password ? errors.password : null}
+            errorMsg={errors.password || null}
           />
           {errors.login ? (
             <div className="invalid-feedback">{errors.login}</div>
@@ -63,8 +51,7 @@ SignIn.propTypes = {
   password: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
-  registered: PropTypes.bool.isRequired
+  errors: PropTypes.object.isRequired
 };
 
 export default SignIn;

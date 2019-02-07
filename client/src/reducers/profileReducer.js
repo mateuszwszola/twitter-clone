@@ -1,12 +1,12 @@
 import {
-  SET_CURRENT_PROFILE,
+  GET_CURRENT_PROFILE,
   CLEAR_CURRENT_PROFILE,
-  SET_PROFILES,
+  GET_PROFILES,
   PROFILE_LOADING
 } from '../actions/types';
 
 const initialState = {
-  currentProfile: null,
+  profile: null,
   profiles: null,
   loading: false
 };
@@ -18,13 +18,13 @@ export default function(state = initialState, action) {
         ...state,
         loading: true
       };
-    case SET_CURRENT_PROFILE:
+    case GET_CURRENT_PROFILE:
       return {
         ...state,
-        currentProfile: action.payload,
+        profile: action.payload,
         loading: false
       };
-    case SET_PROFILES:
+    case GET_PROFILES:
       return {
         ...state,
         profiles: action.payload,
@@ -33,7 +33,7 @@ export default function(state = initialState, action) {
     case CLEAR_CURRENT_PROFILE:
       return {
         ...state,
-        currentProfile: null
+        profile: null
       };
     default:
       return state;

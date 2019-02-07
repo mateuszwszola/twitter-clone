@@ -22,12 +22,12 @@ export const Button = styled.button`
 `;
 
 export const SignoutButton = styled.button`
-  color: #29a3ef;
-  padding: 12px;
-  display: block;
   color: black;
+  font-weight: normal;
   width: 100%;
+  display: block;
   border-radius: 0px;
+  padding: 12px;
 `;
 
 export const EditProfileButton = styled(Button)`
