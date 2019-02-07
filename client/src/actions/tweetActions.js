@@ -8,7 +8,7 @@ export const getTweetsByUserId = user_id => dispatch => {
     .then(res =>
       dispatch({
         type: GET_TWEETS,
-        action: res.data
+        payload: res.data
       })
     )
     .catch(err =>

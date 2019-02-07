@@ -8,7 +8,7 @@ export const fetchUserProfile = () => dispatch => {
     .get('/api/profiles')
     .then(res =>
       dispatch({
-        action: GET_CURRENT_PROFILE,
+        type: GET_CURRENT_PROFILE,
         payload: res.data
       })
     )
@@ -26,7 +26,7 @@ export const fetchProfile = username => dispatch => {
     .get(`/api/profiles/profile/${username}`)
     .then(res =>
       dispatch({
-        action: GET_CURRENT_PROFILE,
+        type: GET_CURRENT_PROFILE,
         payload: res.data
       })
     )
@@ -44,7 +44,7 @@ export const fetchProfileWithTweets = username => dispatch => {
     .get(`/api/profiles/profile/${username}`)
     .then(res => {
       dispatch({
-        action: GET_CURRENT_PROFILE,
+        type: GET_CURRENT_PROFILE,
         payload: res.data
       });
 
