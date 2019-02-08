@@ -13,12 +13,10 @@ const ErrorMsg = styled.p`
   font-size: 1.5rem;
 `;
 
-export default function DisplayErrors({ errors }) {
+export default function DisplayErrors({ error }) {
   return (
     <ErrorWrapper>
-      {errors.map((error, index) => (
-        <ErrorMsg key={index}>{error}</ErrorMsg>
-      ))}
+      <ErrorMsg>{error}</ErrorMsg>
     </ErrorWrapper>
   );
 }

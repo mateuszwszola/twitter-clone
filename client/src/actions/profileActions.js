@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_CURRENT_PROFILE, PROFILE_LOADING } from './types';
-import { getTweetsByUserId } from './tweetActions';
+import {
+  GET_ERRORS,
+  GET_CURRENT_PROFILE,
+  PROFILE_LOADING,
+  GET_TWEETS,
+  TWEET_LOADING
+} from './types';
 
 export const fetchUserProfile = () => dispatch => {
   dispatch(setProfileLoading());
@@ -48,7 +53,13 @@ export const fetchProfileWithTweets = username => dispatch => {
         payload: res.data
       });
 
-      getTweetsByUserId(res.data.user._id);
+      dispatch({ type: TWEET_LOADING });
+      axios.get(`/api/tweets/all/${res.data.user._id}`).then(tweetsRes =>
+        dispatch({
+          type: GET_TWEETS,
+          payload: tweetsRes.data
+        })
+      );
     })
     .catch(err =>
       dispatch({

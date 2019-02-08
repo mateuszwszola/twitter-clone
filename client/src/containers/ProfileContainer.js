@@ -19,25 +19,24 @@ class ProfileContainer extends Component {
 
   componentDidMount() {
     const { username } = this.props.match.params;
-
-    fetchProfileWithTweets(username);
+    // fetch profile and profile tweets
+    this.props.fetchProfileWithTweets(username);
   }
 
   render() {
-    if (this.state.errors.length) {
-      return <DisplayErrors errors={Object.values(this.state.errors)} />;
+    if (this.state.errors.nouser) {
+      return <DisplayErrors error={this.state.errors.nouser} />;
     }
-
-    if (this.props.profile.loading || this.props.tweet.loading) {
+    if (this.props.profile.loading || this.props.profile.profile === null) {
       return <Loading />;
     }
 
     return (
       <div>
         <Profile
-          profile={this.props.profile}
-          tweets={this.props.tweet.tweets}
-          user={this.props.profile.user}
+          profile={this.props.profile.profile}
+          tweet={this.props.tweet}
+          user={this.props.profile.profile.user}
           isAuthenticated={this.props.isAuthenticated}
         />
       </div>

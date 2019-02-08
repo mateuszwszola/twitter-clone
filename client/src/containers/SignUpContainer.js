@@ -14,8 +14,15 @@ class SignUpContainer extends Component {
     username: '',
     password: '',
     password2: '',
-    errors: {}
+    errors: {},
+    redirect: false
   };
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
+    }
+  }
 
   componentWillReceiveProps({ errors }) {
     if (errors) {

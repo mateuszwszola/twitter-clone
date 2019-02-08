@@ -11,12 +11,22 @@ class SignInContainer extends Component {
   state = {
     username: '',
     password: '',
-    errors: {}
+    errors: {},
+    redirect: false
   };
 
-  componentWillReceiveProps({ errors }) {
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
+    }
+  }
+
+  componentWillReceiveProps({ errors, auth }) {
     if (errors) {
       this.handleErrors(errors);
+    }
+    if (auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
     }
   }
 
@@ -48,9 +58,9 @@ class SignInContainer extends Component {
   };
 
   render() {
-    const { username, password, errors } = this.state;
+    const { username, password, errors, redirect } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
-    if (this.props.auth.isAuthenticated) {
+    if (redirect) {
       return <Redirect to={from} />;
     }
     return (
