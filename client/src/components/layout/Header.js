@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logoutUser } from '../../actions/authActions';
 import AuthNav from './Nav/AuthNav';
 import BasicNav from './Nav/BasicNav';
-import { withUserContext } from '../../UserContext';
 
-function Header({ isAuthenticated, user, authenticateUser }) {
+function Header({ isAuthenticated, user, logoutUser }) {
   return (
     <header className="main-header">
       <div className="header-container">
         <i className="fab fa-twitter header__logo" />
         {isAuthenticated ? (
-          <AuthNav user={user} authenticateUser={authenticateUser} />
+          <AuthNav user={user} onLogout={logoutUser} />
         ) : (
           <BasicNav />
         )}
@@ -22,7 +23,15 @@ function Header({ isAuthenticated, user, authenticateUser }) {
 Header.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
-  authenticateUser: PropTypes.func.isRequired
+  logoutUser: PropTypes.func.isRequired
 };
 
-export default withUserContext(Header);
+const mapStateToProps = ({ auth }) => ({
+  isAuthenticated: auth.isAuthenticated,
+  user: auth.user
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(Header);

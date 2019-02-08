@@ -1,17 +1,34 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { withRouter, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { loginUser } from '../actions/authActions';
 import SignIn from '../components/SignIn';
-import { loginUser } from '../utils/api';
 import isEmpty from '../utils/isEmpty';
-import { UserContext } from '../UserContext';
+import validateForm from '../utils/validateForm';
 
 class SignInContainer extends Component {
-  static contextType = UserContext;
   state = {
     username: '',
     password: '',
-    errors: {}
+    errors: {},
+    redirect: false
   };
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
+    }
+  }
+
+  componentWillReceiveProps({ errors, auth }) {
+    if (errors) {
+      this.handleErrors(errors);
+    }
+    if (auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
+    }
+  }
 
   handleChange = e => {
     const { name, value } = e.target;
@@ -32,24 +49,18 @@ class SignInContainer extends Component {
       password
     };
 
-    const fields = Object.keys(userData);
-    const errors = {};
-    for (const field of fields) {
-      if (!userData[field].trim()) {
-        errors[field] = `${field} field is required`;
-      }
-    }
+    const errors = validateForm(userData);
     if (!isEmpty(errors)) {
-      this.handleErrors(errors);
-      return;
+      return this.handleErrors(errors);
     }
-    loginUser(userData, this.context.authenticateUser, this.handleErrors);
+
+    this.props.loginUser(userData);
   };
 
   render() {
-    const { username, password, errors } = this.state;
+    const { username, password, errors, redirect } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
-    if (this.context.isAuthenticated === true) {
+    if (redirect) {
       return <Redirect to={from} />;
     }
     return (
@@ -59,14 +70,23 @@ class SignInContainer extends Component {
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
         errors={errors}
-        registered={
-          (this.props.location.state &&
-            this.props.location.state.successRegister) ||
-          false
-        }
       />
     );
   }
 }
 
-export default SignInContainer;
+SignInContainer.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = ({ auth, errors }) => ({
+  auth,
+  errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(withRouter(SignInContainer));

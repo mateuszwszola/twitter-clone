@@ -1,76 +1,42 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { fetchProfileWithTweets } from '../actions/profileActions';
 import Profile from '../components/Profile';
 import Loading from '../components/Loading';
 import DisplayErrors from '../components/DisplayErrors';
-import { ProfileContext } from '../ProfileContext';
-import { withUserContext } from '../UserContext';
-import axios from 'axios';
 
 class ProfileContainer extends Component {
-  static contextType = ProfileContext;
   state = {
-    tweets: [],
-    profile: {},
-    loading: true,
-    errors: []
+    errors: {}
   };
+
+  componentWillReceiveProps({ errors }) {
+    this.setState(() => ({
+      errors
+    }));
+  }
 
   componentDidMount() {
     const { username } = this.props.match.params;
-
-    axios
-      .get(`/api/profiles/profile/${username}`)
-      .then(({ data }) => {
-        this.setState(() => ({
-          profile: data
-        }));
-        return axios.get(`/api/tweets/all/${data.user._id}`);
-      })
-      .then(({ data }) => {
-        this.setState(() => ({
-          tweets: data,
-          loading: false,
-          errors: []
-        }));
-      })
-      .catch(({ response }) => {
-        this.setState(() => ({
-          errors: response.data
-        }));
-      });
+    // fetch profile and profile tweets
+    this.props.fetchProfileWithTweets(username);
   }
 
-  // handleSuccess = profile => {
-  //   this.context.setCurrentUserProfile(profile);
-  //   this.setState(() => ({
-  //     loading: false,
-  //     errors: null
-  //   }));
-  // };
-
-  // handleError = error => {
-  //   this.setState(() => ({
-  //     error,
-  //     loading: false
-  //   }));
-  // };
-
   render() {
-    const { tweets, profile, loading, errors } = this.state;
-    if (errors.length) {
-      return <DisplayErrors errors={Object.values(errors)} />;
+    if (this.state.errors.nouser) {
+      return <DisplayErrors error={this.state.errors.nouser} />;
     }
-
-    if (loading) {
+    if (this.props.profile.loading || this.props.profile.profile === null) {
       return <Loading />;
     }
 
     return (
       <div>
         <Profile
-          profile={profile}
-          tweets={tweets}
-          user={this.props.user}
+          profile={this.props.profile.profile}
+          tweet={this.props.tweet}
+          user={this.props.profile.profile.user}
           isAuthenticated={this.props.isAuthenticated}
         />
       </div>
@@ -78,4 +44,22 @@ class ProfileContainer extends Component {
   }
 }
 
-export default withUserContext(ProfileContainer);
+ProfileContainer.propTypes = {
+  fetchProfileWithTweets: PropTypes.func.isRequired,
+  tweet: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired
+};
+
+const mapStateToProps = state => ({
+  tweet: state.tweet,
+  profile: state.profile,
+  errors: state.errors,
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(
+  mapStateToProps,
+  { fetchProfileWithTweets }
+)(ProfileContainer);

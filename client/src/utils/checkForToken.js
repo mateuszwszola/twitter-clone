@@ -1,29 +1,25 @@
-import setAuthToken from './setAuthToken';
 import jwt_decode from 'jwt-decode';
+import setAuthToken from './setAuthToken';
+import { setCurrentUser, logoutUser } from '../actions/authActions';
+import store from '../store';
 
 function checkForToken() {
   const { jwtToken } = localStorage;
   if (jwtToken) {
+    // Set auth token for axios requests
+    setAuthToken(jwtToken);
     // Decode token and get user info and exp date
     const decoded = jwt_decode(jwtToken);
-
+    store.dispatch(setCurrentUser(decoded));
     // Check for expired token
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
       // Logout user
-      localStorage.removeItem('jwtToken');
-      setAuthToken(false);
-      // return current user - empty object
-      return {};
+      store.dispatch(logoutUser());
+      // Redirect user to login page
+      window.location.href = '/signin';
     }
-
-    // Set auth token for axios requests
-    setAuthToken(jwtToken);
-    return decoded;
   }
-
-  setAuthToken(false);
-  return {};
 }
 
 export default checkForToken;

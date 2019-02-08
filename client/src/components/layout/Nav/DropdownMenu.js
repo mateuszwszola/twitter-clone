@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { DropdownLink } from '../../UI/Links';
+import { SignoutButton } from '../../UI/Button';
 
-function DropdownMenu({ user }) {
+function DropdownMenu({ user, onLogout }) {
   let link = user.username ? '/' + user.username.toString() : '/';
   return (
     <div className="dropdown-content">
@@ -27,9 +28,9 @@ function DropdownMenu({ user }) {
           <DropdownLink to="/notfound">404 not found</DropdownLink>
         </li>
         <li className="dropdown-menu__item">
-          <DropdownLink to="/signout">
+          <SignoutButton onClick={onLogout}>
             <i className="fas fa-sign-out-alt" /> Sign Out
-          </DropdownLink>
+          </SignoutButton>
         </li>
       </ul>
     </div>
@@ -37,7 +38,8 @@ function DropdownMenu({ user }) {
 }
 
 DropdownMenu.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  onLogout: PropTypes.func.isRequired
 };
 
 export default DropdownMenu;

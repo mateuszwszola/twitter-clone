@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from '../layout/User/UserStatsHeader';
 import TweetsBoard from '../layout/TweetsBoard';
+import Loading from '../Loading';
 
-function Profile({ profile, tweets, user, isAuthenticated }) {
+function Profile({ profile, tweet, user, isAuthenticated }) {
   const owner =
     isAuthenticated && user.username && profile.user.username === user.username;
   return (
@@ -18,7 +19,11 @@ function Profile({ profile, tweets, user, isAuthenticated }) {
           <ProfileUserGroup profile={profile} />
         </div>
         <div className="profile-tweets-board">
-          <TweetsBoard tweets={tweets} />
+          {tweet.loading || tweet.tweets === null ? (
+            <Loading />
+          ) : (
+            <TweetsBoard tweets={tweet.tweets} />
+          )}
         </div>
         <div className="profile-right-sidebar">Right sidebar</div>
       </div>
@@ -28,7 +33,7 @@ function Profile({ profile, tweets, user, isAuthenticated }) {
 
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
-  tweets: PropTypes.array.isRequired,
+  tweet: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 };
