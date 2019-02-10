@@ -23,21 +23,35 @@ class ProfileContainer extends Component {
     this.props.fetchProfileWithTweets(username);
   }
 
+  handleFollowClick = () => {
+    console.log('Follow button clicked!');
+  };
+
+  handleEditProfileClick = () => {
+    console.log('Edit profile button clicked!');
+  };
+
   render() {
+    const { profile, tweet, auth } = this.props;
+
     if (this.state.errors.nouser) {
       return <DisplayErrors error={this.state.errors.nouser} />;
     }
-    if (this.props.profile.loading || this.props.profile.profile === null) {
+    if (profile.loading || profile.profile === null) {
       return <Loading />;
     }
+
+    const owner =
+      auth.isAuthenticated &&
+      auth.user.username === profile.profile.user.username;
 
     return (
       <div>
         <Profile
-          profile={this.props.profile.profile}
-          tweet={this.props.tweet}
-          user={this.props.profile.profile.user}
-          isAuthenticated={this.props.isAuthenticated}
+          profile={profile.profile}
+          tweet={tweet}
+          owner={owner}
+          isAuthenticated={auth.isAuthenticated}
         />
       </div>
     );
@@ -48,15 +62,15 @@ ProfileContainer.propTypes = {
   fetchProfileWithTweets: PropTypes.func.isRequired,
   tweet: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   tweet: state.tweet,
   profile: state.profile,
-  errors: state.errors,
-  isAuthenticated: state.auth.isAuthenticated
+  auth: state.auth,
+  errors: state.errors
 });
 
 export default connect(

@@ -36,3 +36,13 @@ export const EditProfileButton = styled(Button)`
   background-color: #fff;
   align-self: flex-end;
 `;
+
+export const FollowProfileButton = styled(EditProfileButton)`
+  background-color: #f34c79;
+  color: #fff;
+  border: none;
+
+  &:hover {
+    background-color: #e23d69;
+  }
+`;

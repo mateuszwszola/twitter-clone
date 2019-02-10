@@ -5,14 +5,16 @@ import UserStatsHeader from '../layout/User/UserStatsHeader';
 import TweetsBoard from '../layout/TweetsBoard';
 import Loading from '../Loading';
 
-function Profile({ profile, tweet, user, isAuthenticated }) {
-  const owner =
-    isAuthenticated && user.username && profile.user.username === user.username;
+function Profile({ profile, tweet, owner, isAuthenticated }) {
   return (
     <div className="profile-container">
       <div className="profile-background-place" />
       <div className="profile-user-stats-header">
-        <UserStatsHeader profile={profile} owner={owner} />
+        <UserStatsHeader
+          profile={profile}
+          owner={owner}
+          isAuthenticated={isAuthenticated}
+        />
       </div>
       <div className="profile-mid-flex">
         <div className="profile-user-group">
@@ -34,7 +36,7 @@ function Profile({ profile, tweet, user, isAuthenticated }) {
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  owner: PropTypes.bool.isRequired,
   isAuthenticated: PropTypes.bool.isRequired
 };
 

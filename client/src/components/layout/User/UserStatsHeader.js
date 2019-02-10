@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ProfileStatGroup from './ProfileStatGroup';
-import { EditProfileButton } from '../../UI/Button';
+import { EditProfileButton, FollowProfileButton } from '../../UI/Button';
 
 const UserStatsHeader = ({ profile, owner }) => (
   <div className="profile-header-menu">
@@ -12,10 +12,14 @@ const UserStatsHeader = ({ profile, owner }) => (
       <ProfileStatGroup label="Likes" value={profile.likes.length} />
     </ul>
     {owner ? (
-      <div className="profile-edit-button">
+      <div>
         <EditProfileButton primary>Edit Profile</EditProfileButton>
       </div>
-    ) : null}
+    ) : (
+      <div>
+        <FollowProfileButton primary>Follow</FollowProfileButton>
+      </div>
+    )}
   </div>
 );
 
