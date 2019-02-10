@@ -37,10 +37,12 @@ module.exports = data => {
 
     if (profileInformation.includes(property)) {
       if (!_.isEmpty(value)) {
-        if (!validator.isLength(value, lengthForProps[property])) {
-          errors[property] = `${property} must be between ${
-            lengthForProps[property].min
-          } and ${lengthForProps[property].max}`;
+        if (lengthForProps[property]) {
+          if (!validator.isLength(value, lengthForProps[property])) {
+            errors[property] = `${property} must be between ${
+              lengthForProps[property].min
+            } and ${lengthForProps[property].max}`;
+          }
         }
       }
     }

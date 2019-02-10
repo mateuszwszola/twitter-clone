@@ -49,7 +49,7 @@ router.post(
         .then(savedTweet => {
           if (savedTweet) {
             // Add created tweet id to Tweet which is commented comments
-            tweet.comments.push(savedTweet._id);
+            tweet.comments = [{ tweet: savedTweet._id }, ...tweet.comments];
             tweet
               .save()
               .then(t => res.json(t))

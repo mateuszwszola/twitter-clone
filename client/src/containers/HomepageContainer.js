@@ -9,6 +9,7 @@ import { fetchUserProfile } from '../actions/profileActions';
 class HomepageContainer extends Component {
   componentDidMount() {
     this.props.fetchUserProfile();
+    // TODO fetch tweets from profile.tweets
   }
 
   render() {

@@ -36,12 +36,13 @@ router.post(
         }
         // Tweet exists
         // Determine if like or unlike tweet
-        if (
-          tweet.likes.filter(like => like._id.equals(profile.user)).length > 0
-        ) {
+        const index = tweet.likes.findIndex(like =>
+          like.user.equals(profile.user)
+        );
+        if (index > -1) {
           // User already like this tweet, unlike
           tweet.likes = tweet.likes.filter(
-            like => !like._id.equals(profile.user)
+            like => !like.user.equals(profile.user)
           );
           tweet
             .save()
@@ -49,7 +50,7 @@ router.post(
             .catch(err => next(err));
         } else {
           // Like
-          tweet.likes.unshift(profile.user);
+          tweet.likes = [{ user: profile.user }, ...tweet.likes];
           tweet
             .save()
             .then(updatedTweet => res.json(updatedTweet))

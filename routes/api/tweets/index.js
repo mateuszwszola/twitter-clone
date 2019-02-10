@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Tweet = require('../../../models/Tweet');
+const Profile = require('../../../models/Profile');
 const likeRouter = require('./like');
 const commentRouter = require('./comment');
 
@@ -49,6 +50,7 @@ router.get('/all/:user_id', (req, res, next) => {
   }
 
   Tweet.find({ user: user_id })
+    .sort({ created: -1 })
     .populate('user', ['name', 'username', 'avatar'])
     .then(tweets => {
       if (!tweets) {
@@ -94,6 +96,25 @@ router.post(
           errors.tweet = 'Cannot save tweet';
           return res.status(500).json(errors);
         }
+
+        // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.tweets array
+
+        Profile.findOne({ user: req.user._id }).then(profile => {
+          // profile -> profil uzytkownika, ktory dodaje danego tweet
+          profile.tweets = [{ tweet: savedTweet._id }, ...profile.tweets];
+          profile.save();
+
+          // loop through profiles and for each add a tweet_id
+          profile.followers.forEach(follower => {
+            Profile.findOne({ user: follower.user }).then(followerProfile => {
+              followerProfile.tweets = [
+                { tweet: savedTweet._id },
+                ...followerProfile.tweets
+              ];
+              followerProfile.save();
+            });
+          });
+        });
 
         res.json(savedTweet);
       })
@@ -187,7 +208,25 @@ router.delete(
         }
 
         // Delete tweet
-        tweet.remove().then(() => res.json({ success: true }));
+        tweet.remove().then(() => {
+          // remove it from profile.tweets
+          Profile.findOne({ user: req.user._id }).then(profile => {
+            profile.tweets = profile.tweets.filter(
+              tweet => !tweet.tweet.equals(tweet_id)
+            );
+
+            // remove tweet_id from all followers profile.tweets
+            profile.followers.forEach(follower => {
+              Profile.findOne({ user: follower.user }).then(followerProfile => {
+                followerProfile.tweets = followerProfile.tweets.filter(
+                  followerTweet => !followerTweet.tweet.equals(tweet_id)
+                );
+                followerProfile.save();
+              });
+            });
+          });
+          res.json({ success: true });
+        });
       })
       .catch(err => next(err));
   }

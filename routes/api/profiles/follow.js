@@ -48,73 +48,53 @@ router.post(
           }
           // Determine to follow or unfollow
           const index = profile.following.findIndex(follow =>
-            follow._id.equals(user_id)
+            follow.user.equals(user_id)
           );
           if (index > -1) {
             // Index was found => unfollow
             profile.following = profile.following.filter(
-              follow => !follow._id.equals(user_id)
+              follow => !follow.user.equals(user_id)
             );
             someoneProfile.followers = someoneProfile.followers.filter(
-              follower => !follower._id.equals(profile.user)
+              follower => !follower.user.equals(profile.user)
             );
-            // Save your profile
-            profile
-              .save()
-              .then(savedProfile => {
-                if (!savedProfile) {
-                  errors.notsaved =
-                    'There was a problem with saving your profile';
-                  return res.status(500).json(errors);
-                }
-                // Save someone's profile
-                someoneProfile
-                  .save()
-                  .then(someoneSavedProfile => {
-                    if (!someoneSavedProfile) {
-                      errors.profilenotsaved =
-                        'There was a problem with saving someones profile';
-                      return res.status(500).json(errors);
-                    }
-                    res.json({
-                      savedProfile,
-                      someoneSavedProfile
-                    });
-                  })
-                  .catch(err => next(err));
-              })
-              .catch(err => next(err));
           } else {
             // Index was not found => follow that profile
             // Add profile to your following profiles
-            profile.following.unshift({ _id: user_id });
+            profile.following = [{ user: user_id }, ...profile.following];
             // Add your profile to someones followers
-            someoneProfile.followers.unshift({ _id: profile.user });
-            profile
-              .save()
-              .then(savedProfile => {
-                if (!savedProfile) {
-                  errors.noprofile =
-                    'There was a problem with saving your profile';
-                  return res.status(500).json(errors);
-                }
-                someoneProfile
-                  .save()
-                  .then(someoneSavedProfile => {
-                    if (!someoneSavedProfile) {
-                      errors.profilenotsaved =
-                        'There was a problem with saving someones profile';
-                      return res.status(500).json(errors);
-                    }
-                    res.json({
-                      savedProfile,
-                      someoneSavedProfile
-                    });
-                  })
-                  .catch(err => next(err));
-              })
-              .catch(err => next(err));
+            someoneProfile.followers = [
+              { user: profile.user },
+              ...someoneProfile.followers
+            ];
           }
+
+          // Save your profile
+          profile
+            .save()
+            .then(savedProfile => {
+              if (!savedProfile) {
+                errors.notsaved =
+                  'There was a problem with saving your profile';
+                return res.status(500).json(errors);
+              }
+              // Save someone's profile
+              someoneProfile
+                .save()
+                .then(someoneSavedProfile => {
+                  if (!someoneSavedProfile) {
+                    errors.profilenotsaved =
+                      'There was a problem with saving someones profile';
+                    return res.status(500).json(errors);
+                  }
+                  res.json({
+                    savedProfile,
+                    someoneSavedProfile
+                  });
+                })
+                .catch(err => next(err));
+            })
+            .catch(err => next(err));
         });
       })
       .catch(err => next(err));

@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const Profile = require('../../../models/Profile');
+const Tweet = require('../../../models/Tweet');
 const User = require('../../../models/User');
 
 // Load additional routers
@@ -26,7 +27,7 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user._id })
-      .populate('user', ['name', 'username', 'avatar'])
+      .populate('users', ['name', 'username', 'avatar'])
       .then(profile => {
         if (!profile) {
           errors.noprofile = 'There is no profile for this user';
@@ -46,7 +47,8 @@ router.get('/all', (req, res, next) => {
   const errors = {};
 
   Profile.find({})
-    .populate('user', ['name', 'username', 'avatar'])
+    .sort({ created: -1 })
+    .populate('users', ['name', 'username', 'avatar'])
     .then(profiles => {
       if (!profiles) {
         errors.noprofiles = 'There is no profiles';
@@ -71,7 +73,7 @@ router.get('/:user_id', (req, res, next) => {
   }
 
   Profile.findOne({ user: user_id })
-    .populate('user', ['name', 'username', 'avatar'])
+    .populate('users', ['name', 'username', 'avatar'])
     .then(profile => {
       if (!profile) {
         errors.noprofile = 'There is no profile for this user';
@@ -98,7 +100,7 @@ router.get('/profile/:username', (req, res, next) => {
       }
 
       Profile.findOne({ user: user._id })
-        .populate('user', ['name', 'username', 'avatar'])
+        .populate('users', ['name', 'username', 'avatar'])
         .then(profile => {
           if (!profile) {
             errors.noprofile = `Profile for ${username} does not exists`;
@@ -223,6 +225,35 @@ router.delete(
               deletedUser
             });
           })
+          .catch(err => next(err));
+      })
+      .catch(err => next(err));
+  }
+);
+
+// @route   GET api/profiles/tweets/all
+// @desc    Get all tweets from profile.tweets to display them in the profile homepage
+// @access  Private
+router.get(
+  '/tweets/all',
+  passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
+    const errors = {};
+
+    Profile.findOne({ user: req.user._id })
+      .then(profile => {
+        if (!profile) {
+          errors.noprofile = 'Profile does not exists';
+          return res.status(404).json(errors);
+        }
+
+        let profileTweets = profile.tweets.map(
+          profileTweet => profileTweet.tweet
+        );
+
+        Tweet.find({ _id: { $in: profileTweets } })
+          .sort({ created: -1 })
+          .then(tweets => res.json(tweets))
           .catch(err => next(err));
       })
       .catch(err => next(err));
