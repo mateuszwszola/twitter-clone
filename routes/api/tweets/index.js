@@ -98,18 +98,21 @@ router.post(
         }
 
         // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.tweets array
-
         Profile.findOne({ user: req.user._id }).then(profile => {
           // profile -> profil uzytkownika, ktory dodaje danego tweet
           profile.tweets = [{ tweet: savedTweet._id }, ...profile.tweets];
+          profile.homepageTweets = [
+            { tweet: savedTweet._id },
+            ...profile.homepageTweets
+          ];
           profile.save();
 
           // loop through profiles and for each add a tweet_id
           profile.followers.forEach(follower => {
             Profile.findOne({ user: follower.user }).then(followerProfile => {
-              followerProfile.tweets = [
+              followerProfile.homepageTweets = [
                 { tweet: savedTweet._id },
-                ...followerProfile.tweets
+                ...followerProfile.homepageTweets
               ];
               followerProfile.save();
             });
@@ -214,11 +217,14 @@ router.delete(
             profile.tweets = profile.tweets.filter(
               tweet => !tweet.tweet.equals(tweet_id)
             );
+            profile.homepageTweets = profile.homepageTweets.filter(
+              tweet => !tweet.tweet.equals(tweet_id)
+            );
 
-            // remove tweet_id from all followers profile.tweets
+            // remove tweet_id from all followers profile.homepageTweets
             profile.followers.forEach(follower => {
               Profile.findOne({ user: follower.user }).then(followerProfile => {
-                followerProfile.tweets = followerProfile.tweets.filter(
+                followerProfile.homepageTweets = followerProfile.homepageTweets.filter(
                   followerTweet => !followerTweet.tweet.equals(tweet_id)
                 );
                 followerProfile.save();

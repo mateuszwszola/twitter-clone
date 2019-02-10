@@ -42,8 +42,16 @@ const ProfileSchema = new Schema({
       }
     }
   ],
-  // Tweets that will be displayed on the user wall
   tweets: [
+    {
+      tweet: {
+        type: Schema.Types.ObjectId,
+        ref: 'tweets'
+      }
+    }
+  ],
+  // Tweets that will be displayed on the logged in user homepage
+  homepageTweets: [
     {
       tweet: {
         type: Schema.Types.ObjectId,
@@ -61,4 +69,4 @@ const ProfileSchema = new Schema({
   }
 });
 
-module.exports = Profile = mongoose.model('Profile', ProfileSchema);
+module.exports = Profile = mongoose.model('profiles', ProfileSchema);
