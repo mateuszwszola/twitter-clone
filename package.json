@@ -13,27 +13,27 @@
   "author": "Mateusz Wszola",
   "license": "MIT",
   "dependencies": {
-    "bad-words": "^3.0.0",
-    "bcrypt": "^3.0.2",
+    "bad-words": "^3.0.2",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
-    "concurrently": "^4.0.1",
-    "cookie-parser": "^1.4.3",
-    "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "express-rate-limit": "^3.2.1",
-    "express-validator": "^5.3.0",
-    "http-errors": "^1.7.1",
-    "jsonwebtoken": "^8.3.0",
+    "concurrently": "^4.1.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "express-rate-limit": "^3.4.1",
+    "express-validator": "^5.3.1",
+    "http-errors": "^1.7.2",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
-    "mongoose": "^5.2.16",
+    "mongoose": "^5.5.2",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "validator": "^10.7.1"
+    "validator": "^10.11.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-http": "^4.2.0",
-    "nodemon": "^1.18.9"
+    "chai-http": "^4.2.1",
+    "nodemon": "^1.18.11"
   }
 }

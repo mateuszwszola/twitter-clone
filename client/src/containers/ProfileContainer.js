@@ -8,7 +8,8 @@ import DisplayErrors from '../components/DisplayErrors';
 
 class ProfileContainer extends Component {
   state = {
-    errors: {}
+    errors: {},
+    redirect: false
   };
 
   componentWillReceiveProps({ errors }) {
@@ -25,6 +26,11 @@ class ProfileContainer extends Component {
 
   handleFollowClick = () => {
     console.log('Follow button clicked!');
+    if (!this.props.auth.isAuthenticated) {
+      this.setState(() => ({ redirect: true }));
+    }
+
+    // User is authenticated
   };
 
   handleEditProfileClick = () => {
@@ -41,18 +47,9 @@ class ProfileContainer extends Component {
       return <Loading />;
     }
 
-    const owner =
-      auth.isAuthenticated &&
-      auth.user.username === profile.profile.user.username;
-
     return (
       <div>
-        <Profile
-          profile={profile.profile}
-          tweet={tweet}
-          owner={owner}
-          isAuthenticated={auth.isAuthenticated}
-        />
+        <Profile profile={profile.profile} tweet={tweet} auth={auth} />
       </div>
     );
   }
