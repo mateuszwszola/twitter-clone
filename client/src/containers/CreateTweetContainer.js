@@ -1,50 +1,82 @@
 import React, { Component } from 'react';
 import { createTweet } from '../utils/api';
-import CreateTweet from '../components/CreateTweet';
+import CreateTweetModal from '../components/createTweetModal/CreateTweetModal';
+import { Redirect } from 'react-router-dom';
 
 class CreateTweetContainer extends Component {
   state = {
     text: '',
-    errors: {}
+    errors: {},
+    loading: false
+    // TODO: OPENING/CLOSING MODAL
   };
 
   handleChange = e => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     this.setState(() => ({
-      [name]: value
+      text: value
     }));
   };
 
   handleErrors = errors => {
-    this.setState(() => ({ errors }));
+    this.setState(() => ({ errors, loading: false }));
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { text } = this.state;
+  validateTweet = tweet => {
+    const { text } = tweet;
     if (text.length < 2 || text.length > 140) {
-      return this.setState(() => ({
+      this.setState(() => ({
         errors: {
           text: 'Tweet text length must be between 2 and 140 characters'
         }
       }));
+
+      return false;
     }
+
+    return true;
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
     const tweet = {
       text: this.state.text
     };
 
-    createTweet(tweet, this.handleErrors);
+    if (!this.validateTweet(tweet)) {
+      return false;
+    }
+
+    this.setState(() => ({ loading: true }));
+
+    createTweet(
+      tweet,
+      () => {
+        // TODO: close modal
+        this.setState(() => ({
+          loading: false
+        }));
+      },
+      // TODO: Show errors and red styles, but do not close modal
+      this.handleErrors
+    );
   };
 
   render() {
-    const { text, errors } = this.state;
+    const { text, errors, redirectToReferrer, loading } = this.state;
+    // const { from } = this.props.location.state || { from: { pathname: '/' } };
+
+    // if (redirectToReferrer) {
+    //   return <Redirect to={from} />;
+    // }
 
     return (
-      <CreateTweet
+      <CreateTweetModal
         text={text}
         errors={errors}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
+        loading={loading}
       />
     );
   }
