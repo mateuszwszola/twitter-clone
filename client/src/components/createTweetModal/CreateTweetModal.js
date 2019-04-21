@@ -23,11 +23,10 @@ function CreateTweet({
   handleChange,
   handleSubmit,
   loading,
-  handleCloseModal,
-  showModal
+  handleCloseModal
 }) {
   return (
-    <Wrapper style={{ display: showModal ? 'block' : 'none' }}>
+    <Wrapper>
       <Modal>
         <Header>
           <Title>Compose new Tweet</Title>
@@ -77,8 +76,7 @@ CreateTweet.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  handleCloseModal: PropTypes.func.isRequired,
-  showModal: PropTypes.bool.isRequired
+  handleCloseModal: PropTypes.func.isRequired
 };
 
 export default CreateTweet;

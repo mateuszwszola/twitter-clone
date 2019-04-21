@@ -53,9 +53,9 @@ class CreateTweetContainer extends Component {
     createTweet(
       tweet,
       () => {
-        // this.setState(() => ({
-        //   loading: false
-        // }));
+        this.setState(() => ({
+          loading: false
+        }));
         this.props.closeCreateTweetModal();
       },
       this.handleErrors
@@ -70,6 +70,10 @@ class CreateTweetContainer extends Component {
     // if (redirectToReferrer) {
     //   return <Redirect to={from} />;
     // }
+
+    if (!showCreateTweetModal) {
+      return null;
+    }
 
     return (
       <CreateTweetModal

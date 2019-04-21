@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
 const Feedback = styled.div`
-  color: 'red';
+  color: red;
+  padding: 5px 0;
 `;
 
 const TextareaGroup = ({
