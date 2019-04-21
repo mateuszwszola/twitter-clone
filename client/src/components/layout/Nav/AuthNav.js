@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button } from '../../UI/Button';
 import { StyledNavLink } from '../../UI/Links';
 import DropdownMenu from './DropdownMenu';
+import { openCreateTweetModal } from '../../../actions/uiActions';
 
 class AuthNav extends Component {
   state = {
@@ -35,7 +36,7 @@ class AuthNav extends Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, openCreateTweetModal } = this.props;
     return (
       <nav className="main-nav">
         <li className="nav__item">
@@ -44,11 +45,9 @@ class AuthNav extends Component {
           </StyledNavLink>
         </li>
         <li className="nav__item">
-          <Link to="/create-tweet">
-            <Button primary type="text">
-              Tweet
-            </Button>
-          </Link>
+          <Button primary type="text" onClick={openCreateTweetModal}>
+            Tweet
+          </Button>
         </li>
         <li className="nav__item">
           <div className="dropdown">
@@ -69,7 +68,11 @@ class AuthNav extends Component {
 
 AuthNav.propTypes = {
   user: PropTypes.object.isRequired,
-  onLogout: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired,
+  openCreateTweetModal: PropTypes.func.isRequired
 };
 
-export default AuthNav;
+export default connect(
+  null,
+  { openCreateTweetModal }
+)(AuthNav);

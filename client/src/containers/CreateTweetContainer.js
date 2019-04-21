@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createTweet } from '../utils/api';
 import CreateTweetModal from '../components/createTweetModal/CreateTweetModal';
-import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { closeCreateTweetModal } from '../actions/uiActions';
 
 class CreateTweetContainer extends Component {
   state = {
     text: '',
     errors: {},
     loading: false
-    // TODO: OPENING/CLOSING MODAL
   };
 
   handleChange = e => {
@@ -52,18 +53,18 @@ class CreateTweetContainer extends Component {
     createTweet(
       tweet,
       () => {
-        // TODO: close modal
-        this.setState(() => ({
-          loading: false
-        }));
+        // this.setState(() => ({
+        //   loading: false
+        // }));
+        this.props.closeCreateTweetModal();
       },
-      // TODO: Show errors and red styles, but do not close modal
       this.handleErrors
     );
   };
 
   render() {
-    const { text, errors, redirectToReferrer, loading } = this.state;
+    const { text, errors, loading } = this.state;
+    const { showCreateTweetModal, closeCreateTweetModal } = this.props;
     // const { from } = this.props.location.state || { from: { pathname: '/' } };
 
     // if (redirectToReferrer) {
@@ -77,9 +78,23 @@ class CreateTweetContainer extends Component {
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         loading={loading}
+        showModal={showCreateTweetModal}
+        handleCloseModal={closeCreateTweetModal}
       />
     );
   }
 }
 
-export default CreateTweetContainer;
+CreateTweetContainer.propTypes = {
+  showCreateTweetModal: PropTypes.bool.isRequired,
+  closeCreateTweetModal: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ UI }) => ({
+  showCreateTweetModal: UI.showCreateTweetModal
+});
+
+export default connect(
+  mapStateToProps,
+  { closeCreateTweetModal }
+)(CreateTweetContainer);
