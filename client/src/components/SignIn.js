@@ -16,6 +16,7 @@ function SignIn({ username, password, onChange, onSubmit, errors }) {
             value={username}
             onChange={onChange}
             placeholder="Email or username"
+            autocomplete="username"
             error={errors.login || errors.username ? true : false}
             errorMsg={errors.username || errors.login || null}
           />
@@ -25,6 +26,7 @@ function SignIn({ username, password, onChange, onSubmit, errors }) {
             value={password}
             onChange={onChange}
             placeholder="Password"
+            autocomplete="current-password"
             error={errors.login || errors.password ? true : false}
             errorMsg={errors.password || null}
           />

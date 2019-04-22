@@ -12,21 +12,21 @@ class CreateTweetContainer extends Component {
     loading: false
   };
 
-  // wrapperRef = React.createRef();
+  wrapperRef = React.createRef();
 
-  // componentDidMount() {
-  //   document.addEventListener('click', this.closeModal);
-  // }
+  componentDidMount() {
+    document.addEventListener('click', this.closeModal);
+  }
 
-  // componentWillUnmount() {
-  //   document.removeEventListener('click', this.closeModal);
-  // }
+  componentWillUnmount() {
+    document.removeEventListener('click', this.closeModal);
+  }
 
-  // closeModal = e => {
-  //   if (e.target == this.wrapperRef.current) {
-  //     this.props.closeCreateTweetModal();
-  //   }
-  // };
+  closeModal = e => {
+    if (e.target === this.wrapperRef.current) {
+      this.props.closeCreateTweetModal();
+    }
+  };
 
   handleChange = e => {
     const { value } = e.target;
@@ -79,14 +79,15 @@ class CreateTweetContainer extends Component {
     );
   };
 
+  handleTextareaEnterPress = e => {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      this.handleSubmit(e);
+    }
+  };
+
   render() {
     const { text, errors, loading } = this.state;
     const { showCreateTweetModal, closeCreateTweetModal } = this.props;
-    // const { from } = this.props.location.state || { from: { pathname: '/' } };
-
-    // if (redirectToReferrer) {
-    //   return <Redirect to={from} />;
-    // }
 
     if (!showCreateTweetModal) {
       return null;
@@ -96,10 +97,12 @@ class CreateTweetContainer extends Component {
       <CreateTweetModal
         text={text}
         errors={errors}
+        loading={loading}
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
-        loading={loading}
+        handleTextareaEnterPress={this.handleTextareaEnterPress}
         handleCloseModal={closeCreateTweetModal}
+        wrapperRef={this.wrapperRef}
       />
     );
   }

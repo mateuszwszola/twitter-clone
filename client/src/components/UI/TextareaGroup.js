@@ -11,14 +11,17 @@ const TextareaGroup = ({
   textarea: Textarea,
   text,
   handleChange,
+  handleKeyDown,
   placeholder,
   error,
   errorMsg
 }) => (
   <React.Fragment>
     <Textarea
+      type="text"
       value={text}
       onChange={handleChange}
+      onKeyDown={handleKeyDown}
       placeholder={placeholder}
       error={error}
     />
@@ -29,6 +32,7 @@ const TextareaGroup = ({
 TextareaGroup.propTypes = {
   text: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
+  handleKeyDown: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   error: PropTypes.bool.isRequired,
   errorMsg: PropTypes.string.isRequired

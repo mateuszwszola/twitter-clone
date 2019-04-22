@@ -25,6 +25,7 @@ function SignUp({
             value={name}
             onChange={onChange}
             placeholder="Name"
+            autocomplete="name"
             error={errors.name ? true : false}
             errorMsg={errors.name ? errors.name : null}
           />
@@ -34,6 +35,7 @@ function SignUp({
             value={username}
             onChange={onChange}
             placeholder="Username"
+            autocomplete="username"
             error={errors.username ? true : false}
             errorMsg={errors.username ? errors.username : null}
           />
@@ -43,6 +45,7 @@ function SignUp({
             value={email}
             onChange={onChange}
             placeholder="Email"
+            autocomplete="new-password"
             error={errors.email ? true : false}
             errorMsg={errors.email ? errors.email : null}
           />
