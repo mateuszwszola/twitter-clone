@@ -5,6 +5,7 @@ import { Button } from '../../UI/Button';
 import { StyledNavLink } from '../../UI/Links';
 import DropdownMenu from './DropdownMenu';
 import { openCreateTweetModal } from '../../../actions/uiActions';
+import CreateTweetContainer from '../../../containers/CreateTweetContainer';
 
 class AuthNav extends Component {
   state = {
@@ -36,9 +37,10 @@ class AuthNav extends Component {
   };
 
   render() {
-    const { user, openCreateTweetModal } = this.props;
+    const { user, openCreateTweetModal, showCreateTweetModal } = this.props;
     return (
       <nav className="main-nav">
+        {showCreateTweetModal && <CreateTweetContainer />}
         <li className="nav__item">
           <StyledNavLink to="/">
             <i className="fas fa-home" /> Home
@@ -69,10 +71,15 @@ class AuthNav extends Component {
 AuthNav.propTypes = {
   user: PropTypes.object.isRequired,
   onLogout: PropTypes.func.isRequired,
-  openCreateTweetModal: PropTypes.func.isRequired
+  openCreateTweetModal: PropTypes.func.isRequired,
+  showCreateTweetModal: PropTypes.bool.isRequired
 };
 
+const mapStateToProps = ({ UI }) => ({
+  showCreateTweetModal: UI.showCreateTweetModal
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { openCreateTweetModal }
 )(AuthNav);

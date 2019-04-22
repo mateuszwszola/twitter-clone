@@ -22,5 +22,9 @@ export default function DisplayErrors({ error }) {
 }
 
 DisplayErrors.propTypes = {
-  error: PropTypes.string.isRequired
+  error: PropTypes.string
+};
+
+DisplayErrors.defaultProps = {
+  error: 'Something went wrong...'
 };

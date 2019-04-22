@@ -12,6 +12,22 @@ class CreateTweetContainer extends Component {
     loading: false
   };
 
+  // wrapperRef = React.createRef();
+
+  // componentDidMount() {
+  //   document.addEventListener('click', this.closeModal);
+  // }
+
+  // componentWillUnmount() {
+  //   document.removeEventListener('click', this.closeModal);
+  // }
+
+  // closeModal = e => {
+  //   if (e.target == this.wrapperRef.current) {
+  //     this.props.closeCreateTweetModal();
+  //   }
+  // };
+
   handleChange = e => {
     const { value } = e.target;
     this.setState(() => ({
@@ -57,6 +73,7 @@ class CreateTweetContainer extends Component {
           loading: false
         }));
         this.props.closeCreateTweetModal();
+        window.location.reload();
       },
       this.handleErrors
     );
@@ -82,7 +99,6 @@ class CreateTweetContainer extends Component {
         handleChange={this.handleChange}
         handleSubmit={this.handleSubmit}
         loading={loading}
-        showModal={showCreateTweetModal}
         handleCloseModal={closeCreateTweetModal}
       />
     );

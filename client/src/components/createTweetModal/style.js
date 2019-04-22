@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components/macro';
 import { Button as UIButton } from '../UI/Button';
 
 export const Wrapper = styled.div`
+  z-index: 2;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,6 +12,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Modal = styled.div`
+  z-index: 3;
   position: absolute;
   top: 10%;
   left: 50%;

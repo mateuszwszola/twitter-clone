@@ -12,7 +12,7 @@ import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import SettingsContainer from './containers/SettingsContainer';
-import CreateTweetContainer from './containers/CreateTweetContainer';
+import ErrorBoundary from './ErrorBoundary';
 
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -22,23 +22,24 @@ checkForToken();
 function App() {
   return (
     <Provider store={store}>
-      <Router>
-        <div className="wrapper">
-          <div className="content">
-            <Header />
-            <CreateTweetContainer />
-            <Switch>
-              <Route exact path="/" component={PrivateHomepage} />
-              <Route exact path="/signin" component={SignInContainer} />
-              <Route exact path="/signup" component={SignUpContainer} />
-              <Route exact path="/settings" component={SettingsContainer} />
-              <Route exact path="/:username" component={ProfileContainer} />
-              <Route render={() => <div>404 Not Found</div>} />
-            </Switch>
+      <ErrorBoundary>
+        <Router>
+          <div className="wrapper">
+            <div className="content">
+              <Header />
+              <Switch>
+                <Route exact path="/" component={PrivateHomepage} />
+                <Route exact path="/signin" component={SignInContainer} />
+                <Route exact path="/signup" component={SignUpContainer} />
+                <Route exact path="/settings" component={SettingsContainer} />
+                <Route exact path="/:username" component={ProfileContainer} />
+                <Route render={() => <div>404 Not Found</div>} />
+              </Switch>
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </Router>
+        </Router>
+      </ErrorBoundary>
     </Provider>
   );
 }
