@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'User'
   },
   bio: {
     type: String
@@ -22,7 +22,7 @@ const ProfileSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
@@ -30,7 +30,7 @@ const ProfileSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
@@ -38,7 +38,7 @@ const ProfileSchema = new Schema({
     {
       tweet: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'Tweet'
       }
     }
   ],
@@ -46,7 +46,7 @@ const ProfileSchema = new Schema({
     {
       tweet: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'Tweet'
       }
     }
   ],
@@ -55,7 +55,7 @@ const ProfileSchema = new Schema({
     {
       tweet: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'Tweet'
       }
     }
   ],
@@ -69,4 +69,4 @@ const ProfileSchema = new Schema({
   }
 });
 
-module.exports = Profile = mongoose.model('profiles', ProfileSchema);
+module.exports = Profile = mongoose.model('Profile', ProfileSchema);

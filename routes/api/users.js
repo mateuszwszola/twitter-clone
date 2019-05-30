@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { jwtSecret } = require('../../config/keys');
-const passport = require('passport');
+const { JWT_SECRET } = require('../../config/keys');
 const validator = require('validator');
+const auth = require('../../middleware/auth');
 
 // Load validation functions
 const validateRegisterInput = require('../../validation/register');
@@ -21,7 +21,7 @@ const saltRounds = 10;
 // @route   POST api/users/register
 // @desc    Register new user
 // @access  Public
-router.post('/register', (req, res, next) => {
+router.post('/register', async (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -30,70 +30,50 @@ router.post('/register', (req, res, next) => {
 
   const { name, email, password, username } = req.body;
 
-  // Check if user with that email/username already exists in db
-  User.findOne({ email })
-    .then(userByEmail => {
-      if (userByEmail) {
-        errors.email = 'User with that email has already been created';
-        return res.status(400).json(errors);
-      }
+  try {
+    // Check if user with that email/username already exists in db
+    let user = await User.findOne({ email });
+    if (user) {
+      errors.email = 'User with that email has already been created';
+      return res.status(400).json(errors);
+    }
 
-      User.findOne({ username })
-        .then(userByUsername => {
-          if (userByUsername) {
-            errors.username =
-              'User with that username has already been created';
-            return res.status(400).json(errors);
-          }
+    user = await User.findOne({ username });
+    if (user) {
+      errors.username = 'User with that username has already been created';
+      return res.status(400).json(errors);
+    }
 
-          // There is no user with that email/username in db, create the user
-          const newUser = new User({
-            name: startCase(name), // (start case, john doe -> John Doe)
-            username,
-            email,
-            password
-          });
+    // There is no user with that email/username in db, create the user
+    user = new User({
+      name: startCase(name), // (start case, john doe -> John Doe)
+      username,
+      email,
+      password
+    });
 
-          // Create empty profile for that user
-          const newProfile = new Profile({});
+    // Create empty profile for that user
+    const profile = new Profile({});
 
-          // Hash the password
-          bcrypt.genSalt(saltRounds, (err, salt) => {
-            if (err) {
-              return next(err);
-            }
+    // Hash the password
+    const salt = await bcrypt.genSalt(saltRounds);
+    user.password = await bcrypt.hash(password, salt);
 
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) {
-                return next(err);
-              }
+    await user.save();
+    profile.user = user._id;
+    await profile.save();
 
-              newUser.password = hash;
-              newUser
-                .save()
-                .then(user => {
-                  // Fill newProfile with user id
-                  newProfile.user = user._id;
-                  newProfile
-                    .save()
-                    .then(profile => {
-                      res.json({ message: 'Successfully created an account!' });
-                    })
-                    .catch(err => next(err));
-                })
-                .catch(err => next(err));
-            });
-          });
-        })
-        .catch(err => next(err));
-    })
-    .catch(err => next(err));
+    res.json([user, profile]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 // @route   POST api/users/login
 // @desc    Login user / Returning JWT
 // @access  Public
-router.post('/login', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   const { isValid, errors } = validateLoginInput(req.body);
 
   // Check validation
@@ -112,60 +92,50 @@ router.post('/login', (req, res, next) => {
     login = 'email';
   }
 
-  User.findOne({ [login]: username })
-    .then(user => {
-      if (!user) {
-        errors.login = 'Incorrect username and password combination';
-        return res.status(400).json(errors);
+  try {
+    const user = await User.findOne({ [login]: username });
+    if (!user) {
+      errors.login = 'Incorrect username and password combination';
+      return res.status(400).json(errors);
+    }
+
+    // Check passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      errors.login = 'Incorrect username and password combination';
+      return res.status(400).json(errors);
+    }
+
+    // User matched
+    // Create JWT Payload
+    const payload = {
+      user: {
+        id: user.id
       }
-
-      // Check passwords
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) {
-          return next(err);
-        }
-
-        if (isMatch) {
-          // User matched
-          // Create JWT Payload
-          const payload = {
-            id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email
-          };
-          // Sign token
-          jwt.sign(payload, jwtSecret, { expiresIn: 3600 }, (err, token) => {
-            if (err) return next(err);
-            res.json({
-              success: true,
-              token: `Bearer ${token}`
-            });
-          });
-        } else {
-          errors.login = 'Incorrect username and password combination';
-          return res.status(400).json(errors);
-        }
-      });
-    })
-    .catch(err => next(err));
+    };
+    // Sign token
+    jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+      if (err) return next(err);
+      res.json({ token });
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
 });
 
 // @route   GET api/users/current
 // @desc    Return current user
 // @access  Private
-router.get(
-  '/current',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    console.log('req user in current route', req.user);
-    res.json({
-      id: req.user._id,
-      name: req.user.name,
-      username: req.user.username,
-      email: req.user.email
-    });
+router.get('/current', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    console.log({ user });
+    res.send(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
-);
+});
 
 module.exports = router;

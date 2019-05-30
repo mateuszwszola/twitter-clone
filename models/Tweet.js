@@ -13,7 +13,7 @@ const TweetSchema = new Schema({
   // 6. Retweets -> array of tweets_ids
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'User'
   },
   created: {
     type: Date,
@@ -30,7 +30,7 @@ const TweetSchema = new Schema({
     {
       tweet: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'Tweet'
       }
     }
   ],
@@ -38,16 +38,16 @@ const TweetSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
-  // retweets are ids of people how retweeted
+  // retweets are ids of people who retweeted
   retweets: [
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
@@ -56,4 +56,4 @@ const TweetSchema = new Schema({
   }
 });
 
-module.exports = Tweet = mongoose.model('tweets', TweetSchema);
+module.exports = Tweet = mongoose.model('Tweet', TweetSchema);

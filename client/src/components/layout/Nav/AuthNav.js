@@ -9,7 +9,8 @@ import CreateTweetContainer from '../../../containers/CreateTweetContainer';
 
 class AuthNav extends Component {
   state = {
-    showMenu: false
+    showMenu: false,
+    message: ''
   };
 
   avatarRef = React.createRef();
@@ -36,11 +37,36 @@ class AuthNav extends Component {
     }));
   };
 
+  showTempMessage = message => {
+    this.setState(() => ({ message }));
+    setTimeout(() => this.setState(() => ({ message: '' })), 3000);
+  };
+
   render() {
     const { user, openCreateTweetModal, showCreateTweetModal } = this.props;
+
     return (
       <nav className="main-nav">
-        {showCreateTweetModal && <CreateTweetContainer />}
+        {showCreateTweetModal && (
+          <CreateTweetContainer showTempMessage={this.showTempMessage} />
+        )}
+        {this.state.message ? (
+          <div
+            style={{
+              color: 'green',
+              fontWeight: 'bold',
+              position: 'absolute',
+              left: '50%',
+              top: '0',
+              padding: '10px 15px',
+              transform: 'translateX(-50%)'
+            }}
+          >
+            {this.state.message}
+          </div>
+        ) : (
+          ''
+        )}
         <li className="nav__item">
           <StyledNavLink to="/">
             <i className="fas fa-home" /> Home

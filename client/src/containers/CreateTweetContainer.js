@@ -4,6 +4,10 @@ import { createTweet } from '../utils/api';
 import CreateTweetModal from '../components/createTweetModal/CreateTweetModal';
 import { connect } from 'react-redux';
 import { closeCreateTweetModal } from '../actions/uiActions';
+import {
+  getTweetsByUserId,
+  getProfileHomepageTweets
+} from '../actions/tweetActions';
 
 class CreateTweetContainer extends Component {
   state = {
@@ -73,6 +77,7 @@ class CreateTweetContainer extends Component {
           loading: false
         }));
         this.props.closeCreateTweetModal();
+        this.props.showTempMessage('You have successfully created new Tweet!');
         window.location.reload();
       },
       this.handleErrors
@@ -110,14 +115,19 @@ class CreateTweetContainer extends Component {
 
 CreateTweetContainer.propTypes = {
   showCreateTweetModal: PropTypes.bool.isRequired,
-  closeCreateTweetModal: PropTypes.func.isRequired
+  closeCreateTweetModal: PropTypes.func.isRequired,
+  showTempMessage: PropTypes.func.isRequired,
+  getTweetsByUserId: PropTypes.func.isRequired,
+  getProfileHomepageTweets: PropTypes.func.isRequired,
+  userId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ UI }) => ({
-  showCreateTweetModal: UI.showCreateTweetModal
+const mapStateToProps = ({ UI, auth }) => ({
+  showCreateTweetModal: UI.showCreateTweetModal,
+  userId: auth.user.id
 });
 
 export default connect(
   mapStateToProps,
-  { closeCreateTweetModal }
+  { closeCreateTweetModal, getTweetsByUserId, getProfileHomepageTweets }
 )(CreateTweetContainer);
