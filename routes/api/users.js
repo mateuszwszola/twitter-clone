@@ -18,6 +18,19 @@ const Profile = require('../../models/Profile');
 
 const saltRounds = 10;
 
+// @route   GET api/users/all
+// @desc    Get all users
+// @access  Public
+router.get('/all', async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
 // @route   POST api/users/register
 // @desc    Register new user
 // @access  Public
@@ -63,7 +76,7 @@ router.post('/register', async (req, res) => {
     profile.user = user._id;
     await profile.save();
 
-    res.json([user, profile]);
+    res.json({ user, profile });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -130,7 +143,6 @@ router.post('/login', async (req, res, next) => {
 router.get('/current', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    console.log({ user });
     res.send(user);
   } catch (err) {
     console.error(err.message);
