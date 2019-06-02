@@ -18,12 +18,29 @@ const Profile = require('../../models/Profile');
 
 const saltRounds = 10;
 
+// @route   GET api/users/:user_id
+// @desc    Get user by ID
+// @access  Public
+router.get('/:user_id', async (req, res, next) => {
+  try {
+    const { user_id } = req.params;
+    const user = User.findById(user_id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    next(err);
+  }
+});
+
 // @route   GET api/users/all
 // @desc    Get all users
 // @access  Public
 router.get('/all', async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select('-password');
     res.json(users);
   } catch (err) {
     console.error(err.message);

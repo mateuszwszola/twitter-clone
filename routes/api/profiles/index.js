@@ -11,7 +11,6 @@ const followRouter = require('./follow');
 
 // Load validation functions
 const validateProfileInput = require('../../../validation/profile');
-const validateObjectId = require('../../../validation/objectId');
 // Load helper functions
 const startCase = require('../../../helpers/startCase');
 
@@ -21,8 +20,6 @@ router.use('/follow', followRouter);
 // @desc    Get logged in user profile
 // @access  Private
 router.get('/', auth, async (req, res, next) => {
-  const errors = {};
-
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
       'user',
@@ -60,12 +57,6 @@ router.get('/all', async (req, res, next) => {
 // @access  Public
 router.get('/:user_id', async (req, res, next) => {
   const { user_id } = req.params;
-  const errors = {};
-
-  const { idErrors, isValidObjectId } = validateObjectId(user_id);
-  if (!isValidObjectId) {
-    return res.status(400).json(idErrors);
-  }
 
   try {
     const profile = await Profile.findOne({ user: user_id }).populate('user', [
@@ -75,13 +66,16 @@ router.get('/:user_id', async (req, res, next) => {
     ]);
 
     if (!profile) {
-      errors.noprofile = 'There is no profile for this user';
+      errors.noprofile = 'Profile not found';
       return res.status(404).json(errors);
     }
 
     res.json(profile);
   } catch (err) {
     console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Profile not found' });
+    }
     next(err);
   }
 });
@@ -91,7 +85,6 @@ router.get('/:user_id', async (req, res, next) => {
 // @access  Public
 router.get('/username/:username', async (req, res, next) => {
   const { username } = req.params;
-  const errors = {};
 
   try {
     const user = await User.findOne({ username });
@@ -101,8 +94,9 @@ router.get('/username/:username', async (req, res, next) => {
       'avatar'
     ]);
     if (!profile) {
-      errors.noprofile = `Profile for ${username} does not exists`;
-      return res.status(404).json(errors);
+      return res
+        .status(404)
+        .json({ msg: `Profile for ${username} does not exists` });
     }
     res.json(profile);
   } catch (err) {
