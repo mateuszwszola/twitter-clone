@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Homepage from '../components/Homepage';
 import Loading from '../components/Loading';
-import { getProfileHomepageTweets } from '../actions/tweetActions';
-import { fetchUserProfile } from '../actions/profileActions';
+import { getUserProfileWithHomepageTweets } from '../actions/profileActions';
 
 class HomepageContainer extends Component {
   componentDidMount() {
-    this.props.fetchUserProfile();
-    this.props.getProfileHomepageTweets();
+    // TODO: fetch user profile with homepagetweets
+    this.props.getUserProfileWithHomepageTweets();
   }
 
   render() {
-    if (this.props.profile.loading || this.props.profile.profile === null) {
+    const { profile } = this.props;
+    if (profile.loading || profile.profile === null) {
       return <Loading />;
     }
     return (
@@ -24,7 +23,7 @@ class HomepageContainer extends Component {
 }
 
 HomepageContainer.propTypes = {
-  getProfileHomepageTweets: PropTypes.func.isRequired,
+  getUserProfileWithHomepageTweets: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -38,5 +37,5 @@ const mapStateToProps = ({ profile, tweet, errors }) => ({
 
 export default connect(
   mapStateToProps,
-  { getProfileHomepageTweets, fetchUserProfile }
-)(withRouter(HomepageContainer));
+  { getUserProfileWithHomepageTweets }
+)(HomepageContainer);

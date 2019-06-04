@@ -37,6 +37,38 @@ router.get('/', auth, async (req, res, next) => {
   }
 });
 
+// @route   GET api/profiles/homepageTweets
+// @desc    Get logged in user profile with tweets to display on the homepage
+// @access  Private
+router.get('/homepageTweets', auth, async (req, res, next) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id })
+      .populate('user', ['name', 'username', 'avatar'])
+      .populate('homepageTweets.tweet');
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
+// @route   GET api/profiles/tweets
+// @desc    Get logged in user profile with tweets
+// @access  Private
+router.get('/tweets', auth, async (req, res, next) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id })
+      .populate('user', ['name', 'username', 'avatar'])
+      .populate('tweets.tweet');
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
 // @route   GET api/profiles/all
 // @desc    Get all profiles
 // @access  Public

@@ -1,3 +1,5 @@
+import isEmpty from './isEmpty';
+
 // Validate form, check if the fields are not empty
 function validateForm(data) {
   const fields = Object.keys(data);
@@ -12,7 +14,7 @@ function validateForm(data) {
     }
   }
 
-  return errors;
+  return isEmpty(errors) ? null : errors;
 }
 
 export default validateForm;

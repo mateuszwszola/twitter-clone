@@ -1,18 +1,51 @@
-import isEmpty from '../utils/isEmpty';
-import { GET_CURRENT_USER } from '../actions/types';
+import {
+  USER_LOADED,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+  AUTH_ERROR,
+  LOGOUT
+} from '../actions/types';
 
 const initialState = {
+  token: localStorage.getItem('token'),
   isAuthenticated: false,
-  user: {}
+  user: null,
+  loading: true
 };
 
 export default function(state = initialState, action) {
-  switch (action.type) {
-    case GET_CURRENT_USER:
+  const { type, payload } = action;
+
+  switch (type) {
+    case USER_LOADED:
       return {
         ...state,
-        isAuthenticated: !isEmpty(action.payload),
-        user: action.payload
+        isAuthenticated: true,
+        user: payload,
+        loading: false
+      };
+    case LOGIN_SUCCESS:
+    case REGISTER_SUCCESS:
+      localStorage.setItem('token', payload.token);
+      return {
+        ...state,
+        ...payload,
+        isAuthenticated: true,
+        loading: false
+      };
+    case REGISTER_FAIL:
+    case LOGIN_FAIL:
+    case AUTH_ERROR:
+    case LOGOUT:
+      localStorage.removeItem('token');
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        loading: false,
+        user: null
       };
     default:
       return state;

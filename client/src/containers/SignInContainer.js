@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
 import SignIn from '../components/SignIn';
-import isEmpty from '../utils/isEmpty';
 import validateForm from '../utils/validateForm';
 
 class SignInContainer extends Component {
@@ -17,15 +16,6 @@ class SignInContainer extends Component {
 
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
-      this.setState(() => ({ redirect: true }));
-    }
-  }
-
-  componentWillReceiveProps({ errors, auth }) {
-    if (errors) {
-      this.handleErrors(errors);
-    }
-    if (auth.isAuthenticated) {
       this.setState(() => ({ redirect: true }));
     }
   }
@@ -50,26 +40,27 @@ class SignInContainer extends Component {
     };
 
     const errors = validateForm(userData);
-    if (!isEmpty(errors)) {
+    if (errors) {
       return this.handleErrors(errors);
     }
 
-    this.props.loginUser(userData);
+    this.props.loginUser(userData, this.props.history);
   };
 
   render() {
-    const { username, password, errors, redirect } = this.state;
+    const { username, password, redirect } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     if (redirect) {
       return <Redirect to={from} />;
     }
+
     return (
       <SignIn
         username={username}
         password={password}
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
-        errors={errors}
+        errors={this.props.errors}
       />
     );
   }
@@ -89,4 +80,4 @@ const mapStateToProps = ({ auth, errors }) => ({
 export default connect(
   mapStateToProps,
   { loginUser }
-)(withRouter(SignInContainer));
+)(SignInContainer);

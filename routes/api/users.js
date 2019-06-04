@@ -18,13 +18,26 @@ const Profile = require('../../models/Profile');
 
 const saltRounds = 10;
 
+// @route   GET api/users/current
+// @desc    Return current user
+// @access  Private
+router.get('/current', auth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
 // @route   GET api/users/:user_id
 // @desc    Get user by ID
 // @access  Public
 router.get('/:user_id', async (req, res, next) => {
   try {
     const { user_id } = req.params;
-    const user = User.findById(user_id).select('-password');
+    const user = await User.findById(user_id).select('-password');
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -51,7 +64,7 @@ router.get('/all', async (req, res, next) => {
 // @route   POST api/users/register
 // @desc    Register new user
 // @access  Public
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
@@ -93,10 +106,20 @@ router.post('/register', async (req, res) => {
     profile.user = user._id;
     await profile.save();
 
-    res.json({ user, profile });
+    // Create JWT payload
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+    // Sign token
+    jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+      if (err) return next(err);
+      res.json({ token });
+    });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
+    next(err);
   }
 });
 
@@ -150,20 +173,7 @@ router.post('/login', async (req, res, next) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET api/users/current
-// @desc    Return current user
-// @access  Private
-router.get('/current', auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select('-password');
-    res.send(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    next(err);
   }
 });
 
