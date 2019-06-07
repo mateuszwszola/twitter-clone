@@ -18,11 +18,12 @@ class SignUpContainer extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    if (props.auth.isAuthenticated) {
-      return { ...state, redirect: true };
-    }
-    if (props.errors) {
-      return { ...state, errors: props.errors };
+    if (props.auth.isAuthenticated || props.errors) {
+      return {
+        ...state,
+        redirect: props.auth.isAuthenticated,
+        errors: props.errors
+      };
     }
   }
 
@@ -54,7 +55,7 @@ class SignUpContainer extends Component {
       return this.handleErrors(errors);
     }
 
-    this.props.registerUser(newUser, this.props.history);
+    this.props.registerUser(newUser);
   };
 
   render() {

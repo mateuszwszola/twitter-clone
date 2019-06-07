@@ -7,18 +7,17 @@ import { getUserProfileWithHomepageTweets } from '../actions/profileActions';
 
 class HomepageContainer extends Component {
   componentDidMount() {
-    // TODO: fetch user profile with homepagetweets
     this.props.getUserProfileWithHomepageTweets();
   }
 
   render() {
-    const { profile } = this.props;
+    const { profile, tweet, errors } = this.props;
+
     if (profile.loading || profile.profile === null) {
       return <Loading />;
     }
-    return (
-      <Homepage profile={this.props.profile.profile} tweet={this.props.tweet} />
-    );
+
+    return <Homepage profile={profile.profile} tweet={tweet} />;
   }
 }
 

@@ -6,6 +6,7 @@ import {
   GET_TWEETS,
   TWEET_LOADING
 } from './types';
+import { setTweetLoading } from './tweetActions';
 
 export const getUserProfile = () => async dispatch => {
   dispatch(setProfileLoading());
@@ -27,6 +28,7 @@ export const getUserProfile = () => async dispatch => {
 
 export const getUserProfileWithHomepageTweets = () => async dispatch => {
   dispatch(setProfileLoading());
+  dispatch(setTweetLoading());
 
   try {
     const res = await axios.get('/api/profiles/homepageTweets');
@@ -34,6 +36,11 @@ export const getUserProfileWithHomepageTweets = () => async dispatch => {
     dispatch({
       type: GET_CURRENT_PROFILE,
       payload: res.data
+    });
+
+    dispatch({
+      type: GET_TWEETS,
+      payload: res.data.homepageTweets || []
     });
   } catch (err) {
     dispatch({

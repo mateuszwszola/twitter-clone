@@ -14,7 +14,7 @@ function Homepage({ profile, tweet }) {
         {tweet.loading || tweet.tweets === null ? (
           <Loading />
         ) : (
-          <TweetsBoard tweets={tweet.tweets} />
+          <TweetsBoard tweets={tweet.tweets.map(t => t.tweet)} />
         )}
       </div>
       <div className="homepage-right homepage-flex-item">Homepage Right</div>

@@ -14,17 +14,21 @@ class SignInContainer extends Component {
     redirect: false
   };
 
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.setState(() => ({ redirect: true }));
+  static getDerivedStateFromProps(props, state) {
+    if (props.auth.isAuthenticated || props.errors) {
+      return {
+        ...state,
+        redirect: props.auth.isAuthenticated,
+        errors: props.errors
+      };
     }
   }
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({
+    this.setState(() => ({
       [name]: value
-    });
+    }));
   };
 
   handleErrors = errors => {
@@ -44,12 +48,13 @@ class SignInContainer extends Component {
       return this.handleErrors(errors);
     }
 
-    this.props.loginUser(userData, this.props.history);
+    this.props.loginUser(userData);
   };
 
   render() {
-    const { username, password, redirect } = this.state;
+    const { username, password, errors, redirect } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
+
     if (redirect) {
       return <Redirect to={from} />;
     }
@@ -60,7 +65,7 @@ class SignInContainer extends Component {
         password={password}
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
-        errors={this.props.errors}
+        errors={errors}
       />
     );
   }

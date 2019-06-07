@@ -34,7 +34,7 @@ export const loadUser = () => async dispatch => {
 };
 
 // Register user
-export const registerUser = (userData, history) => async dispatch => {
+export const registerUser = userData => async dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -52,7 +52,6 @@ export const registerUser = (userData, history) => async dispatch => {
     });
 
     dispatch(loadUser());
-    history.push('/');
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
@@ -66,7 +65,7 @@ export const registerUser = (userData, history) => async dispatch => {
 };
 
 // Login User
-export const loginUser = (userData, history) => async dispatch => {
+export const loginUser = userData => async dispatch => {
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -83,7 +82,6 @@ export const loginUser = (userData, history) => async dispatch => {
     });
 
     dispatch(loadUser());
-    history.push('/');
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
