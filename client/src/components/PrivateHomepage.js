@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import Landing from './Landing';
 import HomepageContainer from '../containers/HomepageContainer';
 
-const PrivateHomepage = ({ isAuthenticated }) =>
-  isAuthenticated ? <HomepageContainer /> : <Landing />;
+const PrivateHomepage = ({ isAuthenticated }, ...rest) =>
+  isAuthenticated ? <HomepageContainer {...rest} /> : <Landing {...rest} />;
 
 PrivateHomepage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired

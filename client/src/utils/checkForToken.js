@@ -4,10 +4,12 @@ import { logoutUser } from '../actions/authActions';
 import store from '../store';
 
 function checkForToken() {
-  const { token } = localStorage;
+  const token = localStorage.getItem('token');
+
+  // Set auth token for axios requests, if it exists, or not
+  setAuthToken(token);
+
   if (token) {
-    // Set auth token for axios requests
-    setAuthToken(token);
     // Decode token and get user info and exp date
     const decoded = jwt_decode(token);
     // Check for expired token

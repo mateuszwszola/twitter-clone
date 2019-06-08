@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
+import { clearErrors } from '../actions/errorActions';
 import SignIn from '../components/SignIn';
 import validateForm from '../utils/validateForm';
 
@@ -13,6 +14,10 @@ class SignInContainer extends Component {
     errors: {},
     redirect: false
   };
+
+  componentWillUnmount() {
+    this.props.clearErrors();
+  }
 
   static getDerivedStateFromProps(props, state) {
     if (props.auth.isAuthenticated || props.errors) {
@@ -73,6 +78,7 @@ class SignInContainer extends Component {
 
 SignInContainer.propTypes = {
   loginUser: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -84,5 +90,5 @@ const mapStateToProps = ({ auth, errors }) => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
+  { loginUser, clearErrors }
 )(SignInContainer);

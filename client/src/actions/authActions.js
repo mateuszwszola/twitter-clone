@@ -1,5 +1,5 @@
 import axios from 'axios';
-import setAuthToken from '../utils/setAuthToken';
+// import setAuthToken from '../utils/setAuthToken';
 
 import {
   USER_LOADED,
@@ -15,10 +15,9 @@ import {
 
 // Load user
 export const loadUser = () => async dispatch => {
-  if (localStorage.getItem('token')) {
-    setAuthToken(localStorage.getItem('token'));
-  }
-
+  // if (localStorage.getItem('token')) {
+  // setAuthToken(localStorage.getItem('token'));
+  // }
   try {
     const res = await axios.get('/api/users/current');
 

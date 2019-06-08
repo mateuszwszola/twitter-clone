@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
   GET_ERRORS,
-  GET_CURRENT_PROFILE,
+  GET_PROFILE,
   PROFILE_LOADING,
   GET_TWEETS,
   TWEET_LOADING
@@ -15,7 +15,7 @@ export const getUserProfile = () => async dispatch => {
     const res = await axios.get('/api/profiles');
 
     dispatch({
-      type: GET_CURRENT_PROFILE,
+      type: GET_PROFILE,
       payload: res.data
     });
   } catch (err) {
@@ -34,7 +34,7 @@ export const getUserProfileWithHomepageTweets = () => async dispatch => {
     const res = await axios.get('/api/profiles/homepageTweets');
 
     dispatch({
-      type: GET_CURRENT_PROFILE,
+      type: GET_PROFILE,
       payload: res.data
     });
 
@@ -57,7 +57,7 @@ export const getUserProfileWithTweets = () => async dispatch => {
     const res = await axios.get('/api/profiles/tweets');
 
     dispatch({
-      type: GET_CURRENT_PROFILE,
+      type: GET_PROFILE,
       payload: res.data
     });
   } catch (err) {
@@ -75,7 +75,7 @@ export const getProfileByUsername = username => async dispatch => {
     const res = await axios.get(`/api/profiles/profile/${username}`);
 
     dispatch({
-      type: GET_CURRENT_PROFILE,
+      type: GET_PROFILE,
       payload: res.data
     });
   } catch (err) {
@@ -92,7 +92,7 @@ export const fetchProfileWithTweets = username => async dispatch => {
   try {
     const res = await axios.get(`/api/profiles/profile/${username}`);
     dispatch({
-      type: GET_CURRENT_PROFILE,
+      type: GET_PROFILE,
       payload: res.data
     });
     dispatch({ type: TWEET_LOADING });
