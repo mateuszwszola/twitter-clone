@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { createTweet } from '../utils/api';
-import CreateTweetModal from '../components/createTweetModal/CreateTweetModal';
+import CreateTweetModal from '../components/createTweetModal';
 import { connect } from 'react-redux';
 import { closeCreateTweetModal } from '../actions/uiActions';
 import {

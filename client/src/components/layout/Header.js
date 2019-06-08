@@ -22,7 +22,6 @@ function Header({ isAuthenticated, user, logoutUser }) {
 
 Header.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
   logoutUser: PropTypes.func.isRequired
 };
 

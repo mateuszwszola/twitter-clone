@@ -2,7 +2,8 @@ import {
   GET_CURRENT_TWEET,
   CLEAR_CURRENT_TWEET,
   TWEET_LOADING,
-  GET_TWEETS
+  GET_TWEETS,
+  CREATE_TWEET
 } from '../actions/types';
 
 const initialState = {
@@ -12,7 +13,9 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
-  switch (action.type) {
+  const { type, payload } = action;
+
+  switch (type) {
     case TWEET_LOADING:
       return {
         ...state,
@@ -21,7 +24,7 @@ export default function(state = initialState, action) {
     case GET_CURRENT_TWEET:
       return {
         ...state,
-        tweet: action.payload,
+        tweet: payload,
         loading: false
       };
     case CLEAR_CURRENT_TWEET:
@@ -32,8 +35,13 @@ export default function(state = initialState, action) {
     case GET_TWEETS:
       return {
         ...state,
-        tweets: action.payload,
+        tweets: payload,
         loading: false
+      };
+    case CREATE_TWEET:
+      return {
+        ...state,
+        tweets: [payload, ...state.tweets]
       };
     default:
       return state;
