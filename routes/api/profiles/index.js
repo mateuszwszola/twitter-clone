@@ -44,8 +44,10 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id })
       .populate('user', ['name', 'username', 'avatar'])
-      .populate('homepageTweets.tweet')
-      .populate('homepageTweets.tweet.user');
+      .populate({
+        path: 'homepageTweets.tweet',
+        populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+      });
 
     res.json(profile);
   } catch (err) {
@@ -61,7 +63,10 @@ router.get('/tweets', auth, async (req, res, next) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id })
       .populate('user', ['name', 'username', 'avatar'])
-      .populate('tweets.tweet');
+      .populate({
+        path: 'tweets.tweet',
+        populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+      });
 
     res.json(profile);
   } catch (err) {
