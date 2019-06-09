@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { TWEET_LOADING, GET_TWEETS, CREATE_TWEET, GET_ERRORS } from './types';
+import { closeCreateTweetModal } from './uiActions';
 
 export const createTweet = tweet => async dispatch => {
+  dispatch(setTweetLoading());
+
   const config = {
     headers: {
       'Content-Type': 'application/json'
@@ -17,6 +20,8 @@ export const createTweet = tweet => async dispatch => {
       type: CREATE_TWEET,
       payload: res.data
     });
+
+    dispatch(closeCreateTweetModal());
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
@@ -61,8 +66,6 @@ export const getProfileHomepageTweets = () => async dispatch => {
   }
 };
 
-export const setTweetLoading = () => {
-  return {
-    type: TWEET_LOADING
-  };
-};
+export const setTweetLoading = () => ({
+  type: TWEET_LOADING
+});

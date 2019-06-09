@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { createTweet } from '../utils/api';
 import CreateTweetModal from '../components/createTweetModal';
 import { connect } from 'react-redux';
+import { createTweet } from '../actions/tweetActions';
 import { closeCreateTweetModal } from '../actions/uiActions';
-import {
-  getTweetsByUserId,
-  getProfileHomepageTweets
-} from '../actions/tweetActions';
 
 class CreateTweetContainer extends Component {
   state = {
     text: '',
-    errors: {},
-    loading: false
+    errors: {}
   };
 
   wrapperRef = React.createRef();
@@ -40,17 +35,17 @@ class CreateTweetContainer extends Component {
   };
 
   handleErrors = errors => {
-    this.setState(() => ({ errors, loading: false }));
+    this.setState(() => ({ errors }));
   };
 
   validateTweet = tweet => {
     const { text } = tweet;
     if (text.length < 2 || text.length > 140) {
-      this.setState(() => ({
+      this.handleErrors({
         errors: {
           text: 'Tweet text length must be between 2 and 140 characters'
         }
-      }));
+      });
 
       return false;
     }
@@ -68,20 +63,7 @@ class CreateTweetContainer extends Component {
       return false;
     }
 
-    this.setState(() => ({ loading: true }));
-
-    createTweet(
-      tweet,
-      () => {
-        this.setState(() => ({
-          loading: false
-        }));
-        this.props.closeCreateTweetModal();
-        this.props.showTempMessage('You have successfully created new Tweet!');
-        window.location.reload();
-      },
-      this.handleErrors
-    );
+    this.props.createTweet(tweet);
   };
 
   handleTextareaEnterPress = e => {
@@ -91,8 +73,8 @@ class CreateTweetContainer extends Component {
   };
 
   render() {
-    const { text, errors, loading } = this.state;
-    const { showCreateTweetModal, closeCreateTweetModal } = this.props;
+    const { text, errors } = this.state;
+    const { showCreateTweetModal, closeCreateTweetModal, loading } = this.props;
 
     if (!showCreateTweetModal) {
       return null;
@@ -115,19 +97,17 @@ class CreateTweetContainer extends Component {
 
 CreateTweetContainer.propTypes = {
   showCreateTweetModal: PropTypes.bool.isRequired,
+  loading: PropTypes.bool.isRequired,
   closeCreateTweetModal: PropTypes.func.isRequired,
-  showTempMessage: PropTypes.func.isRequired,
-  getTweetsByUserId: PropTypes.func.isRequired,
-  getProfileHomepageTweets: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired
+  createTweet: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ UI, auth }) => ({
+const mapStateToProps = ({ UI, tweet }) => ({
   showCreateTweetModal: UI.showCreateTweetModal,
-  userId: auth.user.id
+  loading: tweet.loading
 });
 
 export default connect(
   mapStateToProps,
-  { closeCreateTweetModal, getTweetsByUserId, getProfileHomepageTweets }
+  { closeCreateTweetModal, createTweet }
 )(CreateTweetContainer);
