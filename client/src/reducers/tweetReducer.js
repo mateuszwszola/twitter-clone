@@ -41,7 +41,8 @@ export default function(state = initialState, action) {
     case CREATE_TWEET:
       return {
         ...state,
-        tweets: [payload, ...state.tweets]
+        tweets: [payload, ...state.tweets],
+        loading: false
       };
     default:
       return state;

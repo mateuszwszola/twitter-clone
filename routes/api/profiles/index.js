@@ -46,6 +46,7 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
       .populate('user', ['name', 'username', 'avatar'])
       .populate({
         path: 'homepageTweets.tweet',
+        select: 'tweet',
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
 

@@ -31,7 +31,7 @@ function App() {
           <div className="wrapper">
             <div className="content">
               <Header />
-              {/* <PrivateRoute component={CreateTweetContainer} /> */}
+              <CreateTweetContainer />
               <Switch>
                 <Route exact path="/" component={PrivateHomepage} />
                 <Route exact path="/signin" component={SignInContainer} />
