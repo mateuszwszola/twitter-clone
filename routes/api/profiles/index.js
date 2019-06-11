@@ -45,12 +45,9 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
     const profile = await Profile.findOne({ user: req.user.id })
       .populate('user', ['name', 'username', 'avatar'])
       .populate({
-        path: 'homepageTweets.tweet',
-        select: 'tweet',
+        path: 'homepageTweets',
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
-
-    console.log('profile.homepageTweets', profile.homepageTweets);
 
     res.json(profile);
   } catch (err) {

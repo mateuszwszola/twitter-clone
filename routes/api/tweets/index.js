@@ -103,14 +103,14 @@ router.post('/', auth, async (req, res, next) => {
     const profile = await Profile.findOne({ user: req.user.id });
     // profile -> profil uzytkownika, ktory dodaje danego tweet
     profile.tweets = [{ tweet: tweet.id }, ...profile.tweets];
-    profile.homepageTweets = [{ tweet: tweet.id }, ...profile.homepageTweets];
+    profile.homepageTweets = [{ _id: tweet.id }, ...profile.homepageTweets];
     await profile.save();
 
     // loop through profiles and for each add a tweet_id
     profile.followers.forEach(async follower => {
       const followerProfile = await Profile.findOne({ user: follower.user });
       followerProfile.homepageTweets = [
-        { tweet: tweet.id },
+        { _id: tweet.id },
         ...followerProfile.homepageTweets
       ];
       await followerProfile.save();

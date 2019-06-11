@@ -51,14 +51,7 @@ const ProfileSchema = new Schema({
     }
   ],
   // Tweets that will be displayed on the logged in user homepage
-  homepageTweets: [
-    {
-      tweet: {
-        type: Schema.Types.ObjectId,
-        ref: 'Tweet'
-      }
-    }
-  ],
+  homepageTweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   // User background picture - uploaded by user
   backgroundPicture: {
     type: String
