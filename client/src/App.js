@@ -5,11 +5,11 @@ import { Header, Footer } from './components/layout';
 import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
 import PrivateHomepage from './components/PrivateHomepage';
-import CreateTweetContainer from './containers/CreateTweetContainer';
+import RenderCreateTweetModal from './components/createTweetModal';
 // import ProfileContainer from './containers/ProfileContainer';
 // import SettingsContainer from './containers/SettingsContainer';
 
-import PrivateRoute from './components/PrivateRoute';
+// import PrivateRoute from './components/PrivateRoute';
 import ErrorBoundary from './ErrorBoundary';
 
 import { Provider } from 'react-redux';
@@ -31,7 +31,7 @@ function App() {
           <div className="wrapper">
             <div className="content">
               <Header />
-              <CreateTweetContainer />
+              <RenderCreateTweetModal />
               <Switch>
                 <Route exact path="/" component={PrivateHomepage} />
                 <Route exact path="/signin" component={SignInContainer} />

@@ -13,11 +13,10 @@ const AuthNav = ({ user, logoutUser, openCreateTweetModal }) => {
 
   const handleDropdown = e => {
     if (e.target === avatarRef.current) {
-      setShowMenu(!showMenu);
-    } else {
-      if (!showMenu) {
-        return false;
-      }
+      return setShowMenu(!showMenu);
+    }
+
+    if (showMenu) {
       setShowMenu(false);
     }
   };
@@ -53,7 +52,7 @@ const AuthNav = ({ user, logoutUser, openCreateTweetModal }) => {
 };
 
 AuthNav.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   logoutUser: PropTypes.func.isRequired,
   openCreateTweetModal: PropTypes.func.isRequired
 };

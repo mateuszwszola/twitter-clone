@@ -6,6 +6,7 @@ import { loginUser } from '../actions/authActions';
 import { clearErrors } from '../actions/errorActions';
 import SignIn from '../components/SignIn';
 import validateForm from '../utils/validateForm';
+import isEmpty from '../utils/isEmpty';
 
 class SignInContainer extends Component {
   state = {
@@ -20,13 +21,16 @@ class SignInContainer extends Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (props.auth.isAuthenticated || props.errors) {
+    const { auth, errors } = props;
+    if (auth.isAuthenticated || !isEmpty(errors)) {
       return {
         ...state,
-        redirect: props.auth.isAuthenticated,
-        errors: props.errors
+        redirect: auth.isAuthenticated,
+        errors: !isEmpty(props.errors) && props.errors
       };
     }
+
+    return null;
   }
 
   handleChange = e => {

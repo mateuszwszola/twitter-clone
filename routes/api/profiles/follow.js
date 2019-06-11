@@ -17,7 +17,10 @@ router.post('/:user_id', auth, async (req, res, next) => {
   }
 
   try {
-    const userProfile = await Profile.findOne({ user: req.user.id });
+    const userProfile = await Profile.findOne({ user: req.user.id }).populate(
+      'user',
+      ['name', 'username', 'avatar']
+    );
     const profileToFollow = await Profile.findOne({ user: user_id });
     if (!profileToFollow) {
       errors.noprofile = 'Profile to follow does not exists';
@@ -51,10 +54,7 @@ router.post('/:user_id', auth, async (req, res, next) => {
     await userProfile.save();
     // Save someone's profile
     await profileToFollow.save();
-    res.json({
-      userProfile,
-      profileToFollow
-    });
+    res.json(userProfile);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ msg: 'Profile to follow does not exists' });

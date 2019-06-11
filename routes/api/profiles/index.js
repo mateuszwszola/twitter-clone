@@ -50,6 +50,8 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
 
+    console.log('profile.homepageTweets', profile.homepageTweets);
+
     res.json(profile);
   } catch (err) {
     console.error(err.message);

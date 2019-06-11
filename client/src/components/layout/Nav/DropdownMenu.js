@@ -19,9 +19,11 @@ function DropdownMenu({ user, onLogout }) {
     <div className="dropdown-content">
       <ul className="dropdown-menu">
         <div className="dropdown__user-info">
-          <li className="dropdown-menu__item dropdown__name">{user.name}</li>
+          <li className="dropdown-menu__item dropdown__name">
+            {user.name || 'Unknown'}
+          </li>
           <li className="dropdown-menu__item dropdown__username">
-            @{user.username}
+            @{user.username || 'Unknown'}
           </li>
         </div>
         <li className="dropdown-menu__item">
@@ -48,6 +50,7 @@ function DropdownMenu({ user, onLogout }) {
 }
 
 DropdownMenu.propTypes = {
+  user: PropTypes.object,
   onLogout: PropTypes.func.isRequired
 };
 

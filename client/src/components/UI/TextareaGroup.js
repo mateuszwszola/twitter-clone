@@ -34,7 +34,7 @@ TextareaGroup.propTypes = {
   handleChange: PropTypes.func.isRequired,
   handleKeyDown: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
-  error: PropTypes.bool.isRequired,
+  error: PropTypes.bool,
   errorMsg: PropTypes.string.isRequired
 };
 

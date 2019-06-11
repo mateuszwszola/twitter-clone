@@ -31,23 +31,6 @@ router.get('/current', auth, async (req, res, next) => {
   }
 });
 
-// @route   GET api/users/:user_id
-// @desc    Get user by ID
-// @access  Public
-router.get('/:user_id', async (req, res, next) => {
-  try {
-    const { user_id } = req.params;
-    const user = await User.findById(user_id).select('-password');
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'User not found' });
-    }
-    next(err);
-  }
-});
-
 // @route   GET api/users/all
 // @desc    Get all users
 // @access  Public
@@ -173,6 +156,23 @@ router.post('/login', async (req, res, next) => {
     });
   } catch (err) {
     console.error(err.message);
+    next(err);
+  }
+});
+
+// @route   GET api/users/:user_id
+// @desc    Get user by ID
+// @access  Public
+router.get('/:user_id', async (req, res, next) => {
+  try {
+    const { user_id } = req.params;
+    const user = await User.findById(user_id).select('-password');
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User not found' });
+    }
     next(err);
   }
 });
