@@ -97,7 +97,11 @@ router.post('/', auth, async (req, res, next) => {
   newTweet.user = req.user.id;
 
   try {
-    const tweet = await newTweet.save();
+    const savedTweet = await newTweet.save();
+    const tweet = await Tweet.populate(savedTweet, {
+      path: 'user',
+      select: ['name', 'username', 'avatar']
+    });
 
     // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.tweets array
     const profile = await Profile.findOne({ user: req.user.id });

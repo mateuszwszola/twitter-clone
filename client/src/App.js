@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { Header, Footer } from './components/layout';
+
 import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
 import PrivateHomepage from './components/PrivateHomepage';
@@ -10,7 +11,7 @@ import RenderCreateTweetModal from './components/createTweetModal';
 // import SettingsContainer from './containers/SettingsContainer';
 
 // import PrivateRoute from './components/PrivateRoute';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import { Provider } from 'react-redux';
 import store from './store';
