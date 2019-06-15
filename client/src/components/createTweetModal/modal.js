@@ -59,8 +59,8 @@ function CreateTweetModal({
                   handleChange={handleChange}
                   handleKeyDown={handleTextareaEnterPress}
                   placeholder="What's happening?"
-                  error={errors.text}
-                  errorMsg={errors.text ? errors.text : ''}
+                  error={!!errors.text}
+                  errorMsg={errors.text || ''}
                 />
                 <Button primary type="submit" disabled={!text}>
                   Tweet

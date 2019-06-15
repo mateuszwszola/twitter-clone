@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import useInterval from './useInterval';
 
 const defaultText = 'Loading';
 
 function Loading() {
   const [text, setText] = useState(defaultText);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (text === defaultText + '...') {
-        setText(defaultText);
-      } else {
-        setText(text + '.');
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  });
+  useInterval(() => {
+    if (text === defaultText + '...') {
+      setText(defaultText);
+    } else {
+      setText(text + '.');
+    }
+  }, 1000);
 
   return <div>{text}</div>;
 }

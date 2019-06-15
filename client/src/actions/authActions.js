@@ -40,7 +40,7 @@ export const registerUser = userData => async dispatch => {
     }
   };
 
-  const body = JSON.stringify(userData);
+  const body = JSON.stringify(userData);/**/
 
   try {
     const res = await axios.post('/api/users/register', body, config);

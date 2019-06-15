@@ -16,7 +16,7 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
           onChange={onChange}
           placeholder="Email or username"
           autocomplete="username"
-          error={errors.login || errors.username ? true : false}
+          error={!!(errors.login || errors.username)}
           errorMsg={errors.username || errors.login || null}
         />
         <InputGroup
@@ -26,7 +26,7 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
           onChange={onChange}
           placeholder="Password"
           autocomplete="current-password"
-          error={errors.login || errors.password ? true : false}
+          error={!!(errors.login || errors.password)}
           errorMsg={errors.password || null}
         />
         {errors.login ? (

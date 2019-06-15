@@ -17,13 +17,13 @@ const CreateTweetContainer = ({
   useEffect(() => {
     document.addEventListener('click', closeModal);
     return () => document.removeEventListener('click', closeModal);
-  });
+  }, []);
 
   const closeModal = e => {
-    if (wrapperRef !== null) {
+    if (wrapperRef === null) {
       return false;
     }
-    if (e.target === this.wrapperRef.current) {
+    if (e.target === wrapperRef.current) {
       closeCreateTweetModal();
     }
   };
@@ -49,16 +49,17 @@ const CreateTweetContainer = ({
   const handleSubmit = e => {
     e.preventDefault();
     const tweet = { text };
-    if (!validateTweet(tweet)) {
-      return false;
+    if (validateTweet(tweet)) {
+      createTweet(tweet);
     }
-
-    createTweet(tweet);
   };
 
   const handleTextareaEnterPress = e => {
     if (e.keyCode === 13 && e.shiftKey === false) {
-      handleSubmit(e);
+      const tweet = { text };
+      if (validateTweet(tweet)) {
+        createTweet(tweet);
+      }
     }
   };
 

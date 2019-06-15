@@ -1,24 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Homepage from '../components/Homepage';
 import Loading from '../components/Loading';
 import { getUserProfileWithHomepageTweets } from '../actions/profileActions';
 
-class HomepageContainer extends Component {
-  componentDidMount() {
-    this.props.getUserProfileWithHomepageTweets();
+function HomepageContainer({
+  getUserProfileWithHomepageTweets,
+  profile,
+  tweet,
+  errors
+}) {
+  useEffect(() => {
+    getUserProfileWithHomepageTweets();
+  }, []);
+
+  if (profile.loading || profile.profile === null) {
+    return <Loading />;
   }
 
-  render() {
-    const { profile, tweet, errors } = this.props;
-
-    if (profile.loading || profile.profile === null) {
-      return <Loading />;
-    }
-
-    return <Homepage profile={profile.profile} tweet={tweet} />;
-  }
+  return <Homepage profile={profile.profile} tweet={tweet} />;
 }
 
 HomepageContainer.propTypes = {

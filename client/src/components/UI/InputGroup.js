@@ -34,7 +34,7 @@ InputGroup.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  error: PropTypes.bool.isRequired
+  error: PropTypes.bool
 };
 
 InputGroup.defaultProps = {

@@ -18,7 +18,6 @@ const TextareaGroup = ({
 }) => (
   <React.Fragment>
     <Textarea
-      type="text"
       value={text}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

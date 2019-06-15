@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Landing from './Landing';
-import HomepageContainer from '../containers/HomepageContainer';
+import Landing from '../Landing';
+import HomepageContainer from '../../containers/HomepageContainer';
 
 const PrivateHomepage = ({ isAuthenticated }, ...rest) =>
   isAuthenticated ? <HomepageContainer {...rest} /> : <Landing {...rest} />;
