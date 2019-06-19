@@ -83,30 +83,25 @@ router.post('/', auth, async (req, res, next) => {
     return res.status(400).json(errors);
   }
 
-  const tweetContent = {
-    text: req.body.text
-  };
+  const tweetContent = { text: req.body.text };
 
   if (req.body.media) {
     tweetContent.media = req.body.media;
   }
 
-  // 1. Create new tweet
-  const newTweet = new Tweet(tweetContent);
-
-  newTweet.user = req.user.id;
-
   try {
+    const newTweet = new Tweet(tweetContent);
+    newTweet.user = req.user.id;
     const savedTweet = await newTweet.save();
     const tweet = await Tweet.populate(savedTweet, {
       path: 'user',
       select: ['name', 'username', 'avatar']
     });
 
-    // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.tweets array
+    // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.homepageTweets array
     const profile = await Profile.findOne({ user: req.user.id });
     // profile -> profil uzytkownika, ktory dodaje danego tweet
-    profile.tweets = [{ tweet: tweet.id }, ...profile.tweets];
+    profile.tweets = [{ _id: tweet.id }, ...profile.tweets];
     profile.homepageTweets = [{ _id: tweet.id }, ...profile.homepageTweets];
     await profile.save();
 
@@ -204,11 +199,12 @@ router.delete('/:tweet_id', auth, async (req, res, next) => {
     // remove it from profile.tweets
     const profile = await Profile.findOne({ user: req.user.id });
 
+    console.log('tweet.id', tweet.id);
     profile.tweets = profile.tweets.filter(
-      tweet => !tweet.tweet.equals(tweet_id)
+      tweet => tweet._id.toString() !== tweet_id
     );
     profile.homepageTweets = profile.homepageTweets.filter(
-      tweet => !tweet.tweet.equals(tweet_id)
+      tweet => tweet._id.toString() !== tweet_id
     );
 
     await profile.save();
@@ -217,7 +213,7 @@ router.delete('/:tweet_id', auth, async (req, res, next) => {
     profile.followers.forEach(async follower => {
       const followerProfile = await Profile.findOne({ user: follower.user });
       followerProfile.homepageTweets = followerProfile.homepageTweets.filter(
-        followerTweet => !followerTweet.tweet.equals(tweet_id)
+        followerTweet => followerTweet._id.toString() !== tweet_id
       );
       await followerProfile.save();
     });

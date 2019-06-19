@@ -23,8 +23,9 @@ router.post('/:user_id', auth, async (req, res, next) => {
     );
     const profileToFollow = await Profile.findOne({ user: user_id });
     if (!profileToFollow) {
-      errors.noprofile = 'Profile to follow does not exists';
-      return res.status(400).json(errors);
+      return res
+        .status(400)
+        .json({ message: 'Profile to follow does not exists' });
     }
 
     // Determine to follow or unfollow

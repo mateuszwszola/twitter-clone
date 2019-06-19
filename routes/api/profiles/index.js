@@ -64,7 +64,7 @@ router.get('/tweets', auth, async (req, res, next) => {
     const profile = await Profile.findOne({ user: req.user.id })
       .populate('user', ['name', 'username', 'avatar'])
       .populate({
-        path: 'tweets.tweet',
+        path: 'tweets',
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
 
