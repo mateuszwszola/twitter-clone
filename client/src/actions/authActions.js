@@ -40,7 +40,7 @@ export const registerUser = userData => async dispatch => {
     }
   };
 
-  const body = JSON.stringify(userData);/**/
+  const body = JSON.stringify(userData); /**/
 
   try {
     const res = await axios.post('/api/users/register', body, config);
@@ -93,6 +93,6 @@ export const loginUser = userData => async dispatch => {
 };
 
 export const logoutUser = () => dispatch => {
-  dispatch({ type: CLEAR_PROFILE });
+  // dispatch({ type: CLEAR_PROFILE }); TODO: When user logs out, but they view user profile, I do not want to clear it
   dispatch({ type: LOGOUT });
 };

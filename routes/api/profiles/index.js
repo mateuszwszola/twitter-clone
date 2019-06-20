@@ -49,6 +49,9 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
 
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile Not Found' });
+    }
     res.json(profile);
   } catch (err) {
     console.error(err.message);
@@ -67,7 +70,9 @@ router.get('/tweets', auth, async (req, res, next) => {
         path: 'tweets',
         populate: { path: 'user', select: ['name', 'username', 'avatar'] }
       });
-
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile Not Found' });
+    }
     res.json(profile);
   } catch (err) {
     console.error(err.message);
@@ -135,6 +140,38 @@ router.get('/username/:username', async (req, res, next) => {
       return res
         .status(404)
         .json({ msg: `Profile for ${username} does not exists` });
+    }
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
+// @route   GET api/profiles/username/:username/tweets
+// @desc    Get profile by username with tweets
+// @access  Public
+router.get('/username/:username/tweets', async (req, res, next) => {
+  const { username } = req.params;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: 'User with that username does not exists' });
+    }
+    const profile = await Profile.findOne({ user: user.id })
+      .populate('user', ['name', 'username', 'avatar'])
+      .populate({
+        path: 'tweets',
+        populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+      });
+
+    if (!profile) {
+      return res
+        .status(404)
+        .json({ message: 'Profile with that username does not exists' });
     }
     res.json(profile);
   } catch (err) {

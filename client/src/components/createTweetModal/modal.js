@@ -23,7 +23,7 @@ function CreateTweetModal({
   errors,
   handleChange,
   handleSubmit,
-  handleTextareaEnterPress,
+  handleEnterPress,
   loading,
   handleCloseModal,
   wrapperRef
@@ -57,7 +57,7 @@ function CreateTweetModal({
                   textarea={Textarea}
                   text={text}
                   handleChange={handleChange}
-                  handleKeyDown={handleTextareaEnterPress}
+                  handleEnterPress={handleEnterPress}
                   placeholder="What's happening?"
                   error={!!errors.text}
                   errorMsg={errors.text || ''}
@@ -80,7 +80,7 @@ CreateTweetModal.propTypes = {
   errors: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleTextareaEnterPress: PropTypes.func.isRequired,
+  handleEnterPress: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired
 };

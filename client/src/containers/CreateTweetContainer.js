@@ -20,10 +20,7 @@ const CreateTweetContainer = ({
   }, []);
 
   const closeModal = e => {
-    if (wrapperRef === null) {
-      return false;
-    }
-    if (e.target === wrapperRef.current) {
+    if (wrapperRef !== null && e.target === wrapperRef.current) {
       closeCreateTweetModal();
     }
   };
@@ -54,7 +51,8 @@ const CreateTweetContainer = ({
     }
   };
 
-  const handleTextareaEnterPress = e => {
+  const handleEnterPress = e => {
+    e.preventDefault();
     if (e.keyCode === 13 && e.shiftKey === false) {
       const tweet = { text };
       if (validateTweet(tweet)) {
@@ -70,7 +68,7 @@ const CreateTweetContainer = ({
       loading={loading}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
-      handleTextareaEnterPress={handleTextareaEnterPress}
+      handleEnterPress={handleEnterPress}
       handleCloseModal={closeCreateTweetModal}
       wrapperRef={wrapperRef}
     />
