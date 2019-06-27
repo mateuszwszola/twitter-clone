@@ -28,10 +28,9 @@ function ProfileContainer({
     } else {
       setOwner(false);
     }
-  });
+  }, [auth, username]);
 
   useEffect(() => {
-    console.log('Username changed, Get Profile effect!');
     getProfileWithTweetsByUsername(username);
   }, [username]);
 

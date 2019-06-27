@@ -4,7 +4,8 @@ import {
   GET_PROFILES,
   PROFILE_LOADING,
   UPDATE_PROFILE,
-  CREATE_TWEET
+  CREATE_TWEET,
+  FOLLOW
 } from '../actions/types';
 
 const initialState = {
@@ -49,6 +50,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profile: updatedProfile
+      };
+    case FOLLOW:
+      return {
+        ...state,
+        profile: payload
       };
     default:
       return state;

@@ -1,6 +1,23 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_PROFILE, PROFILE_LOADING, GET_TWEETS } from './types';
+import {
+  GET_ERRORS,
+  GET_PROFILE,
+  PROFILE_LOADING,
+  GET_TWEETS,
+  FOLLOW
+} from './types';
 import { setTweetLoading } from './tweetActions';
+
+// export const followProfile = () => async dispatch => {
+//   try {
+//     const res = await axios.post()
+//   } catch (err) {
+//     dispatch({
+//       type: GET_ERRORS,
+//       payload: err.reponse.data
+//     })
+//   }
+// }
 
 export const getUserProfile = () => async dispatch => {
   dispatch(setProfileLoading());
