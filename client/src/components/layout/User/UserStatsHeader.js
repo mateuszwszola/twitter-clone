@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ProfileStatGroup from './ProfileStatGroup';
 import { EditProfileButton, FollowProfileButton } from '../../UI/Button';
 
-const UserStatsHeader = ({ profile, owner, followButtonText }) => (
+const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => (
   <div className="profile-header-menu">
     <ul className="header-menu-list">
       <ProfileStatGroup label="Tweets" value={profile.tweets.length} />
@@ -17,7 +17,13 @@ const UserStatsHeader = ({ profile, owner, followButtonText }) => (
       </div>
     ) : (
       <div>
-        <FollowProfileButton primary>{followButtonText}</FollowProfileButton>
+        {isAuthenticated ? (
+          <FollowProfileButton primary>
+            {followed ? 'Unfollow' : 'Follow'}
+          </FollowProfileButton>
+        ) : (
+          ''
+        )}
       </div>
     )}
   </div>
@@ -26,7 +32,8 @@ const UserStatsHeader = ({ profile, owner, followButtonText }) => (
 UserStatsHeader.propTypes = {
   profile: PropTypes.object.isRequired,
   owner: PropTypes.bool.isRequired,
-  followButtonText: PropTypes.string.isRequired
+  isAuthenticated: PropTypes.bool.isRequired,
+  followed: PropTypes.bool.isRequired
 };
 
 export default UserStatsHeader;

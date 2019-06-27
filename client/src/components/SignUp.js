@@ -26,7 +26,7 @@ function SignUp({
             onChange={onChange}
             placeholder="Name"
             autocomplete="name"
-            error={errors.name ? true : false}
+            error={!!errors.name}
             errorMsg={errors.name ? errors.name : null}
           />
           <InputGroup
@@ -36,7 +36,7 @@ function SignUp({
             onChange={onChange}
             placeholder="Username"
             autocomplete="username"
-            error={errors.username ? true : false}
+            error={!!errors.username}
             errorMsg={errors.username ? errors.username : null}
           />
           <InputGroup
@@ -46,7 +46,7 @@ function SignUp({
             onChange={onChange}
             placeholder="Email"
             autocomplete="new-password"
-            error={errors.email ? true : false}
+            error={!!errors.email}
             errorMsg={errors.email ? errors.email : null}
           />
           <InputGroup
@@ -55,7 +55,7 @@ function SignUp({
             value={password}
             onChange={onChange}
             placeholder="Password"
-            error={errors.password ? true : false}
+            error={!!errors.password}
             errorMsg={errors.password ? errors.password : null}
           />
           <InputGroup
@@ -64,7 +64,7 @@ function SignUp({
             value={password2}
             onChange={onChange}
             placeholder="Repeat password"
-            error={errors.password2 ? true : false}
+            error={!!errors.password2}
             errorMsg={errors.password2 ? errors.password2 : null}
           />
           <Button primary type="submit">

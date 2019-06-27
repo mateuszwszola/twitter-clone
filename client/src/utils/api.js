@@ -58,6 +58,9 @@ export function fetchProfile(username, successCb, errorCb) {
 export function createTweet(tweet, successCb, errorCb) {
   axios
     .post('/api/tweets', tweet)
-    .then(res => successCb())
+    .then(res => {
+      console.log('createTweet res', res.data);
+      successCb();
+    })
     .catch(err => errorCb(err.response.data));
 }

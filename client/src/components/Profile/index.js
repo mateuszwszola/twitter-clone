@@ -5,25 +5,7 @@ import UserStatsHeader from '../layout/User/UserStatsHeader';
 import TweetsBoard from '../layout/TweetsBoard';
 import Loading from '../Loading';
 
-function Profile({ profile, tweet, auth }) {
-  let owner = false;
-  let followButtonText = 'Follow';
-
-  // let owner =
-  //   auth.isAuthenticated &&
-  //   auth.user &&
-  //   auth.user.username === profile.profile.user.username;
-  // let followButtonText = 'Follow';
-  // if (auth.isAuthenticated) {
-  //   let follow =
-  //     profile.profile.followers.filter(follower =>
-  //       follower.user.equals(auth.user.id)
-  //     ).length > 0;
-  //   if (follow) {
-  //     followButtonText = 'Unfollow';
-  //   }
-  //}
-
+function Profile({ profile, tweet, owner, isAuthenticated, followed }) {
   return (
     <div className="profile-container">
       <div className="profile-background-place" />
@@ -31,7 +13,8 @@ function Profile({ profile, tweet, auth }) {
         <UserStatsHeader
           profile={profile}
           owner={owner}
-          followButtonText={followButtonText}
+          isAuthenticated={isAuthenticated}
+          followed={followed}
         />
       </div>
       <div className="profile-mid-flex">
@@ -54,7 +37,9 @@ function Profile({ profile, tweet, auth }) {
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  owner: PropTypes.bool.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  followed: PropTypes.bool.isRequired
 };
 
 export default Profile;

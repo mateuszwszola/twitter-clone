@@ -18,12 +18,12 @@ import {
   Button
 } from './style';
 
-function CreateTweet({
+function CreateTweetModal({
   text,
   errors,
   handleChange,
   handleSubmit,
-  handleTextareaEnterPress,
+  handleEnterPress,
   loading,
   handleCloseModal,
   wrapperRef
@@ -57,10 +57,10 @@ function CreateTweet({
                   textarea={Textarea}
                   text={text}
                   handleChange={handleChange}
-                  handleKeyDown={handleTextareaEnterPress}
+                  handleEnterPress={handleEnterPress}
                   placeholder="What's happening?"
-                  error={errors.text ? true : false}
-                  errorMsg={errors.text ? errors.text : ''}
+                  error={!!errors.text}
+                  errorMsg={errors.text || ''}
                 />
                 <Button primary type="submit" disabled={!text}>
                   Tweet
@@ -75,14 +75,14 @@ function CreateTweet({
   );
 }
 
-CreateTweet.propTypes = {
+CreateTweetModal.propTypes = {
   text: PropTypes.string.isRequired,
   errors: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  handleTextareaEnterPress: PropTypes.func.isRequired,
+  handleEnterPress: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired
 };
 
-export default CreateTweet;
+export default CreateTweetModal;

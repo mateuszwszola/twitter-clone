@@ -1,241 +1,231 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
+const auth = require('../../../middleware/auth');
+
 const Tweet = require('../../../models/Tweet');
 const Profile = require('../../../models/Profile');
+
 const likeRouter = require('./like');
 const commentRouter = require('./comment');
 
-const validateObjectId = require('../../../validation/objectId');
 const validateTweet = require('../../../validation/createTweet');
 
 router.use('/like', likeRouter);
 router.use('/comment', commentRouter);
 
+// @route   GET api/tweets/all
+// @desc    Get all tweets
+// @access  Public
+router.get('/all', async (req, res, next) => {
+  try {
+    const tweets = await Tweet.find({})
+      .sort({ created: -1 })
+      .populate('User', ['name', 'username', 'avatar']);
+    res.json(tweets);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
 // @route   GET api/tweets/:tweet_id
 // @desc    Get tweet by tweet ID
 // @access  Public
-router.get('/:tweet_id', (req, res, next) => {
+router.get('/:tweet_id', async (req, res, next) => {
   const { tweet_id } = req.params;
-  const errors = {};
-
-  const { idErrors, isValidObjectId } = validateObjectId(tweet_id);
-  if (!isValidObjectId) {
-    return res.status(400).json(idErrors);
+  try {
+    const tweet = await Tweet.findById(tweet_id).populate('user', [
+      'name',
+      'username',
+      'avatar'
+    ]);
+    if (!tweet) {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    res.json(tweet);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    next(err);
   }
-
-  Tweet.findById(tweet_id)
-    .populate('user', ['name', 'username', 'avatar'])
-    .then(tweet => {
-      if (!tweet) {
-        errors.notweet = 'Tweet does not exists';
-        return res.status(404).json(errors);
-      }
-
-      res.json(tweet);
-    })
-    .catch(err => next(err));
 });
 
 // @route   GET api/tweets/all/:user_id
-// @desc    Get all tweets posted by the same user
+// @desc    Get all tweets posted by the user
 // @access  Public
-router.get('/all/:user_id', (req, res, next) => {
+router.get('/all/:user_id', async (req, res, next) => {
   const { user_id } = req.params;
-  const errors = {};
 
-  const { idErrors, isValidObjectId } = validateObjectId(user_id);
-  if (!isValidObjectId) {
-    return res.status(400).json(idErrors);
+  try {
+    const tweets = await Tweet.find({ user: user_id })
+      .sort({ created: -1 })
+      .populate('user', ['name', 'username', 'avatar']);
+
+    res.json(tweets);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User that not exists' });
+    }
+    next(err);
   }
-
-  Tweet.find({ user: user_id })
-    .sort({ created: -1 })
-    .populate('user', ['name', 'username', 'avatar'])
-    .then(tweets => {
-      if (!tweets) {
-        errors.notweets = 'That user does not have any tweets';
-        return res.status(404).json(errors);
-      }
-
-      res.json(tweets);
-    })
-    .catch(err => next(err));
 });
 
 // @route   POST api/tweets
 // @desc    Create tweet
 // @access  Private
-router.post(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    const { errors, isValid } = validateTweet(req.body);
+router.post('/', auth, async (req, res, next) => {
+  const { errors, isValid } = validateTweet(req.body);
 
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    const tweetContent = {
-      text: req.body.text
-    };
-
-    if (req.body.media) {
-      tweetContent.media = req.body.media;
-    }
-
-    // 1. Create new tweet
-    const newTweet = new Tweet(tweetContent);
-
-    newTweet.user = req.user._id;
-
-    newTweet
-      .save()
-      .then(savedTweet => {
-        if (!savedTweet) {
-          errors.tweet = 'Cannot save tweet';
-          return res.status(500).json(errors);
-        }
-
-        // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.tweets array
-        Profile.findOne({ user: req.user._id }).then(profile => {
-          // profile -> profil uzytkownika, ktory dodaje danego tweet
-          profile.tweets = [{ tweet: savedTweet._id }, ...profile.tweets];
-          profile.homepageTweets = [
-            { tweet: savedTweet._id },
-            ...profile.homepageTweets
-          ];
-          profile.save();
-
-          // loop through profiles and for each add a tweet_id
-          profile.followers.forEach(follower => {
-            Profile.findOne({ user: follower.user }).then(followerProfile => {
-              followerProfile.homepageTweets = [
-                { tweet: savedTweet._id },
-                ...followerProfile.homepageTweets
-              ];
-              followerProfile.save();
-            });
-          });
-        });
-
-        res.json(savedTweet);
-      })
-      .catch(err => next(err));
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
-);
+
+  const tweetContent = { text: req.body.text };
+
+  if (req.body.media) {
+    tweetContent.media = req.body.media;
+  }
+
+  try {
+    const newTweet = new Tweet(tweetContent);
+    newTweet.user = req.user.id;
+    const savedTweet = await newTweet.save();
+    const tweet = await Tweet.populate(savedTweet, {
+      path: 'user',
+      select: ['name', 'username', 'avatar']
+    });
+
+    // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.homepageTweets array
+    const profile = await Profile.findOne({ user: req.user.id });
+    // profile -> profil uzytkownika, ktory dodaje danego tweet
+    profile.tweets = [{ _id: tweet.id }, ...profile.tweets];
+    profile.homepageTweets = [{ _id: tweet.id }, ...profile.homepageTweets];
+    await profile.save();
+
+    // loop through profiles and for each add a tweet_id
+    profile.followers.forEach(async follower => {
+      const followerProfile = await Profile.findOne({ user: follower.user });
+      followerProfile.homepageTweets = [
+        { _id: tweet.id },
+        ...followerProfile.homepageTweets
+      ];
+      await followerProfile.save();
+    });
+
+    res.json(tweet);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
 
 // @route   PUT api/tweets/:tweet_id
 // @desc    Update tweet (only by tweet author)
 // @access  Private
-router.put(
-  '/:tweet_id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    // 1. Validate tweet_id
-    // 2. Check if tweet does exists
-    // 3. If yes, make sure user is the author
-    // 4. If tweet does not exists, return with appropriate message and status code
-    // 5. If user is not author of this tweet, also send appropriate content
-    const { tweet_id } = req.params;
-    const { idErrors, isValidObjectId } = validateObjectId(tweet_id);
-    if (!isValidObjectId) {
-      return res.status(400).json(idErrors);
-    }
+router.put('/:tweet_id', auth, async (req, res, next) => {
+  // 1. Validate tweet_id
+  // 2. Check if tweet does exists
+  // 3. If yes, make sure user is the author
+  // 4. If tweet does not exists, return with appropriate message and status code
+  // 5. If user is not author of this tweet, also send appropriate content
+  const { tweet_id } = req.params;
 
-    const { errors, isValid } = validateTweet(req.body);
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    Tweet.findById(tweet_id).then(tweet => {
-      if (!tweet) {
-        errors.tweet = 'This tweet does not exists';
-        return res.status(404).json(errors);
-      }
-      // Make sure user is the owner of this tweet, if it is, then validate and update it
-      if (!req.user._id.equals(tweet.user)) {
-        errors.notowner = 'You cannot update someone else tweets';
-        return res.status(401).json(errors);
-      }
-
-      tweet.text = req.body.text;
-      tweet.editted = true;
-      if (req.body['media']) {
-        tweet.media = req.body.media;
-      }
-
-      tweet
-        .save()
-        .then(savedTweet => {
-          if (!savedTweet) {
-            errors.tweetnotsaved = 'There was a problem with saving your tweet';
-            return res.status(500).json(errors);
-          }
-
-          res.json(savedTweet);
-        })
-        .catch(err => next(err));
-    });
+  const { errors, isValid } = validateTweet(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
-);
+
+  try {
+    const tweet = await Tweet.findById(tweet_id);
+    if (!tweet) {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    // Make sure user is the owner of this tweet, if it is, then validate and update it
+    if (req.user.id !== tweet.user.toString()) {
+      return res
+        .status(401)
+        .json({ msg: 'You cannot update someone else tweets' });
+    }
+
+    const newTweet = {
+      text: req.body.text,
+      editted: true
+    };
+
+    if (req.body['media']) {
+      newTweet.media = req.body.media;
+    }
+
+    const savedTweet = await Tweet.findByIdAndUpdate(
+      tweet_id,
+      { $set: newTweet },
+      { new: true }
+    );
+    res.json(savedTweet);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    next(err);
+  }
+});
 
 // @route   DELETE api/tweets/:tweet_id
 // @desc    Delete tweet
 // @access  Private
-router.delete(
-  '/:tweet_id',
-  passport.authenticate('jwt', { session: false }),
-  (req, res, next) => {
-    const { tweet_id } = req.params;
-    const { idErrors, isValidObjectId } = validateObjectId(tweet_id);
-    const errors = {};
-
-    if (!isValidObjectId) {
-      return res.status(400).json(idErrors);
+router.delete('/:tweet_id', auth, async (req, res, next) => {
+  const { tweet_id } = req.params;
+  try {
+    // Make sure tweet does exists
+    const tweet = await Tweet.findById(tweet_id);
+    // Tweet does not exists
+    if (!tweet) {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    // Tweet does exists
+    // Make sure the user is the owner of that tweet
+    if (req.user.id !== tweet.user.toString()) {
+      return res
+        .status(401)
+        .json({ msg: 'You are not allowed to delete that tweet' });
     }
 
-    // Make sure tweet does exists
-    Tweet.findById(tweet_id)
-      .then(tweet => {
-        // Tweet does not exists
-        if (!tweet) {
-          errors.tweetnotfound = 'That tweet does not exists';
-          return res.status(404).json(errors);
-        }
-        // Tweet does exists
-        // Make sure the user is the owner of that tweet
-        if (!req.user._id.equals(tweet.user)) {
-          errors.notowner = 'You cannot delete someone else tweet';
-          return res.status(401).json(errors);
-        }
+    // Delete tweet
+    await tweet.remove();
+    // remove it from profile.tweets
+    const profile = await Profile.findOne({ user: req.user.id });
 
-        // Delete tweet
-        tweet.remove().then(() => {
-          // remove it from profile.tweets
-          Profile.findOne({ user: req.user._id }).then(profile => {
-            profile.tweets = profile.tweets.filter(
-              tweet => !tweet.tweet.equals(tweet_id)
-            );
-            profile.homepageTweets = profile.homepageTweets.filter(
-              tweet => !tweet.tweet.equals(tweet_id)
-            );
+    console.log('tweet.id', tweet.id);
+    profile.tweets = profile.tweets.filter(
+      tweet => tweet._id.toString() !== tweet_id
+    );
+    profile.homepageTweets = profile.homepageTweets.filter(
+      tweet => tweet._id.toString() !== tweet_id
+    );
 
-            // remove tweet_id from all followers profile.homepageTweets
-            profile.followers.forEach(follower => {
-              Profile.findOne({ user: follower.user }).then(followerProfile => {
-                followerProfile.homepageTweets = followerProfile.homepageTweets.filter(
-                  followerTweet => !followerTweet.tweet.equals(tweet_id)
-                );
-                followerProfile.save();
-              });
-            });
-          });
-          res.json({ success: true });
-        });
-      })
-      .catch(err => next(err));
+    await profile.save();
+
+    // remove tweet_id from all followers profile.homepageTweets
+    profile.followers.forEach(async follower => {
+      const followerProfile = await Profile.findOne({ user: follower.user });
+      followerProfile.homepageTweets = followerProfile.homepageTweets.filter(
+        followerTweet => followerTweet._id.toString() !== tweet_id
+      );
+      await followerProfile.save();
+    });
+
+    res.json(tweet);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Tweet does not exists' });
+    }
+    next(err);
   }
-);
+});
 
 module.exports = router;

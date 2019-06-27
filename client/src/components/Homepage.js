@@ -24,7 +24,7 @@ function Homepage({ profile, tweet }) {
 
 Homepage.propTypes = {
   profile: PropTypes.object.isRequired,
-  tweet: PropTypes.object.isRequired
+  tweet: PropTypes.object
 };
 
 export default Homepage;

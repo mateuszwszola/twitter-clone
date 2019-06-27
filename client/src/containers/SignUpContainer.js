@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../actions/authActions';
+import { clearErrors } from '../actions/errorActions';
 import SignUp from '../components/SignUp';
 import validateForm from '../utils/validateForm';
 import isEmpty from '../utils/isEmpty';
@@ -18,16 +19,21 @@ class SignUpContainer extends Component {
     redirect: false
   };
 
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.setState(() => ({ redirect: true }));
-    }
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
-  componentWillReceiveProps({ errors }) {
-    if (errors) {
-      this.handleErrors(errors);
+  static getDerivedStateFromProps(props, state) {
+    const { auth, errors } = props;
+    if (auth.isAuthenticated || !isEmpty(errors)) {
+      return {
+        ...state,
+        redirect: auth.isAuthenticated,
+        errors: !isEmpty(props.errors) && props.errors
+      };
     }
+
+    return null;
   }
 
   handleChange = e => {
@@ -54,17 +60,25 @@ class SignUpContainer extends Component {
     };
 
     const errors = validateForm(newUser);
-    if (!isEmpty(errors)) {
+    if (errors) {
       return this.handleErrors(errors);
     }
 
-    this.props.registerUser(newUser, this.props.history);
+    this.props.registerUser(newUser);
   };
 
   render() {
-    const { name, email, username, password, password2, errors } = this.state;
+    const {
+      name,
+      email,
+      username,
+      password,
+      password2,
+      errors,
+      redirect
+    } = this.state;
 
-    if (this.props.auth.isAuthenticated) {
+    if (redirect) {
       return <Redirect to="/" />;
     }
 
@@ -85,6 +99,7 @@ class SignUpContainer extends Component {
 
 SignUpContainer.propTypes = {
   registerUser: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -96,5 +111,5 @@ const mapStateToProps = ({ auth, errors }) => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
-)(withRouter(SignUpContainer));
+  { registerUser, clearErrors }
+)(SignUpContainer);

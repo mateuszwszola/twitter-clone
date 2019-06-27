@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
 import { UserAvatar } from '../UI/UserAvatar';
-import avatar from '../../img/tiger-avatar-example.jpg';
+// import avatar from '../../img/tiger-avatar-example.jpg';
 
 const TweetsBoard = ({ tweets }) => (
   <div className="tweets-board-container">
@@ -15,7 +15,11 @@ const TweetsBoard = ({ tweets }) => (
           {tweets.length > 0 ? (
             tweets.map(tweet => (
               <li key={tweet._id} className="tweets-board-list-item">
-                <UserAvatar small src={avatar} alt="User Avatar" />
+                <UserAvatar
+                  small
+                  src="https://picsum.photos/200"
+                  alt="User Avatar"
+                />
                 <div className="tweets-board-list-item-content">
                   <div className="tweet-user-group">
                     <span className="tweet-user-name-group">

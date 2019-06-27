@@ -1,85 +1,67 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import DropdownMenu from './DropdownMenu';
 import { Button } from '../../UI/Button';
 import { StyledNavLink } from '../../UI/Links';
-import DropdownMenu from './DropdownMenu';
 import { openCreateTweetModal } from '../../../actions/uiActions';
-import CreateTweetContainer from '../../../containers/CreateTweetContainer';
+import { logoutUser } from '../../../actions/authActions';
 
-class AuthNav extends Component {
-  state = {
-    showMenu: false
-  };
+const AuthNav = ({ user, logoutUser, openCreateTweetModal }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const avatarRef = useRef(null);
 
-  avatarRef = React.createRef();
+  const handleDropdown = e => {
+    if (e.target === avatarRef.current) {
+      return setShowMenu(!showMenu);
+    }
 
-  componentDidMount() {
-    document.addEventListener('click', this.hideMenu);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.hideMenu);
-  }
-
-  hideMenu = e => {
-    if (e.target !== this.avatarRef.current) {
-      this.setState(() => ({
-        showMenu: false
-      }));
+    if (showMenu) {
+      setShowMenu(false);
     }
   };
 
-  toggleMenu = () => {
-    this.setState(({ showMenu }) => ({
-      showMenu: !showMenu
-    }));
-  };
+  useEffect(() => {
+    document.addEventListener('click', handleDropdown);
+    return () => document.removeEventListener('click', handleDropdown);
+  });
 
-  render() {
-    const { user, openCreateTweetModal, showCreateTweetModal } = this.props;
-    return (
-      <nav className="main-nav">
-        {showCreateTweetModal && <CreateTweetContainer />}
-        <li className="nav__item">
-          <StyledNavLink to="/">
-            <i className="fas fa-home" /> Home
-          </StyledNavLink>
-        </li>
-        <li className="nav__item">
-          <Button primary type="text" onClick={openCreateTweetModal}>
-            Tweet
-          </Button>
-        </li>
-        <li className="nav__item">
-          <div className="dropdown">
-            <i
-              onClick={this.toggleMenu}
-              className="fas fa-user-circle nav__avatar dropdown-button"
-              ref={this.avatarRef}
-            />
-            {this.state.showMenu ? (
-              <DropdownMenu user={user} onLogout={this.props.onLogout} />
-            ) : null}
-          </div>
-        </li>
-      </nav>
-    );
-  }
-}
-
-AuthNav.propTypes = {
-  user: PropTypes.object.isRequired,
-  onLogout: PropTypes.func.isRequired,
-  openCreateTweetModal: PropTypes.func.isRequired,
-  showCreateTweetModal: PropTypes.bool.isRequired
+  return (
+    <nav className="main-nav">
+      <li className="nav__item">
+        <StyledNavLink to="/">
+          <i className="fas fa-home" /> Home
+        </StyledNavLink>
+      </li>
+      <li className="nav__item">
+        <Button primary type="text" onClick={openCreateTweetModal}>
+          Tweet
+        </Button>
+      </li>
+      <li className="nav__item">
+        <div className="dropdown">
+          <i
+            className="fas fa-user-circle nav__avatar dropdown-button"
+            ref={avatarRef}
+          />
+          {showMenu ? <DropdownMenu user={user} onLogout={logoutUser} /> : null}
+        </div>
+      </li>
+    </nav>
+  );
 };
 
-const mapStateToProps = ({ UI }) => ({
-  showCreateTweetModal: UI.showCreateTweetModal
+AuthNav.propTypes = {
+  user: PropTypes.object,
+  logoutUser: PropTypes.func.isRequired,
+  openCreateTweetModal: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ auth }) => ({
+  user: auth.user
 });
 
 export default connect(
   mapStateToProps,
-  { openCreateTweetModal }
+  { logoutUser, openCreateTweetModal }
 )(AuthNav);

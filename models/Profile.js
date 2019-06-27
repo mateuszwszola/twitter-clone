@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'users'
+    ref: 'User'
   },
   bio: {
     type: String
@@ -22,7 +22,7 @@ const ProfileSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
@@ -30,7 +30,7 @@ const ProfileSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
       }
     }
   ],
@@ -38,27 +38,13 @@ const ProfileSchema = new Schema({
     {
       tweet: {
         type: Schema.Types.ObjectId,
-        ref: 'tweets'
+        ref: 'Tweet'
       }
     }
   ],
-  tweets: [
-    {
-      tweet: {
-        type: Schema.Types.ObjectId,
-        ref: 'tweets'
-      }
-    }
-  ],
+  tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   // Tweets that will be displayed on the logged in user homepage
-  homepageTweets: [
-    {
-      tweet: {
-        type: Schema.Types.ObjectId,
-        ref: 'tweets'
-      }
-    }
-  ],
+  homepageTweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   // User background picture - uploaded by user
   backgroundPicture: {
     type: String
@@ -69,4 +55,4 @@ const ProfileSchema = new Schema({
   }
 });
 
-module.exports = Profile = mongoose.model('profiles', ProfileSchema);
+module.exports = Profile = mongoose.model('Profile', ProfileSchema);

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
+import { clearErrors } from '../actions/errorActions';
 import SignIn from '../components/SignIn';
-import isEmpty from '../utils/isEmpty';
 import validateForm from '../utils/validateForm';
+import isEmpty from '../utils/isEmpty';
 
 class SignInContainer extends Component {
   state = {
@@ -15,26 +16,28 @@ class SignInContainer extends Component {
     redirect: false
   };
 
-  componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
-      this.setState(() => ({ redirect: true }));
-    }
+  componentWillUnmount() {
+    this.props.clearErrors();
   }
 
-  componentWillReceiveProps({ errors, auth }) {
-    if (errors) {
-      this.handleErrors(errors);
+  static getDerivedStateFromProps(props, state) {
+    const { auth, errors } = props;
+    if (auth.isAuthenticated || !isEmpty(errors)) {
+      return {
+        ...state,
+        redirect: auth.isAuthenticated,
+        errors: !isEmpty(props.errors) && props.errors
+      };
     }
-    if (auth.isAuthenticated) {
-      this.setState(() => ({ redirect: true }));
-    }
+
+    return null;
   }
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.setState({
+    this.setState(() => ({
       [name]: value
-    });
+    }));
   };
 
   handleErrors = errors => {
@@ -50,7 +53,7 @@ class SignInContainer extends Component {
     };
 
     const errors = validateForm(userData);
-    if (!isEmpty(errors)) {
+    if (errors) {
       return this.handleErrors(errors);
     }
 
@@ -60,9 +63,11 @@ class SignInContainer extends Component {
   render() {
     const { username, password, errors, redirect } = this.state;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
+
     if (redirect) {
       return <Redirect to={from} />;
     }
+
     return (
       <SignIn
         username={username}
@@ -77,6 +82,7 @@ class SignInContainer extends Component {
 
 SignInContainer.propTypes = {
   loginUser: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -88,5 +94,5 @@ const mapStateToProps = ({ auth, errors }) => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
-)(withRouter(SignInContainer));
+  { loginUser, clearErrors }
+)(SignInContainer);

@@ -2,7 +2,7 @@
   "name": "client",
   "version": "1.0.0",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
@@ -10,13 +10,13 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-moment": "^0.9.2",
-    "react-redux": "^7.0.2",
+    "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "3.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -32,6 +32,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-plugin-macros": "^2.5.1"
+    "babel-plugin-macros": "^2.6.0"
   }
 }

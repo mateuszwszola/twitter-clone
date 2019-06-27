@@ -1,52 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { createTweet } from '../utils/api';
-import CreateTweetModal from '../components/createTweetModal/CreateTweetModal';
+import CreateTweetModal from '../components/createTweetModal/modal';
 import { connect } from 'react-redux';
+import { createTweet } from '../actions/tweetActions';
 import { closeCreateTweetModal } from '../actions/uiActions';
 
-class CreateTweetContainer extends Component {
-  state = {
-    text: '',
-    errors: {},
-    loading: false
-  };
+const CreateTweetContainer = ({
+  closeCreateTweetModal,
+  createTweet,
+  loading
+}) => {
+  const [text, setText] = useState('');
+  const [errors, setErrors] = useState({});
+  const wrapperRef = useRef(null);
 
-  wrapperRef = React.createRef();
+  useEffect(() => {
+    document.addEventListener('click', closeModal);
+    return () => document.removeEventListener('click', closeModal);
+  }, []);
 
-  componentDidMount() {
-    document.addEventListener('click', this.closeModal);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('click', this.closeModal);
-  }
-
-  closeModal = e => {
-    if (e.target === this.wrapperRef.current) {
-      this.props.closeCreateTweetModal();
+  const closeModal = e => {
+    if (wrapperRef !== null && e.target === wrapperRef.current) {
+      closeCreateTweetModal();
     }
   };
 
-  handleChange = e => {
+  const handleChange = e => {
     const { value } = e.target;
-    this.setState(() => ({
-      text: value
-    }));
+    setText(value);
   };
 
-  handleErrors = errors => {
-    this.setState(() => ({ errors, loading: false }));
-  };
-
-  validateTweet = tweet => {
+  const validateTweet = tweet => {
     const { text } = tweet;
     if (text.length < 2 || text.length > 140) {
-      this.setState(() => ({
-        errors: {
-          text: 'Tweet text length must be between 2 and 140 characters'
-        }
-      }));
+      setErrors({
+        text: 'Tweet text length must be between 2 and 140 characters'
+      });
 
       return false;
     }
@@ -54,70 +43,49 @@ class CreateTweetContainer extends Component {
     return true;
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    const tweet = {
-      text: this.state.text
-    };
-
-    if (!this.validateTweet(tweet)) {
-      return false;
+    const tweet = { text };
+    if (validateTweet(tweet)) {
+      createTweet(tweet);
     }
-
-    this.setState(() => ({ loading: true }));
-
-    createTweet(
-      tweet,
-      () => {
-        this.setState(() => ({
-          loading: false
-        }));
-        this.props.closeCreateTweetModal();
-        window.location.reload();
-      },
-      this.handleErrors
-    );
   };
 
-  handleTextareaEnterPress = e => {
+  const handleEnterPress = e => {
+    e.preventDefault();
     if (e.keyCode === 13 && e.shiftKey === false) {
-      this.handleSubmit(e);
+      const tweet = { text };
+      if (validateTweet(tweet)) {
+        createTweet(tweet);
+      }
     }
   };
 
-  render() {
-    const { text, errors, loading } = this.state;
-    const { showCreateTweetModal, closeCreateTweetModal } = this.props;
-
-    if (!showCreateTweetModal) {
-      return null;
-    }
-
-    return (
-      <CreateTweetModal
-        text={text}
-        errors={errors}
-        loading={loading}
-        handleChange={this.handleChange}
-        handleSubmit={this.handleSubmit}
-        handleTextareaEnterPress={this.handleTextareaEnterPress}
-        handleCloseModal={closeCreateTweetModal}
-        wrapperRef={this.wrapperRef}
-      />
-    );
-  }
-}
-
-CreateTweetContainer.propTypes = {
-  showCreateTweetModal: PropTypes.bool.isRequired,
-  closeCreateTweetModal: PropTypes.func.isRequired
+  return (
+    <CreateTweetModal
+      text={text}
+      errors={errors}
+      loading={loading}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      handleEnterPress={handleEnterPress}
+      handleCloseModal={closeCreateTweetModal}
+      wrapperRef={wrapperRef}
+    />
+  );
 };
 
-const mapStateToProps = ({ UI }) => ({
-  showCreateTweetModal: UI.showCreateTweetModal
+CreateTweetContainer.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  closeCreateTweetModal: PropTypes.func.isRequired,
+  createTweet: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ tweet }) => ({
+  loading: tweet.loading
 });
 
 export default connect(
   mapStateToProps,
-  { closeCreateTweetModal }
+  { closeCreateTweetModal, createTweet }
 )(CreateTweetContainer);
