@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledNavLink } from '../../UI/Links';
+import { StyledNavLink } from '../../UI/links';
 
 export default function BasicNav() {
   return (

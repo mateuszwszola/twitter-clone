@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/macro';
-import { Button as UIButton } from '../UI/Button';
+import { Button as UIButton } from '../UI/button';
 
 export const Wrapper = styled.div`
   z-index: 2;

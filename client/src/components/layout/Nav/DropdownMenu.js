@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DropdownLink } from '../../UI/Links';
-import { SignoutButton } from '../../UI/Button';
-import Loading from '../../Loading';
+import { DropdownLink } from '../../UI/links';
+import { SignoutButton } from '../../UI/button';
+import Loading from '../../loading';
 
 function DropdownMenu({ user, onLogout }) {
   if (user === null) {

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import InputGroup from './UI/InputGroup';
-import { Button } from './UI/Button';
+import InputGroup from '../UI/inputGroup';
+import { Button } from '../../shared/components';
+import { Container } from '../../shared/layout';
+import { SignUpContainer, Title, Form, Helper, StyledLink } from './style';
 
 function SignUp({
   name,
@@ -15,10 +16,10 @@ function SignUp({
   errors
 }) {
   return (
-    <div className="container">
-      <div className="auth__container">
-        <h1 className="auth__logo">Sign Up to Twitter</h1>
-        <form className="auth__form" onSubmit={onSubmit}>
+    <Container>
+      <SignUpContainer>
+        <Title>Sign Up to Twitter</Title>
+        <Form onSubmit={onSubmit}>
           <InputGroup
             type="text"
             name="name"
@@ -70,15 +71,15 @@ function SignUp({
           <Button primary type="submit">
             Sign Up
           </Button>
-        </form>
-        <p className="signin-helper">
+        </Form>
+        <Helper>
           Already have an account?
-          <Link to="/signin" className="login-signin-link">
+          <StyledLink to="/signin">
             Sign In now <i className="fas fa-angle-double-right" />
-          </Link>
-        </p>
-      </div>
-    </div>
+          </StyledLink>
+        </Helper>
+      </SignUpContainer>
+    </Container>
   );
 }
 

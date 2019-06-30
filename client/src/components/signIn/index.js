@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import InputGroup from './UI/InputGroup';
-import { Button } from './UI/Button';
+import InputGroup from '../UI/inputGroup';
+import { Button, FeedbackMessage } from '../../shared/components';
+import { Container } from '../../shared/layout';
+import { SignInContainer, Title, Form, Helper } from './style';
 
 const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
-  <div className="container">
-    <div className="auth__container">
-      <h1 className="auth__logo">Sign in to Twitter</h1>
-      <form className="auth__form" onSubmit={onSubmit}>
+  <Container>
+    <SignInContainer>
+      <Title>Sign in to Twitter</Title>
+      <Form onSubmit={onSubmit}>
         <InputGroup
           type="text"
           name="username"
@@ -30,20 +32,20 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
           errorMsg={errors.password || null}
         />
         {errors.login ? (
-          <div className="invalid-feedback">{errors.login}</div>
+          <FeedbackMessage>{errors.login}</FeedbackMessage>
         ) : null}
         <Button type="submit" primary>
           Log In
         </Button>
-      </form>
-      <p className="signup-helper">
+      </Form>
+      <Helper>
         New to Twitter?
         <Link to="/signup" className="login-signup-link">
           Sign up now <i className="fas fa-angle-double-right" />
         </Link>
-      </p>
-    </div>
-  </div>
+      </Helper>
+    </SignInContainer>
+  </Container>
 );
 
 SignIn.propTypes = {

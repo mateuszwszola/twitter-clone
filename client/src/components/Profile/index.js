@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ProfileUserGroup from './ProfileUserGroup';
-import UserStatsHeader from '../layout/User/UserStatsHeader';
-import TweetsBoard from '../layout/TweetsBoard';
-import Loading from '../Loading';
+import ProfileUserGroup from './profileUserGroup';
+import UserStatsHeader from '../layout/user/userStatsHeader';
+import TweetsBoard from '../layout/tweetsBoard';
+import Loading from '../loading';
 
 function Profile({ profile, tweet, owner, isAuthenticated, followed }) {
   return (

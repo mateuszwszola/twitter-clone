@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TweetsBoard from './layout/TweetsBoard';
-import UserPreview from './layout/UserPreview';
-import Loading from './Loading';
+import TweetsBoard from '../layout/tweetsBoard';
+import UserPreview from '../layout/userPreview';
+import Loading from '../loading';
+import { Container, LeftSidebar, Main, RightSidebar } from './style';
 
 function Homepage({ profile, tweet }) {
   return (
-    <div className="homepage-container container">
-      <div className="homepage-left homepage-flex-item">
+    <Container>
+      <LeftSidebar>
         <UserPreview profile={profile} />
-      </div>
-      <div className="homepage-mid homepage-flex-item">
+      </LeftSidebar>
+      <Main>
         {tweet.loading || tweet.tweets === null ? (
           <Loading />
         ) : (
           <TweetsBoard tweets={tweet.tweets} />
         )}
-      </div>
-      <div className="homepage-right homepage-flex-item">Homepage Right</div>
-    </div>
+      </Main>
+      <RightSidebar>Homepage Right</RightSidebar>
+    </Container>
   );
 }
 

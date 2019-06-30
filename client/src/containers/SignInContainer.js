@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
 import { clearErrors } from '../actions/errorActions';
-import SignIn from '../components/SignIn';
+import SignIn from '../components/signIn';
 import validateForm from '../utils/validateForm';
 import isEmpty from '../utils/isEmpty';
 

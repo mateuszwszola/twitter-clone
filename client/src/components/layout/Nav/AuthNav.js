@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import DropdownMenu from './DropdownMenu';
-import { Button } from '../../UI/Button';
-import { StyledNavLink } from '../../UI/Links';
+import DropdownMenu from './dropdownMenu';
+import { Button } from '../../UI/button';
+import { StyledNavLink } from '../../UI/links';
 import { openCreateTweetModal } from '../../../actions/uiActions';
 import { logoutUser } from '../../../actions/authActions';
 

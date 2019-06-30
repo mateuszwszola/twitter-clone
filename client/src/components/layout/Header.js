@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import AuthNav from './Nav/AuthNav';
-import BasicNav from './Nav/BasicNav';
+import AuthNav from './nav/authNav';
+import BasicNav from './nav/basicNav';
 
 const Header = ({ isAuthenticated }) => (
   <header className="main-header">

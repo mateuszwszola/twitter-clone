@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ProfileStatGroup from './ProfileStatGroup';
-import { EditProfileButton, FollowProfileButton } from '../../UI/Button';
+import ProfileStatGroup from './profileStatGroup';
+import { EditProfileButton, FollowProfileButton } from '../../UI/button';
 
 const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => (
   <div className="profile-header-menu">

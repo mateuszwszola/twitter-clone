@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import { UserAvatar } from '../UI/UserAvatar';
+import { UserAvatar } from '../UI/userAvatar';
 // import avatar from '../../img/tiger-avatar-example.jpg';
 
 const TweetsBoard = ({ tweets }) => (

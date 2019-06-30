@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getProfileWithTweetsByUsername } from '../actions/profileActions';
-import Profile from '../components/Profile';
-import Loading from '../components/Loading';
-import DisplayErrors from '../components/DisplayErrors';
+import Profile from '../components/profile';
+import Loading from '../components/loading';
+import DisplayErrors from '../components/displayErrors';
 import isEmpty from '../utils/isEmpty';
 
 function ProfileContainer({
