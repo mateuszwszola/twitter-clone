@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import Background from './background';
-import HeaderMenu from './headerMenu';
-import MidFlex from './midFlex';
-import StatsContainer from './statsContainer';
+import Background from './Background';
+import HeaderMenu from './HeaderMenu';
+import MidFlex from './MidFlex';
+import StatsContainer from './StatsContainer';
 
 const UserPreviewCard = styled.div`
   display: flex;

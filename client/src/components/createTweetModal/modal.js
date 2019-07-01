@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import Loading from '../loading';
-import TextareaGroup from '../UI/textareaGroup';
+import Loading from '../Loading';
+import TextareaGroup from 'components/TextareaGroup';
 import {
   Wrapper,
   Modal,

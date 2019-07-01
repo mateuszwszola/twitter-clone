@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginUser } from '../actions/authActions';
-import { clearErrors } from '../actions/errorActions';
-import SignIn from '../components/signIn';
-import validateForm from '../utils/validateForm';
-import isEmpty from '../utils/isEmpty';
+import { loginUser } from 'actions/authActions';
+import { clearErrors } from 'actions/errorActions';
+import SignIn from 'components/signIn';
+import validateForm from 'utils/validateForm';
+import isEmpty from 'utils/isEmpty';
 
 class SignInContainer extends Component {
   state = {

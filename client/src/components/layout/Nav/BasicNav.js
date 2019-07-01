@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledNavLink } from '../../../shared/components';
+import { StyledNavLink } from 'shared/components';
 import { MainNav, NavItem } from './style';
 
 export default function BasicNav() {

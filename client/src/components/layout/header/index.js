@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import AuthNav from './nav/authNav';
-import BasicNav from './nav/basicNav';
+import AuthNav from '../nav/AuthNav';
+import BasicNav from '../nav/BasicNav';
+import { StyledHeader, Container, Logo } from './style';
 
 const Header = ({ isAuthenticated }) => (
-  <header className="main-header">
-    <div className="header-container">
-      <i className="fab fa-twitter header__logo" />
+  <StyledHeader>
+    <Container>
+      <Logo className="fab fa-twitter" />
       {isAuthenticated ? <AuthNav /> : <BasicNav />}
-    </div>
-  </header>
+    </Container>
+  </StyledHeader>
 );
 
 Header.propTypes = {

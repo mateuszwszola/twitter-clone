@@ -1,10 +1,10 @@
 import styled from 'styled-components/macro';
 
-const sizes = {
-  phone: 768,
-  tablet: 992,
-  desktop: 1200
-};
+// const sizes = {
+//   phone: 768,
+//   tablet: 992,
+//   desktop: 1200
+// };
 
 // const queries = {
 //   tiny: `@media (max-width: ${sizes.phone}px)`,

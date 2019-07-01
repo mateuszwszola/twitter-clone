@@ -6,8 +6,8 @@ import {
   REGISTER_FAIL,
   AUTH_ERROR,
   LOGOUT
-} from '../actions/types';
-import setAuthToken from '../utils/setAuthToken';
+} from 'actions/types';
+import setAuthToken from 'utils/setAuthToken';
 
 const initialState = {
   token: localStorage.getItem('token'),

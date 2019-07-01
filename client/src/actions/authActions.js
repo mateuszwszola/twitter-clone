@@ -8,7 +8,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_PROFILE,
+  // CLEAR_PROFILE,
   GET_ERRORS,
   AUTH_ERROR
 } from './types';

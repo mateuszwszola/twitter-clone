@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ListItem, Key, Value } from './style';
 
 const ProfileStatGroup = ({ label, value }) => (
-  <li className="header-menu-list-item">
-    <span className="header-menu-list-item-key">{label}</span>
-    <span className="header-menu-list-item-value">{value}</span>
-  </li>
+  <ListItem>
+    <Key>{label}</Key>
+    <Value>{value}</Value>
+  </ListItem>
 );
 
 ProfileStatGroup.propTypes = {

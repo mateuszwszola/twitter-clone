@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { openCreateTweetModal } from '../../../actions/uiActions';
-import { logoutUser } from '../../../actions/authActions';
+import { openCreateTweetModal } from 'actions/uiActions';
+import { logoutUser } from 'actions/authActions';
 import DropdownMenu from './dropdownMenu';
-import { Button, StyledNavLink } from '../../../shared/components';
+import { Button, StyledNavLink } from 'shared/components';
 import { MainNav, NavItem, StyledDropdown, NavAvatar } from './style';
 
 function AuthNavView({

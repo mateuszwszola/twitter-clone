@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getProfileWithTweetsByUsername } from '../actions/profileActions';
-import Profile from '../components/profile';
-import Loading from '../components/loading';
-import DisplayErrors from '../components/displayErrors';
-import isEmpty from '../utils/isEmpty';
+import { getProfileWithTweetsByUsername } from 'actions/profileActions';
+import Profile from 'components/profile';
+import Loading from 'components/Loading';
+import DisplayErrors from 'components/displayErrors';
+import isEmpty from 'utils/isEmpty';
 
 function ProfileContainer({
   match,
@@ -34,12 +34,12 @@ function ProfileContainer({
     getProfileWithTweetsByUsername(username);
   }, [username]);
 
-  if (profile.loading || profile.profile === null) {
-    return <Loading />;
+  if (!isEmpty(errors)) {
+    return <DisplayErrors error={errors.message} />;
   }
 
-  if (!isEmpty(errors)) {
-    return <DisplayErrors errors={errors} />;
+  if (profile.loading || profile.profile === null) {
+    return <Loading />;
   }
 
   const followed =

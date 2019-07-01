@@ -3,10 +3,11 @@ import {
   GET_ERRORS,
   GET_PROFILE,
   PROFILE_LOADING,
-  GET_TWEETS,
-  FOLLOW
+  GET_TWEETS
+  // FOLLOW
 } from './types';
 import { setTweetLoading } from './tweetActions';
+import { clearErrors } from './errorActions';
 
 // export const followProfile = () => async dispatch => {
 //   try {
@@ -53,6 +54,8 @@ export const getUserProfileWithHomepageTweets = () => async dispatch => {
       type: GET_TWEETS,
       payload: res.data.homepageTweets || []
     });
+
+    dispatch(clearErrors());
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
@@ -77,6 +80,8 @@ export const getUserProfileWithTweets = () => async dispatch => {
       type: GET_TWEETS,
       payload: res.data.tweets || []
     });
+
+    dispatch(clearErrors());
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
@@ -95,6 +100,7 @@ export const getProfileByUsername = username => async dispatch => {
       type: GET_PROFILE,
       payload: res.data
     });
+    dispatch(clearErrors());
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
@@ -118,6 +124,8 @@ export const getProfileWithTweetsByUsername = username => async dispatch => {
       type: GET_TWEETS,
       payload: res.data.tweets || []
     });
+
+    dispatch(clearErrors());
   } catch (error) {
     dispatch({
       type: GET_ERRORS,

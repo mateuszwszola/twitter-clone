@@ -5,6 +5,22 @@ const PrimaryHeading = styled.h1``;
 
 const SecondaryHeading = styled.h2``;
 
+const Input = styled.input`
+  font-size: 1em;
+  outline: none;
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px 5px;
+  border: 1px solid #e6ecf0;
+  border-radius: 3px;
+  border-color: ${props => (props.error ? 'red' : 'none')};
+
+  :focus {
+    border-color: #cadae4;
+  }
+`;
+
 const Button = styled.button`
   font-size: 1rem;
   padding: 0.7em 1em;
@@ -74,7 +90,7 @@ const DropdownLink = styled(StyledNavLink)`
 const FeedbackMessage = styled.div`
   color: ${props =>
     props.success ? props.theme.colors.green : props.theme.colors.red};
-  padding: 10px;
+  padding: 5px;
   font-size: 0.8rem;
 `;
 
@@ -111,5 +127,6 @@ export {
   StyledNavLink,
   DropdownLink,
   FeedbackMessage,
-  UserAvatar
+  UserAvatar,
+  Input
 };

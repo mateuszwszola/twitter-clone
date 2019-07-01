@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InputGroup from '../UI/inputGroup';
-import { Button } from '../../shared/components';
-import { Container } from '../../shared/layout';
+import InputGroup from 'components/InputGroup';
+import { Button } from 'shared/components';
+import { Container } from 'shared/layout';
 import { SignUpContainer, Title, Form, Helper, StyledLink } from './style';
 
 function SignUp({

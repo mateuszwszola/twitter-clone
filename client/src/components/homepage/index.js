@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TweetsBoard from '../layout/tweetsBoard';
-import UserPreview from '../layout/userPreview';
-import Loading from '../loading';
+import UserPreview from '../layout/UserPreview';
+import Loading from '../Loading';
 import { Container, LeftSidebar, Main, RightSidebar } from './style';
 
 function Homepage({ profile, tweet }) {

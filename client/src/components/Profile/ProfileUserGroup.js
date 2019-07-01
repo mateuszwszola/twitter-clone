@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UserAvatar } from '../UI/userAvatar';
-import avatar from '../../img/tiger-avatar-example.jpg';
-import LinkedUserName from '../layout/user/linkedUserName';
-import LinkedUserUsername from '../layout/user/linkedUserUsername';
-import ProfileCreatedGroup from '../layout/user/profileCreatedGroup';
+import { UserAvatar } from 'components/layout/user/UserAvatar';
+import avatar from 'img/tiger-avatar-example.jpg';
+import LinkedUserName from 'components/layout/user/LinkedUserName';
+import LinkedUserUsername from 'components/layout/user/LinkedUserUsername';
+import ProfileCreatedGroup from 'components/layout/user/ProfileCreatedGroup';
 
 const ProfileUserGroup = ({ profile }) => (
   <div className="profile-user-info">

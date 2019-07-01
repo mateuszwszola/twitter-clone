@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { StyledUserName, UserInfoLink } from './style';
 
 const LinkedUserName = ({ username, name }) => (
-  <h1 className="user-info-name">
-    <Link to={`/${username}`} className="user-info-link">
-      {name}
-    </Link>
-  </h1>
+  <StyledUserName>
+    <UserInfoLink to={`/${username}`}>{name}</UserInfoLink>
+  </StyledUserName>
 );
 
 LinkedUserName.propTypes = {

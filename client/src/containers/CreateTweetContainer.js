@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import CreateTweetModal from '../components/createTweetModal/modal';
+import CreateTweetModal from 'components/createTweetModal/Modal';
 import { connect } from 'react-redux';
-import { createTweet } from '../actions/tweetActions';
-import { closeCreateTweetModal } from '../actions/uiActions';
+import { createTweet } from 'actions/tweetActions';
+import { closeCreateTweetModal } from 'actions/uiActions';
 
 const CreateTweetContainer = ({
   closeCreateTweetModal,

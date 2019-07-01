@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import InputGroup from '../UI/inputGroup';
-import { Button, FeedbackMessage } from '../../shared/components';
-import { Container } from '../../shared/layout';
+import InputGroup from 'components/InputGroup';
+import { Button, FeedbackMessage } from 'shared/components';
+import { Container } from 'shared/layout';
 import { SignInContainer, Title, Form, Helper } from './style';
 
 const SignIn = ({ username, password, onChange, onSubmit, errors }) => (

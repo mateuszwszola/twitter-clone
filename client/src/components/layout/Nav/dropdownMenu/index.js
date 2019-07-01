@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DropdownLink, SignoutButton } from '../../../../shared/components';
-import Loading from '../../../loading';
+import { DropdownLink, SignoutButton } from 'shared/components';
+import Loading from 'components/Loading';
 import {
   Wrapper,
   Menu,
