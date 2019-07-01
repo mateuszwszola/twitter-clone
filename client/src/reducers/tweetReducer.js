@@ -3,8 +3,9 @@ import {
   CLEAR_CURRENT_TWEET,
   TWEET_LOADING,
   GET_TWEETS,
-  CREATE_TWEET
-} from '../actions/types';
+  CREATE_TWEET,
+  GET_ERRORS
+} from 'actions/types';
 
 const initialState = {
   tweet: null,
@@ -42,6 +43,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         tweets: [payload, ...state.tweets],
+        loading: false
+      };
+    case GET_ERRORS:
+      return {
+        ...state,
         loading: false
       };
     default:

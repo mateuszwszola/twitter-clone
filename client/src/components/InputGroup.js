@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import { Input, FeedbackMessage } from 'shared/components';
 
 export default function InputGroup({
   type,
@@ -12,18 +12,16 @@ export default function InputGroup({
   errorMsg
 }) {
   return (
-    <div className="input-group">
-      <input
-        className={classnames('input', `input--${type}`, {
-          'input--error': error
-        })}
+    <div>
+      <Input
+        error={error ? true : false}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
       />
-      {errorMsg ? <div className="invalid-feedback">{errorMsg}</div> : null}
+      {errorMsg ? <FeedbackMessage>{errorMsg}</FeedbackMessage> : null}
     </div>
   );
 }

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
+import { UserInfoJoined } from './style';
 
 const ProfileCreatedGroup = ({ created }) => (
-  <p className="user-info-joined">
+  <UserInfoJoined>
     <i className="fas fa-calendar-alt" /> Joined{' '}
     <Moment format="MMMM YYYY" withTitle>
       {created}
     </Moment>
-  </p>
+  </UserInfoJoined>
 );
 
 ProfileCreatedGroup.propTypes = {

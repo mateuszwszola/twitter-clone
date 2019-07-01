@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UserAvatar } from '../UI/UserAvatar';
-import LinkedUserName from './User/LinkedUserName';
-import LinkedUserUsername from './User/LinkedUserUsername';
-import ProfileStatGroup from './User/ProfileStatGroup';
-import avatar from '../../img/tiger-avatar-example.jpg';
+import { UserAvatar } from 'components/layout/user/UserAvatar';
+import LinkedUserName from './user/LinkedUserName';
+import LinkedUserUsername from './user/LinkedUserUsername';
+import ProfileStatGroup from './user/ProfileStatGroup';
+import avatar from 'img/tiger-avatar-example.jpg';
 
-import UserPreviewCard from './UserPreviewCard';
+import UserPreviewCard from './userPreviewCard';
 
 function UserPreview({ profile }) {
   return (

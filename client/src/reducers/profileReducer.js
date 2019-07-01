@@ -5,8 +5,9 @@ import {
   PROFILE_LOADING,
   UPDATE_PROFILE,
   CREATE_TWEET,
-  FOLLOW
-} from '../actions/types';
+  FOLLOW,
+  GET_ERRORS
+} from 'actions/types';
 
 const initialState = {
   profile: null,
@@ -55,6 +56,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profile: payload
+      };
+    case GET_ERRORS:
+      return {
+        ...state,
+        loading: false
       };
     default:
       return state;

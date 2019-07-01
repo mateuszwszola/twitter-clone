@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import checkForToken from '../utils/checkForToken';
-import isEmpty from '../utils/isEmpty';
+import checkForToken from 'utils/checkForToken';
+import isEmpty from 'utils/isEmpty';
 
 let UserContext;
 const { Provider, Consumer } = (UserContext = React.createContext());

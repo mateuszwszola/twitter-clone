@@ -1,7 +1,7 @@
 import {
   OPEN_CREATE_TWEET_MODAL,
   CLOSE_CREATE_TWEET_MODAL
-} from '../actions/types';
+} from 'actions/types';
 
 const initialState = {
   showCreateTweetModal: false
