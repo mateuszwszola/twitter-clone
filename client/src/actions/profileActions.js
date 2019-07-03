@@ -8,6 +8,7 @@ import {
 } from './types';
 import { setTweetLoading } from './tweetActions';
 import { clearErrors } from './errorActions';
+import { setAlert } from './alertActions';
 
 // export const followProfile = () => async dispatch => {
 //   try {
@@ -19,6 +20,35 @@ import { clearErrors } from './errorActions';
 //     })
 //   }
 // }
+
+export const updateProfile = data => async dispatch => {
+  dispatch(setProfileLoading());
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  try {
+    const body = JSON.stringify(data);
+    const res = await axios.post('/api/profiles', body, config);
+
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data
+    });
+
+    dispatch(setAlert('Profile successfully updated', 'success'));
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+
+    dispatch(setAlert('Cannot update the profile', 'danger'));
+  }
+};
 
 export const getUserProfile = () => async dispatch => {
   dispatch(setProfileLoading());

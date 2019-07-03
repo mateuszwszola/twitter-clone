@@ -12,9 +12,8 @@ const Input = styled.input`
   width: 100%;
   margin: 10px 0;
   padding: 10px 5px;
-  border: 1px solid #e6ecf0;
+  border: 1px solid ${props => props.error ? props.theme.colors.red : '#e6ecf0'};
   border-radius: 3px;
-  border-color: ${props => (props.error ? 'red' : 'none')};
 
   :focus {
     border-color: #cadae4;

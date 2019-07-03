@@ -14,56 +14,76 @@ import {
   TweetText,
   TweetBottomGroup,
   TweetUserName,
-  TweetUserUsername
+  TweetUserUsername,
+  Icon,
+  ItemGroup
 } from './style';
 
-const TweetsBoard = ({ tweets }) => (
-  <Container>
-    <Board>
-      <HeaderWrapper>
-        <Header>Tweets</Header>
-      </HeaderWrapper>
-      <List>
-        {tweets.length > 0 ? (
-          tweets.map(tweet => (
-            <ListItem key={tweet._id}>
-              <UserAvatar
-                small
-                src="https://picsum.photos/200"
-                alt="User Avatar"
-              />
-              <ListItemContent>
-                <TweetUserGroup>
-                  <TweetUserName>{tweet.user.name}</TweetUserName>@
-                  <TweetUserUsername>{tweet.user.username}</TweetUserUsername>
-                  <Moment format="MMMM YYYY" withTitle>
-                    {tweet.created}
-                  </Moment>
-                </TweetUserGroup>
-                <div>
-                  <TweetText>{tweet.text}</TweetText>
-                </div>
-                <TweetBottomGroup>
-                  <span>
-                    <i className="far fa-comment" /> {tweet.comments.length}
-                  </span>
-                  <span>
-                    <i className="fas fa-retweet" /> {tweet.retweets.length}
-                  </span>
-                  <span>
-                    <i className="far fa-heart" /> {tweet.likes.length}
-                  </span>
-                </TweetBottomGroup>
-              </ListItemContent>
-            </ListItem>
-          ))
-        ) : (
-          <p className="no-tweets-info">None</p>
-        )}
-      </List>
-    </Board>
-  </Container>
-);
+function TweetsBoard({ tweets }) {
+  if (tweets.length === 0) {
+    return (
+      <Container>
+        <p>You don't have any tweets</p>
+      </Container>
+    );
+  }
+  return (
+    <Container>
+      <Board>
+        <HeaderWrapper>
+          <Header>Tweets</Header>
+        </HeaderWrapper>
+        <List>
+          {tweets.length > 0
+            ? tweets.map(tweet => (
+                <ListItem key={tweet._id}>
+                  <UserAvatar
+                    small
+                    src="https://picsum.photos/200"
+                    alt="User Avatar"
+                  />
+                  <ListItemContent>
+                    <TweetUserGroup>
+                      <ItemGroup>
+                        <TweetUserName>{tweet.user.name}</TweetUserName>
+                      </ItemGroup>
+                      <ItemGroup>
+                        @
+                        <TweetUserUsername>
+                          {tweet.user.username}
+                        </TweetUserUsername>
+                      </ItemGroup>
+                      <ItemGroup>
+                        <Moment format="MMMM YYYY" withTitle>
+                          {tweet.created}
+                        </Moment>
+                      </ItemGroup>
+                    </TweetUserGroup>
+                    <div>
+                      <TweetText>{tweet.text}</TweetText>
+                    </div>
+                    <TweetBottomGroup>
+                      <ItemGroup>
+                        <Icon className="far fa-comment" />{' '}
+                        {tweet.comments.length}
+                      </ItemGroup>
+                      <ItemGroup>
+                        <Icon className="fas fa-retweet" />{' '}
+                        {tweet.retweets.length}
+                      </ItemGroup>
+                      <ItemGroup>
+                        <Icon className="far fa-heart" /> {tweet.likes.length}
+                      </ItemGroup>
+                    </TweetBottomGroup>
+                  </ListItemContent>
+                </ListItem>
+              ))
+            : ''}
+        </List>
+      </Board>
+    </Container>
+  );
+}
 
 TweetsBoard.propTypes = {
   tweets: PropTypes.array.isRequired
