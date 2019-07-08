@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Form from './form/Form';
+import Form from './Form';
 import { Container } from 'shared/layout';
 
 function EditProfile({
@@ -12,7 +12,7 @@ function EditProfile({
   birthday,
   handleChange,
   handleSubmit,
-    errors
+  errors
 }) {
   return (
     <Container>

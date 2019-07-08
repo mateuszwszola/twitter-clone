@@ -10,8 +10,9 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
   <Container>
     <SignInContainer>
       <Title>Sign in to Twitter</Title>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit} data-cy="signin-form">
         <InputGroup
+          data-cy="signin-username-input"
           type="text"
           name="username"
           value={username}
@@ -22,6 +23,7 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
           errorMsg={errors.username || errors.login || null}
         />
         <InputGroup
+          data-cy="signin-password-input"
           type="password"
           name="password"
           value={password}

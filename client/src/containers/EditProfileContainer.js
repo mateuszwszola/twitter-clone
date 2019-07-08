@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUserProfile, updateProfile } from 'actions/profileActions';
 import Loading from 'components/Loading';
-import EditProfile from 'components/editProfile/EditProfile';
+import EditProfile from 'components/EditProfile';
 
 function reducer(state, newState) {
   return { ...state, ...newState };

@@ -9,7 +9,8 @@ export default function InputGroup({
   onChange,
   placeholder,
   error,
-  errorMsg
+  errorMsg,
+  ...rest
 }) {
   return (
     <div>
@@ -20,6 +21,7 @@ export default function InputGroup({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        {...rest}
       />
       {errorMsg ? <FeedbackMessage>{errorMsg}</FeedbackMessage> : null}
     </div>
