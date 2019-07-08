@@ -227,7 +227,7 @@ router.post('/', auth, async (req, res, next) => {
       { user: req.user.id },
       { $set: profileFields },
       { new: true }
-    );
+    ).populate('user', ['name', 'username', 'avatar']);
 
     res.json(profile);
   } catch (err) {

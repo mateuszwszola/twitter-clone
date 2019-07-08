@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { openCreateTweetModal } from 'actions/uiActions';
 import { logoutUser } from 'actions/authActions';
-import DropdownMenu from './dropdownMenu';
+import DropdownMenu from './DropdownMenu';
 import { Button, StyledNavLink } from 'shared/components';
 import { MainNav, NavItem, StyledDropdown, NavAvatar } from './style';
 

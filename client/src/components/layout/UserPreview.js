@@ -6,7 +6,7 @@ import LinkedUserUsername from './user/LinkedUserUsername';
 import ProfileStatGroup from './user/ProfileStatGroup';
 import avatar from 'img/tiger-avatar-example.jpg';
 
-import UserPreviewCard from './userPreviewCard';
+import UserPreviewCard from './UserPreviewCard';
 
 function UserPreview({ profile }) {
   return (

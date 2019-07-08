@@ -2,6 +2,8 @@ import styled from 'styled-components/macro';
 
 export const Container = styled.div`
   height: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 `;
 
 export const Board = styled.div`
@@ -56,3 +58,9 @@ export const TweetUserName = styled.span`
 export const TweetUserUsername = styled.span`
   font-weight: bold;
 `;
+
+export const ItemGroup = styled.span`
+  padding: 0 5px;
+`;
+
+export const Icon = styled.i``;

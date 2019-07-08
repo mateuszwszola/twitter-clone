@@ -22,7 +22,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "proxy": "http://localhost:3001",
   "browserslist": [
@@ -32,6 +33,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "babel-plugin-macros": "^2.6.0"
+    "babel-plugin-macros": "^2.6.0",
+    "cypress": "^3.3.2"
   }
 }

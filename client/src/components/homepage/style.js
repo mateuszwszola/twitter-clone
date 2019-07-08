@@ -16,7 +16,7 @@ const Container = styled.main`
 const LeftSidebar = styled.div`
   flex: 290px;
   max-width: 500px;
-  margin: 0.7rem;
+  margin: 0 0.7rem;
 `;
 
 const Main = styled.div`
@@ -25,10 +25,10 @@ const Main = styled.div`
 `;
 
 const RightSidebar = styled.div`
-  background-color: papayawhip;
   min-height: 200px;
   flex: 290px;
   max-width: 500px;
+  margin: 0 0.7em;
 `;
 
 export { Container, LeftSidebar, Main, RightSidebar };

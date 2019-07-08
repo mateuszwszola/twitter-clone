@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TweetsBoard from '../layout/tweetsBoard';
+import TweetsBoard from '../layout/TweetsBoard';
 import UserPreview from '../layout/UserPreview';
 import Loading from '../Loading';
 import { Container, LeftSidebar, Main, RightSidebar } from './style';
@@ -18,7 +18,7 @@ function Homepage({ profile, tweet }) {
           <TweetsBoard tweets={tweet.tweets} />
         )}
       </Main>
-      <RightSidebar>Homepage Right</RightSidebar>
+      <RightSidebar>Right Sidebar</RightSidebar>
     </Container>
   );
 }

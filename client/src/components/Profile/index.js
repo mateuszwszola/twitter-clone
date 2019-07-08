@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
-import TweetsBoard from 'components/layout/tweetsBoard';
+import TweetsBoard from 'components/layout/TweetsBoard';
 import Loading from '../Loading';
 
 function Profile({ profile, tweet, owner, isAuthenticated, followed }) {

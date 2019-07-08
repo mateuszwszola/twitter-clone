@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ProfileStatGroup from './ProfileStatGroup';
 import { EditProfileButton, FollowProfileButton } from 'shared/components';
 import { ProfileHeaderMenu, HeaderMenuList } from './style';
+import { Link } from 'react-router-dom';
 
 const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => (
   <ProfileHeaderMenu>
@@ -14,7 +15,9 @@ const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => (
     </HeaderMenuList>
     {owner ? (
       <div>
-        <EditProfileButton primary>Edit Profile</EditProfileButton>
+        <EditProfileButton as={Link} primary to="/edit-profile">
+          Edit Profile
+        </EditProfileButton>
       </div>
     ) : (
       <div>

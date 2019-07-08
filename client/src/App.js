@@ -9,11 +9,13 @@ import { Header, Footer } from 'components/layout';
 import SignInContainer from 'containers/SignInContainer';
 import SignUpContainer from 'containers/SignUpContainer';
 import PrivateHomepage from 'components/route/PrivateHomepage';
-import RenderCreateTweetModal from 'components/createTweetModal';
+import RenderCreateTweetModal from 'components/CreateTweetModal';
 import ProfileContainer from 'containers/ProfileContainer';
 import SettingsContainer from './containers/SettingsContainer';
-// import PrivateRoute from './components/route/PrivateRoute';
+import EditProfileContainer from './containers/EditProfileContainer';
+import PrivateRoute from './components/route/PrivateRoute';
 import ErrorBoundary from 'components/ErrorBoundary';
+import Alert from 'components/Alert';
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -24,7 +26,9 @@ checkForToken();
 
 function App() {
   useEffect(() => {
-    store.dispatch(loadUser());
+    if (window.localStorage.getItem('token')) {
+      store.dispatch(loadUser());
+    }
   }, []);
 
   return (
@@ -35,9 +39,15 @@ function App() {
           <Router>
             <Wrapper>
               <Content>
+                <Alert />
                 <Header />
                 <RenderCreateTweetModal />
                 <Switch>
+                  <PrivateRoute
+                    exact
+                    path="/edit-profile"
+                    component={EditProfileContainer}
+                  />
                   <Route exact path="/" component={PrivateHomepage} />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />
