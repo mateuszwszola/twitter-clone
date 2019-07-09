@@ -4,33 +4,34 @@ import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
 import TweetsBoard from 'components/layout/TweetsBoard';
 import Loading from '../Loading';
+import { Container, BackgroundContainer, Background, ProfileTweetsBoard, Sidebar } from './style';
+
+const backgroundPlaceholderSrc = "https://via.placeholder.com/1280x250?text=Background+Picture";
 
 function Profile({ profile, tweet, owner, isAuthenticated, followed }) {
   return (
-    <div className="profile-container">
-      <div className="profile-background-place" />
-      <div className="profile-user-stats-header">
+    <Container>
+        <BackgroundContainer>
+            <Background alt={`${profile.user.name} background`} src={profile.user.background || backgroundPlaceholderSrc} />
+        </BackgroundContainer>
         <UserStatsHeader
           profile={profile}
           owner={owner}
           isAuthenticated={isAuthenticated}
           followed={followed}
         />
-      </div>
-      <div className="profile-mid-flex">
-        <div className="profile-user-group">
+      <div>
           <ProfileUserGroup profile={profile} />
-        </div>
-        <div className="profile-tweets-board">
+        <ProfileTweetsBoard>
           {tweet.loading || tweet.tweets === null ? (
             <Loading />
           ) : (
             <TweetsBoard tweets={tweet.tweets} />
           )}
-        </div>
-        <div className="profile-right-sidebar">Right sidebar</div>
+        </ProfileTweetsBoard>
+        <Sidebar>Right sidebar</Sidebar>
       </div>
-    </div>
+    </Container>
   );
 }
 

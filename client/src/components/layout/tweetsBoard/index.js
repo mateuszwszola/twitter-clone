@@ -18,6 +18,7 @@ import {
   Icon,
   ItemGroup
 } from './style';
+import portretPlaceholder from 'img/portret-placeholder.png'
 
 function TweetsBoard({ tweets }) {
   if (tweets.length === 0) {
@@ -39,7 +40,7 @@ function TweetsBoard({ tweets }) {
                 <ListItem key={tweet._id}>
                   <UserAvatar
                     small
-                    src="https://picsum.photos/200"
+                    src={tweet.user.avatar || portretPlaceholder}
                     alt="User Avatar"
                   />
                   <ListItemContent>
@@ -54,7 +55,7 @@ function TweetsBoard({ tweets }) {
                         </TweetUserUsername>
                       </ItemGroup>
                       <ItemGroup>
-                        <Moment format="MMMM YYYY" withTitle>
+                        <Moment format="DD/MM/YYYY" withTitle>
                           {tweet.created}
                         </Moment>
                       </ItemGroup>

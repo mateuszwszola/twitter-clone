@@ -10,6 +10,8 @@ function EditProfile({
   location,
   website,
   birthday,
+  avatar,
+  backgroundPicture,
   handleChange,
   handleSubmit,
   errors
@@ -23,6 +25,8 @@ function EditProfile({
         location={location}
         website={website}
         birthday={birthday}
+        avatar={avatar}
+        backgroundPicture={backgroundPicture}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         errors={errors}
@@ -38,6 +42,8 @@ EditProfile.propTypes = {
   location: PropTypes.string.isRequired,
   website: PropTypes.string.isRequired,
   birthday: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
+  backgroundPicture: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired

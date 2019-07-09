@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UserAvatar } from 'components/layout/user/UserAvatar';
-import avatar from 'img/tiger-avatar-example.jpg';
+import portretPlaceholder from 'img/portret-placeholder.png';
 import LinkedUserName from 'components/layout/user/LinkedUserName';
 import LinkedUserUsername from 'components/layout/user/LinkedUserUsername';
 import ProfileCreatedGroup from 'components/layout/user/ProfileCreatedGroup';
@@ -9,7 +9,7 @@ import ProfileCreatedGroup from 'components/layout/user/ProfileCreatedGroup';
 function ProfileUserGroup({ profile }) {
   return (
     <div className="profile-user-info">
-      <UserAvatar src={avatar} alt="User Avatar" />
+      <UserAvatar src={profile.user.avatar || portretPlaceholder} alt="User Avatar" />
       <LinkedUserName
         username={profile.user.username}
         name={profile.user.name}

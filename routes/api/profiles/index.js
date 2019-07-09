@@ -193,16 +193,18 @@ router.post('/', auth, async (req, res, next) => {
   // Validation before checks if name exists, if value is empty and if it is alphanumeric, so here I only check if property name in req.body is "something" in order to change it
   try {
     if (req.body['name']) {
-      const user = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { _id: req.user.id },
         { $set: { name: startCase(req.body['name']) } },
         { new: true }
       );
-
-      if (!user) {
-        errors.name = 'There was a problem with updating the user name';
-        return res.status(500).json(errors);
-      }
+    }
+    if (req.body['avatar']) {
+      await User.findOneAndUpdate(
+          { _id: req.user.id },
+          { $set: { avatar: req.body['avatar'] } },
+          { new: true }
+      )
     }
 
     const profileFields = {};
@@ -212,6 +214,7 @@ router.post('/', auth, async (req, res, next) => {
       'location',
       'website',
       'birthday',
+      'avatar',
       'backgroundPicture',
       'created'
     ];

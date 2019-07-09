@@ -1,15 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyledForm,
-  Label,
-  InputGroup,
-  ButtonGroup,
-  SaveButton,
-  CancelButton
-} from './style';
-import { Input, FeedbackMessage } from 'shared/components';
+import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
+import { Input, FeedbackMessage } from 'shared/components';
+import {
+    StyledForm,
+    Label,
+    InputGroup,
+    ButtonGroup,
+    SaveButton,
+    CancelButton
+} from './style';
+
+function getBirthdayDate(birthday) {
+    if (!birthday) {
+        return '';
+    }
+    const prependWithZero = number => number < 10 ? '0' + number : number;
+    const date = new Date(birthday);
+    const year = date.getFullYear();
+    const month = prependWithZero(date.getMonth() + 1);
+    const day = prependWithZero(date.getDate());
+    return `${year}-${month}-${day}`;
+}
 
 function Form({
   name,
@@ -18,22 +31,25 @@ function Form({
   location,
   website,
   birthday,
+  avatar,
+  backgroundPicture,
   handleChange,
   handleSubmit,
-    errors
+  errors
 }) {
+
   return (
     <StyledForm onSubmit={handleSubmit}>
       <InputGroup>
         <Label htmlFor="name">Name:</Label>
         <Input
-            type="text"
-            name="name"
-            value={name}
-            onChange={handleChange}
-            error={!!errors.name}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+          error={!!errors.name}
         />
-          {errors.name && <FeedbackMessage>{errors.name}</FeedbackMessage>}
+        {errors.name && <FeedbackMessage>{errors.name}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -45,13 +61,21 @@ function Form({
           onChange={handleChange}
           error={!!errors.username}
         />
-          {errors.username && <FeedbackMessage>{errors.username}</FeedbackMessage>}
+        {errors.username && (
+          <FeedbackMessage>{errors.username}</FeedbackMessage>
+        )}
       </InputGroup>
 
       <InputGroup>
         <Label htmlFor="bio">Bio:</Label>
-        <Input type="text" name="bio" value={bio} onChange={handleChange} error={!!errors.bio} />
-          {errors.bio && <FeedbackMessage>{errors.bio}</FeedbackMessage>}
+        <Input
+          type="text"
+          name="bio"
+          value={bio}
+          onChange={handleChange}
+          error={!!errors.bio}
+        />
+        {errors.bio && <FeedbackMessage>{errors.bio}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -63,7 +87,9 @@ function Form({
           onChange={handleChange}
           error={!!errors.location}
         />
-          {errors.location && <FeedbackMessage>{errors.location}</FeedbackMessage>}
+        {errors.location && (
+          <FeedbackMessage>{errors.location}</FeedbackMessage>
+        )}
       </InputGroup>
 
       <InputGroup>
@@ -75,7 +101,7 @@ function Form({
           onChange={handleChange}
           error={!!errors.website}
         />
-          {errors.website && <FeedbackMessage>{errors.website}</FeedbackMessage>}
+        {errors.website && <FeedbackMessage>{errors.website}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -83,11 +109,39 @@ function Form({
         <Input
           type="date"
           name="birthday"
-          value={birthday}
+          value={getBirthdayDate(birthday)}
           onChange={handleChange}
           error={!!errors.birthday}
         />
-          {errors.birthday && <FeedbackMessage>{errors.birthday}</FeedbackMessage>}
+        {errors.birthday && (
+          <FeedbackMessage>{errors.birthday}</FeedbackMessage>
+        )}
+      </InputGroup>
+
+      <InputGroup>
+        <Label htmlFor="avatar">Avatar (URL):</Label>
+        <Input
+          type="text"
+          name="avatar"
+          value={avatar}
+          onChange={handleChange}
+          error={!!errors.avatar}
+        />
+        {errors.avatar && <FeedbackMessage>{errors.avatar}</FeedbackMessage>}
+      </InputGroup>
+
+      <InputGroup>
+        <Label htmlFor="backgroundPicture">Background picture (URL):</Label>
+        <Input
+          type="text"
+          name="backgroundPicture"
+          value={backgroundPicture}
+          onChange={handleChange}
+          error={!!errors.backgroundPicture}
+        />
+        {errors.backgroundPicture && (
+          <FeedbackMessage>{errors.backgroundPicture}</FeedbackMessage>
+        )}
       </InputGroup>
 
       <ButtonGroup>
@@ -109,7 +163,7 @@ Form.propTypes = {
   birthday: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired
 };
 
 export default Form;

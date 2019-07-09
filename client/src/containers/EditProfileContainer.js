@@ -22,10 +22,21 @@ function EditProfileContainer({
     bio: '',
     location: '',
     website: '',
-    birthday: ''
+    birthday: '',
+    avatar: '',
+    backgroundPicture: ''
   });
 
-  const { name, username, bio, location, website, birthday } = state;
+  const {
+    name,
+    username,
+    bio,
+    location,
+    website,
+    birthday,
+    avatar,
+    backgroundPicture
+  } = state;
 
   useEffect(() => {
     if (profile === null && loading === false) {
@@ -37,14 +48,15 @@ function EditProfileContainer({
     if (profile === null) {
       return;
     }
-
     setState({
       name: profile.user.name || '',
       username: profile.user.username || '',
       bio: profile.bio || '',
       location: profile.location || '',
       website: profile.website || '',
-      birthday: profile.birthday || ''
+      birthday: profile.birthday || '',
+      avatar: profile.user.avatar || '',
+      backgroundPicture: profile.backgroundPicture || ''
     });
   }, [profile]);
 
@@ -61,7 +73,9 @@ function EditProfileContainer({
       bio,
       website,
       location,
-      birthday
+      birthday,
+      avatar,
+      backgroundPicture
     };
 
     updateProfile(profileData, history);
@@ -79,6 +93,8 @@ function EditProfileContainer({
       location={location}
       website={website}
       birthday={birthday}
+      avatar={avatar}
+      backgroundPicture={backgroundPicture}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
       errors={errors}

@@ -38,14 +38,14 @@ module.exports = data => {
     // If req.body has a value, and the value is not empty, user do not want to clear the input, so I validate it
 
     if (profileInformation.includes(property)) {
-      if (!isEmpty(value)) {
-        if (lengthForProps[property]) {
-          if (!validator.isLength(value, lengthForProps[property])) {
-            errors[property] = `${property} must be between ${
-              lengthForProps[property].min
-            } and ${lengthForProps[property].max}`;
-          }
-        }
+      if (
+        !isEmpty(value) &&
+        lengthForProps[property] &&
+        !validator.isLength(value, lengthForProps[property])
+      ) {
+        errors[property] = `${property} must be between ${
+          lengthForProps[property].min
+        } and ${lengthForProps[property].max}`;
       }
     }
 
@@ -54,47 +54,45 @@ module.exports = data => {
         errors[property] = `You need to specify a value for ${property} field`;
       } else {
         if (!validator.isAlphanumeric(value.split(' ').join(''), 'pl-PL')) {
-          errors[property] = 'Invalid name format';
+          errors[property] = `Invalid ${property} format`;
         }
       }
     }
 
-    if (property === 'location') {
-      if (!isEmpty(value)) {
-        if (!validator.isAlphanumeric(value.split(' ').join(''))) {
-          errors.location = 'Invalid location';
-        }
+    if (!isEmpty(value)) {
+      if (
+        property === 'location' &&
+        !validator.isAlphanumeric(value.split(' ').join(''))
+      ) {
+        errors.location = 'Invalid location';
       }
-    }
 
-    if (property === 'website') {
-      if (!isEmpty(value)) {
-        if (!validator.isURL(value)) {
-          errors.website = 'Website must be a URL';
-        }
+      if (property === 'website' && !validator.isURL(value)) {
+        errors.website = 'Website must be a URL';
       }
-    }
 
-    if (property === 'birthday') {
-      if (!isEmpty(value)) {
-        if (!isDate(value)) {
-          errors.birthday = 'Birthday must be a date';
+      if (property === 'birthday') {
+        const birthdayDate = validator.toDate(value);
+        if (!isDate(birthdayDate)) {
+          errors.birthday = 'Birthday must be a valid date';
+        }
+        const prependWithZero = value => value < 10 ? '0' + value : value;
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = prependWithZero(date.getMonth() + 1);
+        const day = prependWithZero(date.getDate());
+        const minDate = `${year - 13}-${month}-${day}`;
+        if (validator.isAfter(value, minDate)) {
+          errors.birthday = 'You must be at least 13 years old';
         }
       }
-    }
-    if (property === 'avatar') {
-      if (!isEmpty(value)) {
-        if (!validator.isURL(value)) {
-          errors.website = 'Avatar must be a URL';
-        }
-      }
-    }
 
-    if (property === 'backgroundPicture') {
-      if (!isEmpty(value)) {
-        if (!validator.isURL(value)) {
-          errors.website = 'Background picture must be a URL';
-        }
+      if (property === 'avatar' && !validator.isURL(value)) {
+        errors.avatar = 'Avatar must be a URL';
+      }
+
+      if (property === 'backgroundPicture' && !validator.isURL(value)) {
+        errors.backgroundPicture = 'Background picture must be a URL';
       }
     }
   });

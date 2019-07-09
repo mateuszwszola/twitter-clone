@@ -4,7 +4,7 @@ import { UserAvatar } from 'components/layout/user/UserAvatar';
 import LinkedUserName from './user/LinkedUserName';
 import LinkedUserUsername from './user/LinkedUserUsername';
 import ProfileStatGroup from './user/ProfileStatGroup';
-import avatar from 'img/tiger-avatar-example.jpg';
+import portretPlaceholder from 'img/portret-placeholder.png';
 
 import UserPreviewCard from './UserPreviewCard';
 
@@ -15,7 +15,7 @@ function UserPreview({ profile }) {
       <UserPreviewCard.MidFlex>
         <UserAvatar
           className="user-preview-avatar"
-          src={avatar}
+          src={profile.user.avatar || portretPlaceholder}
           alt="User avatar"
           small
         />
