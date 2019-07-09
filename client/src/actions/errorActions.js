@@ -1,5 +1,8 @@
 import { CLEAR_ERRORS } from './types';
+import store from '../store';
 
 export const clearErrors = () => dispatch => {
-  dispatch({ type: CLEAR_ERRORS });
+  if (Object.keys(store.getState().errors).length) {
+    dispatch({ type: CLEAR_ERRORS });
+  }
 };

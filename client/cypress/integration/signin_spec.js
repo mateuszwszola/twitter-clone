@@ -33,35 +33,69 @@ describe('/signin', () => {
     );
   });
 
-  it('requires username and password', () => {
-    cy.get('[data-cy=signin-form]')
-      .contains('Log In')
-      .click();
-    cy.contains('username is required');
-    cy.contains('password is required');
+  it('checks controlled inputs values after typing', () => {
+    cy.get('[data-cy=signin-username-input]')
+      .type('fake@email.com')
+      .should('have.value', 'fake@email.com');
+    cy.get('[data-cy=signin-password-input]')
+      .type('password')
+      .should('have.value', 'password');
   });
 
-  it('requires password', () => {
-    cy.get('[data-cy=signin-username-input]').type('fake@email.com');
+  context('Form submission', () => {
+    beforeEach(() => {
+      cy.server();
+    });
 
-    cy.get('[data-cy=signin-form]')
-      .contains('Log In')
-      .click();
-    cy.contains('password is required');
+    it('requires username and password', () => {
+      cy.route({
+        url: '/api/users/login',
+        method: 'POST',
+        body: {
+          username: '',
+          password: ''
+        },
+        status: 400,
+        response: {
+          errors: {
+            username: 'Username is required',
+            password: 'Password is required'
+          }
+        }
+      });
+
+      cy.get('[data-cy=signin-form]')
+        .contains('Log In')
+        .click();
+      cy.contains('username is required');
+      cy.contains('password is required');
+    });
+
+    it('requires password', () => {
+      cy.route('POST', '/api/users/login', {
+        password: 'password is required'
+      });
+      cy.get('[data-cy=signin-username-input]').type('fake@email.com');
+      cy.get('[data-cy=signin-form]')
+        .contains('Log In')
+        .click();
+      cy.contains('password is required');
+    });
+    it('requires valid username and password', () => {
+      cy.route('POST', '/api/users/login', {
+        login: 'Incorrect username and password combination'
+      });
+      cy.get('[data-cy=signin-username-input]').type('fake@email.com');
+      cy.get('[data-cy=signin-password-input]').type('password');
+      cy.get('[data-cy=signin-form]')
+        .contains('Log In')
+        .click();
+      cy.contains('Incorrect username and password combination');
+    });
   });
 
-  it('requires valid username and password', () => {
-    cy.get('[data-cy=signin-username-input]').type('fake@email.com');
-    cy.get('[data-cy=signin-password-input]').type('password');
-    cy.get('[data-cy=signin-form]')
-      .contains('Log In')
-      .click();
-
-    cy.contains('Incorrect username and password combination');
-  });
-
-  it('navigates to / on successful signin', () => {
-    cy.login();
-    cy.hash().should('eq', '/');
-  });
+  // it('navigates to / on successful signin', () => {
+  //   cy.login();
+  //   cy.hash().should('eq', '/');
+  // });
 });

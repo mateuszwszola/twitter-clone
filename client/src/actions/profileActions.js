@@ -39,6 +39,7 @@ export const updateProfile = data => async dispatch => {
       payload: res.data
     });
 
+    dispatch(clearErrors());
     dispatch(setAlert('Profile successfully updated', 'success'));
   } catch (err) {
     dispatch({

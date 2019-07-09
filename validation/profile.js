@@ -1,6 +1,6 @@
 // Validation for creating or updating user PROFILE
 const validator = require('validator');
-const _ = require('lodash');
+const { isEmpty, isDate } = require('lodash');
 
 module.exports = data => {
   const errors = {};
@@ -14,14 +14,16 @@ module.exports = data => {
     'birthday',
     'avatar',
     'backgroundPicture',
-    'name' // This is an extra property which is placed in User model (but I would like to be able to change it with profile)
+    'name', // This is an extra property which is placed in User model (but I would like to be able to change it with profile)
+    'username'
   ];
 
   const lengthForProps = {
     bio: { min: 2, max: 70 },
     location: { min: 2, max: 30 },
     website: { min: 3, max: 30 },
-    name: { min: 2, max: 30 }
+    name: { min: 2, max: 30 },
+    username: { min: 6, max: 15 }
     // TODO: Include min/max for the rest of profile information
     // Figure out how to handle this, because right now I get an error when I send these properties, because below I am checking if profileInformation includes property sent to the server, if yes I am accesing min/max here which does not exists yet
   };
@@ -30,13 +32,13 @@ module.exports = data => {
   console.log('entries', entries);
   entries.forEach(([property, value]) => {
     value = value.trim();
-    value = _.isEmpty(value) ? '' : value.toString();
+    value = isEmpty(value) ? '' : value.toString();
 
     // I do not specify isEmpty for things like bio, because user can fill empty bio to reset bio
     // If req.body has a value, and the value is not empty, user do not want to clear the input, so I validate it
 
     if (profileInformation.includes(property)) {
-      if (!_.isEmpty(value)) {
+      if (!isEmpty(value)) {
         if (lengthForProps[property]) {
           if (!validator.isLength(value, lengthForProps[property])) {
             errors[property] = `${property} must be between ${
@@ -47,18 +49,18 @@ module.exports = data => {
       }
     }
 
-    if (property === 'name') {
-      if (_.isEmpty(value)) {
-        errors.name = 'You need to specify a value for name field';
+    if (property === 'name' || property === 'username') {
+      if (isEmpty(value)) {
+        errors[property] = `You need to specify a value for ${property} field`;
       } else {
         if (!validator.isAlphanumeric(value.split(' ').join(''), 'pl-PL')) {
-          errors.name = 'Invalid name format';
+          errors[property] = 'Invalid name format';
         }
       }
     }
 
     if (property === 'location') {
-      if (!_.isEmpty(value)) {
+      if (!isEmpty(value)) {
         if (!validator.isAlphanumeric(value.split(' ').join(''))) {
           errors.location = 'Invalid location';
         }
@@ -66,7 +68,7 @@ module.exports = data => {
     }
 
     if (property === 'website') {
-      if (!_.isEmpty(value)) {
+      if (!isEmpty(value)) {
         if (!validator.isURL(value)) {
           errors.website = 'Website must be a URL';
         }
@@ -74,25 +76,31 @@ module.exports = data => {
     }
 
     if (property === 'birthday') {
-      if (!_.isEmpty(value)) {
-        if (!_.isDate(value)) {
+      if (!isEmpty(value)) {
+        if (!isDate(value)) {
           errors.birthday = 'Birthday must be a date';
         }
       }
     }
-    // TODO:
-    // if (property === 'avatar') {
-    //   // Avatar will be uploaded by the user
+    if (property === 'avatar') {
+      if (!isEmpty(value)) {
+        if (!validator.isURL(value)) {
+          errors.website = 'Avatar must be a URL';
+        }
+      }
+    }
 
-    // }
-
-    // if (property === 'backgroundPicture') {
-    //   // Background Picuture will be uploaded by the user
-    // }
+    if (property === 'backgroundPicture') {
+      if (!isEmpty(value)) {
+        if (!validator.isURL(value)) {
+          errors.website = 'Background picture must be a URL';
+        }
+      }
+    }
   });
 
   return {
     errors,
-    isValid: _.isEmpty(errors)
+    isValid: isEmpty(errors)
   };
 };
