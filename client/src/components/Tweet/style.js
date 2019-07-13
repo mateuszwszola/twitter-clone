@@ -43,6 +43,7 @@ export const StyledTweet = styled.div`
   transform: translate(-50%, -50%);
   border-radius: 5px;
   background-color: #fff;
+  width: 50%;
   max-width: 650px;
   display: flex;
   flex-direction: column;

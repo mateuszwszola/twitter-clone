@@ -17,7 +17,7 @@ import PrivateRoute from './components/route/PrivateRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Alert from 'components/Alert';
 import { TweetView } from './components/Tweet';
-import { TweetModal } from './components/Tweet';
+// import { TweetModal } from './components/Tweet';
 import ModalSwitch from './components/ModalSwitch';
 
 import { Provider } from 'react-redux';
@@ -28,9 +28,9 @@ import { loadUser } from 'actions/authActions';
 checkForToken();
 
 function App() {
-  // useEffect(() => {
-  //   store.dispatch(loadUser());
-  // }, []);
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
 
   return (
     <Provider store={store}>
@@ -52,7 +52,7 @@ function App() {
                   <Route exact path="/" component={PrivateHomepage} />
                   <Route
                     path="/:username/status/:status_id"
-                    component={TweetModal}
+                    component={TweetView}
                   />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />

@@ -32,26 +32,18 @@ import { UserAvatar } from 'shared/components';
 import { Link } from 'react-router-dom';
 import AddComment from './AddComment';
 
-const tweet = {
-  user: {
-    name: 'Bob Doe',
-    username: 'bobdoe'
-  },
-  created: '13-07-2019',
-  text:
-    'Hello everyone, this is my first tweet. I would like to share with you some of my recent thoughts about Tools Of Titans book',
-  comments: [],
-  likes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-  retweets: [1, 2]
-};
-
-function CommentSection() {
-  return (
-    <div>
-      <p>Comment section</p>
-    </div>
-  );
-}
+// const tweet = {
+//   user: {
+//     name: 'Bob Doe',
+//     username: 'bobdoe'
+//   },
+//   created: '13-07-2019',
+//   text:
+//     'Hello everyone, this is my first tweet. I would like to share with you some of my recent thoughts about Tools Of Titans book',
+//   comments: [],
+//   likes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+//   retweets: [1, 2]
+// };
 
 function TweetModal({ back, containerRef, tweet }) {
   return createPortal(
@@ -83,7 +75,7 @@ function TweetModal({ back, containerRef, tweet }) {
               </UserInfo>
             </UserGroup>
 
-            <FollowButton primary>Following</FollowButton>
+            {/* <FollowButton primary>Following</FollowButton> */}
           </TopFlex>
 
           <TweetContent>
@@ -128,7 +120,7 @@ function TweetModal({ back, containerRef, tweet }) {
         </Main>
 
         <AddComment />
-        <TweetsBoard tweets={tweet.comments} />
+        <TweetsBoard tweets={tweet.comments} comments={true} />
       </StyledTweet>
     </Container>,
     document.getElementById('root')
@@ -141,25 +133,25 @@ TweetModal.propTypes = {
 };
 
 function TweetModalContainer(props) {
-  // const { status_id } = props.match.params;
+  const { status_id } = props.match.params;
   const containerRef = useRef(null);
 
-  // const {
-  //   tweet: { tweet, loading },
-  //   errors,
-  //   getTweetById,
-  //   history
-  // } = props;
+  const {
+    tweet: { tweet, loading },
+    errors,
+    getTweetById,
+    history
+  } = props;
 
-  // useEffect(() => {
-  //   if (!tweet && loading === false) {
-  //     getTweetById(status_id);
-  //   }
-  // }, [status_id]);
+  useEffect(() => {
+    if (!tweet && loading === false) {
+      getTweetById(status_id);
+    }
+  }, [status_id]);
 
-  // if (loading || !tweet) {
-  //   return <Loading />;
-  // }
+  if (loading || !tweet) {
+    return <Loading />;
+  }
 
   const back = e => {
     if (e.target !== containerRef.current) {
@@ -178,6 +170,7 @@ TweetModalContainer.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  auth: state.auth,
   tweet: state.tweet,
   errors: state.errors
 });

@@ -69,3 +69,9 @@ export const ItemGroup = styled.span`
 `;
 
 export const Icon = styled.i``;
+
+export const InfoText = styled.p`
+  padding: 10px 15px;
+  font-size: 1.15em;
+  color: ${props => props.theme.colors.darkGray};
+`;

@@ -55,6 +55,7 @@ function ProfileContainer({
         owner={owner}
         isAuthenticated={auth.isAuthenticated}
         followed={followed}
+        match={match}
       />
     </>
   );

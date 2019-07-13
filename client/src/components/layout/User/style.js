@@ -33,11 +33,16 @@ export const ListItem = styled.li`
 `;
 
 export const Key = styled.span`
-  font-size: 1.1em;
+  font-size: 1em;
+  color: ${props => props.theme.colors.darkGray};
   font-weight: bold;
 `;
 
-export const Value = styled.span``;
+export const Value = styled.span`
+  font-size: 1.3em;
+  color: ${props => props.theme.colors.blue};
+  font-weight: bold;
+`;
 
 export const ProfileHeaderMenu = styled.div`
   background-color: #fff;

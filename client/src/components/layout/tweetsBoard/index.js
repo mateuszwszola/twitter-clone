@@ -19,16 +19,21 @@ import {
   TweetUserName,
   TweetUserUsername,
   Icon,
-  ItemGroup
+  ItemGroup,
+  InfoText
 } from './style';
 import portretPlaceholder from 'img/portret-placeholder.png';
 
 function TweetsBoard(props) {
-  const { tweets, setCurrentTweet } = props;
+  const { tweets, setCurrentTweet, comments } = props;
   if (tweets.length === 0) {
     return (
       <Container>
-        <p>You don't have any tweets</p>
+        {comments ? (
+          <InfoText>Tweet does not have any comments</InfoText>
+        ) : (
+          <InfoText>You don't have any tweets</InfoText>
+        )}
       </Container>
     );
   }

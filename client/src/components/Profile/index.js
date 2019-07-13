@@ -4,31 +4,72 @@ import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
 import TweetsBoard from 'components/layout/TweetsBoard';
 import Loading from '../Loading';
-import { Container, BackgroundContainer, Background, ProfileTweetsBoard, Sidebar } from './style';
+import {
+  Container,
+  BackgroundContainer,
+  Background,
+  ProfileTweetsBoard,
+  Sidebar
+} from './style';
+import { Route, Switch } from 'react-router-dom';
+import Following from './Following';
+import Followers from './Followers';
+import Likes from './Likes';
 
-const backgroundPlaceholderSrc = "https://via.placeholder.com/1280x250?text=Background+Picture";
+const backgroundPlaceholderSrc =
+  'https://via.placeholder.com/1280x250?text=Background+Picture';
 
-function Profile({ profile, tweet, owner, isAuthenticated, followed }) {
+function ProfileTweets({ loading, tweets }) {
+  return (
+    <ProfileTweetsBoard>
+      {loading || tweets === null ? (
+        <Loading />
+      ) : (
+        <TweetsBoard tweets={tweets} />
+      )}
+    </ProfileTweetsBoard>
+  );
+}
+
+ProfileTweets.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  tweets: PropTypes.array
+};
+
+function Profile({
+  profile,
+  tweet: { loading, tweets },
+  owner,
+  isAuthenticated,
+  followed,
+  match
+}) {
   return (
     <Container>
-        <BackgroundContainer>
-            <Background alt={`${profile.user.name} background`} src={profile.user.background || backgroundPlaceholderSrc} />
-        </BackgroundContainer>
-        <UserStatsHeader
-          profile={profile}
-          owner={owner}
-          isAuthenticated={isAuthenticated}
-          followed={followed}
+      <BackgroundContainer>
+        <Background
+          alt={`${profile.user.name} background`}
+          src={profile.user.background || backgroundPlaceholderSrc}
         />
+      </BackgroundContainer>
+      <UserStatsHeader
+        profile={profile}
+        owner={owner}
+        isAuthenticated={isAuthenticated}
+        followed={followed}
+      />
       <div>
-          <ProfileUserGroup profile={profile} />
-        <ProfileTweetsBoard>
-          {tweet.loading || tweet.tweets === null ? (
-            <Loading />
-          ) : (
-            <TweetsBoard tweets={tweet.tweets} />
-          )}
-        </ProfileTweetsBoard>
+        <ProfileUserGroup profile={profile} />
+        <Switch>
+          <Route
+            exact
+            path={`${match.path}`}
+            render={() => <ProfileTweets loading={loading} tweets={tweets} />}
+          />
+          <Route path={`${match.path}/following`} component={Following} />
+          <Route path={`${match.path}/followers`} component={Followers} />
+          <Route path={`${match.path}/likes`} component={Likes} />
+        </Switch>
         <Sidebar>Right sidebar</Sidebar>
       </div>
     </Container>

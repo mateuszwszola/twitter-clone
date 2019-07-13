@@ -5,6 +5,7 @@ import LinkedUserName from './user/LinkedUserName';
 import LinkedUserUsername from './user/LinkedUserUsername';
 import ProfileStatGroup from './user/ProfileStatGroup';
 import portretPlaceholder from 'img/portret-placeholder.png';
+import { Link } from 'react-router-dom';
 
 import UserPreviewCard from './UserPreviewCard';
 
@@ -29,15 +30,23 @@ function UserPreview({ profile }) {
       </UserPreviewCard.MidFlex>
       <UserPreviewCard.StatsContainer>
         <UserPreviewCard.HeaderMenu>
-          <ProfileStatGroup label="Tweets" value={profile.tweets.length} />
-          <ProfileStatGroup
-            label="Following"
-            value={profile.following.length}
-          />
-          <ProfileStatGroup
-            label="Followers"
-            value={profile.followers.length}
-          />
+          <Link to={`${profile.user.username}`}>
+            <ProfileStatGroup label="Tweets" value={profile.tweets.length} />
+          </Link>
+          <Link to={`${profile.user.username}/following`}>
+            <ProfileStatGroup
+              label="Following"
+              value={profile.following.length}
+              username={profile.user.username}
+            />
+          </Link>
+          <Link to={`${profile.user.username}/followers`}>
+            <ProfileStatGroup
+              label="Followers"
+              value={profile.followers.length}
+              username={profile.user.username}
+            />
+          </Link>
         </UserPreviewCard.HeaderMenu>
       </UserPreviewCard.StatsContainer>
     </UserPreviewCard>

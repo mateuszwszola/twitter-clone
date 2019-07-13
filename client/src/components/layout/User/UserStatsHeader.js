@@ -5,33 +5,44 @@ import { EditProfileButton, FollowProfileButton } from 'shared/components';
 import { ProfileHeaderMenu, HeaderMenuList } from './style';
 import { Link } from 'react-router-dom';
 
-const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => (
-  <ProfileHeaderMenu>
-    <HeaderMenuList>
-      <ProfileStatGroup label="Tweets" value={profile.tweets.length} />
-      <ProfileStatGroup label="Following" value={profile.following.length} />
-      <ProfileStatGroup label="Followers" value={profile.followers.length} />
-      <ProfileStatGroup label="Likes" value={profile.likes.length} />
-    </HeaderMenuList>
-    {owner ? (
-      <div>
-        <EditProfileButton as={Link} primary to="/edit-profile">
-          Edit Profile
-        </EditProfileButton>
-      </div>
-    ) : (
-      <div>
-        {isAuthenticated ? (
-          <FollowProfileButton primary>
-            {followed ? 'Unfollow' : 'Follow'}
-          </FollowProfileButton>
-        ) : (
-          ''
-        )}
-      </div>
-    )}
-  </ProfileHeaderMenu>
-);
+const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => {
+  const { user, tweets, following, followers, likes } = profile;
+  return (
+    <ProfileHeaderMenu>
+      <HeaderMenuList>
+        <Link to={`/${user.username}`}>
+          <ProfileStatGroup label="Tweets" value={tweets.length} />
+        </Link>
+        <Link to={`/${user.username}/following`}>
+          <ProfileStatGroup label="Following" value={following.length} />
+        </Link>
+        <Link to={`/${user.username}/followers`}>
+          <ProfileStatGroup label="Followers" value={followers.length} />
+        </Link>
+        <Link to={`/${user.username}/likes`}>
+          <ProfileStatGroup label="Likes" value={likes.length} />
+        </Link>
+      </HeaderMenuList>
+      {owner ? (
+        <div>
+          <EditProfileButton as={Link} primary to="/edit-profile">
+            Edit Profile
+          </EditProfileButton>
+        </div>
+      ) : (
+        <div>
+          {isAuthenticated ? (
+            <FollowProfileButton primary>
+              {followed ? 'Unfollow' : 'Follow'}
+            </FollowProfileButton>
+          ) : (
+            ''
+          )}
+        </div>
+      )}
+    </ProfileHeaderMenu>
+  );
+};
 
 UserStatsHeader.propTypes = {
   profile: PropTypes.object.isRequired,
