@@ -107,7 +107,12 @@ const UserAvatar = styled.img`
       width: 70px;
       height: 70px;
     `}
-
+  ${props =>
+    props.tiny &&
+    css`
+      width: 30px;
+      height: 30px;
+    `}
   ${props =>
     props.big &&
     css`

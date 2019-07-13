@@ -1,107 +1,177 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { getTweetById } from 'actions/tweetActions';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
+import TweetsBoard from '../layout/TweetsBoard';
 import portretPlaceholder from 'img/portret-placeholder.png';
 import Moment from 'react-moment';
 import {
   Container,
-  ListItem,
-  ListItemContent,
-  TweetUserGroup,
+  StyledTweet,
+  Main,
+  TweetContent,
+  TopFlex,
   ItemGroup,
   TweetUserName,
   TweetUserUsername,
   TweetText,
-  TweetBottomGroup,
   Icon,
-  CommentContainer
+  CloseButton,
+  TweetDate,
+  UserGroup,
+  UserInfo,
+  SocialGroup,
+  TweetActionGroup,
+  FollowButton,
+  TweetAction
 } from './style';
 import { UserAvatar } from 'shared/components';
 import { Link } from 'react-router-dom';
 import AddComment from './AddComment';
 
-function TweetModal(props) {
-  const { status_id } = props.match.params;
-  const {
-    tweet: { tweet, loading },
-    errors,
-    getTweetById,
-    history
-  } = props;
+const tweet = {
+  user: {
+    name: 'Bob Doe',
+    username: 'bobdoe'
+  },
+  created: '13-07-2019',
+  text:
+    'Hello everyone, this is my first tweet. I would like to share with you some of my recent thoughts about Tools Of Titans book',
+  comments: [],
+  likes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  retweets: [1, 2]
+};
 
-  useEffect(() => {
-    if (!tweet && loading === false) {
-      getTweetById(status_id);
-    }
-  }, [status_id]);
+function CommentSection() {
+  return (
+    <div>
+      <p>Comment section</p>
+    </div>
+  );
+}
 
-  if (loading || !tweet) {
-    return <Loading />;
-  }
-
-  const back = e => {
-    e.stopPropagation();
-    history.goBack();
-  };
-
+function TweetModal({ back, containerRef, tweet }) {
   return createPortal(
-    <Container>
-      <button onClick={back}>Close</button>
-      <ListItem>
-        <UserAvatar
-          small
-          src={tweet.user.avatar || portretPlaceholder}
-          alt="User Avatar"
-        />
-        <ListItemContent>
-          <TweetUserGroup>
-            <ItemGroup>
-              <TweetUserName as={Link} to={`/${tweet.user.username}`}>
-                {tweet.user.name}
-              </TweetUserName>
-            </ItemGroup>
-            <ItemGroup>
-              @
-              <TweetUserUsername as={Link} to={`/${tweet.user.username}`}>
-                {tweet.user.username}
-              </TweetUserUsername>
-            </ItemGroup>
-            <ItemGroup>
-              <Moment format="DD/MM/YYYY" withTitle>
-                {tweet.created}
-              </Moment>
-            </ItemGroup>
-          </TweetUserGroup>
-          <div>
-            <TweetText>{tweet.text}</TweetText>
-          </div>
-          <TweetBottomGroup>
-            <ItemGroup>
-              <Icon className="far fa-comment" /> {tweet.comments.length}
-            </ItemGroup>
-            <ItemGroup>
-              <Icon className="fas fa-retweet" /> {tweet.retweets.length}
-            </ItemGroup>
-            <ItemGroup>
-              <Icon className="far fa-heart" /> {tweet.likes.length}
-            </ItemGroup>
-          </TweetBottomGroup>
+    <Container onClick={back} ref={containerRef}>
+      <CloseButton />
+      <StyledTweet>
+        <Main>
+          <TopFlex>
+            <UserGroup>
+              <Link to={`/${tweet.user.username}`}>
+                <UserAvatar
+                  small
+                  src={tweet.user.avatar || portretPlaceholder}
+                  alt="User Avatar"
+                />
+              </Link>
+              <UserInfo>
+                <ItemGroup>
+                  <TweetUserName as={Link} to={`/${tweet.user.username}`}>
+                    {tweet.user.name}
+                  </TweetUserName>
+                </ItemGroup>
+                <ItemGroup>
+                  @
+                  <TweetUserUsername as={Link} to={`/${tweet.user.username}`}>
+                    {tweet.user.username}
+                  </TweetUserUsername>
+                </ItemGroup>
+              </UserInfo>
+            </UserGroup>
 
-          <CommentContainer>
-            <AddComment />
-          </CommentContainer>
-        </ListItemContent>
-      </ListItem>
+            <FollowButton primary>Following</FollowButton>
+          </TopFlex>
+
+          <TweetContent>
+            <TweetText>{tweet.text}</TweetText>
+            <TweetDate>
+              13/07/2019
+              {/* <Moment format="DD/MM/YYYY" withTitle>
+                {tweet.created}
+              </Moment> */}
+            </TweetDate>
+
+            <SocialGroup>
+              <ItemGroup>
+                <strong>{tweet.retweets.length} </strong> Retweet
+              </ItemGroup>
+              <ItemGroup>
+                <strong>{tweet.likes.length}</strong> Likes
+              </ItemGroup>
+            </SocialGroup>
+
+            <TweetActionGroup>
+              <TweetAction>
+                <Icon
+                  className="far fa-comment"
+                  onClick={() => alert('Comment')}
+                />{' '}
+                <strong>{tweet.comments.length}</strong>
+              </TweetAction>
+              <TweetAction>
+                <Icon
+                  className="fas fa-retweet"
+                  onClick={() => alert('Retweet')}
+                />{' '}
+                <strong>{tweet.retweets.length}</strong>
+              </TweetAction>
+              <TweetAction>
+                <Icon className="far fa-heart" onClick={() => alert('Like')} />{' '}
+                <strong>{tweet.likes.length}</strong>
+              </TweetAction>
+            </TweetActionGroup>
+          </TweetContent>
+        </Main>
+
+        <AddComment />
+        <TweetsBoard tweets={tweet.comments} />
+      </StyledTweet>
     </Container>,
     document.getElementById('root')
   );
 }
 
 TweetModal.propTypes = {
+  back: PropTypes.func.isRequired,
+  tweet: PropTypes.object.isRequired
+};
+
+function TweetModalContainer(props) {
+  // const { status_id } = props.match.params;
+  const containerRef = useRef(null);
+
+  // const {
+  //   tweet: { tweet, loading },
+  //   errors,
+  //   getTweetById,
+  //   history
+  // } = props;
+
+  // useEffect(() => {
+  //   if (!tweet && loading === false) {
+  //     getTweetById(status_id);
+  //   }
+  // }, [status_id]);
+
+  // if (loading || !tweet) {
+  //   return <Loading />;
+  // }
+
+  const back = e => {
+    if (e.target !== containerRef.current) {
+      return;
+    }
+    props.history.goBack();
+  };
+
+  return <TweetModal containerRef={containerRef} back={back} tweet={tweet} />;
+}
+
+TweetModalContainer.propTypes = {
   tweet: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   getTweetById: PropTypes.func.isRequired
@@ -115,4 +185,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getTweetById }
-)(withRouter(TweetModal));
+)(withRouter(TweetModalContainer));

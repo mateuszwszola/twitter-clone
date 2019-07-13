@@ -1,7 +1,36 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { CommentContainer, CommentForm, CommentInput } from './style';
+import { UserAvatar } from 'shared/components';
+import portretPlaceholder from 'img/portret-placeholder.png';
 
-function AddComment(props) {
+function AddComment({ handleSubmit, handleChange, comment }) {
+  return (
+    <CommentContainer>
+      <UserAvatar
+        tiny
+        src={portretPlaceholder} // user avatar
+        alt="User Avatar"
+      />
+      <CommentForm onSubmit={handleSubmit}>
+        <CommentInput
+          placeholder="Tweet your reply"
+          type="text"
+          value={comment}
+          onChange={handleChange}
+        />
+      </CommentForm>
+    </CommentContainer>
+  );
+}
+
+AddComment.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  comment: PropTypes.string.isRequired
+};
+
+function AddCommentContainer(props) {
   const [comment, setComment] = useState('');
 
   function handleChange(e) {
@@ -15,13 +44,12 @@ function AddComment(props) {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={comment} onChange={handleChange} />
-        <button>Add Comment</button>
-      </form>
-    </div>
+    <AddComment
+      handleSubmit={handleSubmit}
+      handleChange={handleChange}
+      comment={comment}
+    />
   );
 }
 
-export default AddComment;
+export default AddCommentContainer;
