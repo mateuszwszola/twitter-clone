@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
+import { Link, withRouter } from 'react-router-dom';
 import { UserAvatar } from 'shared/components';
 import {
   Container,
@@ -18,9 +19,10 @@ import {
   Icon,
   ItemGroup
 } from './style';
-import portretPlaceholder from 'img/portret-placeholder.png'
+import portretPlaceholder from 'img/portret-placeholder.png';
 
-function TweetsBoard({ tweets }) {
+function TweetsBoard(props) {
+  const { tweets } = props;
   if (tweets.length === 0) {
     return (
       <Container>
@@ -28,6 +30,14 @@ function TweetsBoard({ tweets }) {
       </Container>
     );
   }
+
+  const handleTweetClick = (username, tweetId) => {
+    props.history.push({
+      pathname: `/${username}/status/${tweetId}`,
+      state: { modal: true }
+    });
+  };
+
   return (
     <Container>
       <Board>
@@ -37,7 +47,12 @@ function TweetsBoard({ tweets }) {
         <List>
           {tweets.length > 0
             ? tweets.map(tweet => (
-                <ListItem key={tweet._id}>
+                <ListItem
+                  key={tweet._id}
+                  onClick={() =>
+                    handleTweetClick(tweet.user.username, tweet._id)
+                  }
+                >
                   <UserAvatar
                     small
                     src={tweet.user.avatar || portretPlaceholder}
@@ -90,4 +105,4 @@ TweetsBoard.propTypes = {
   tweets: PropTypes.array.isRequired
 };
 
-export default TweetsBoard;
+export default withRouter(TweetsBoard);

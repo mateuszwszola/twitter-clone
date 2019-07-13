@@ -1,40 +1,25 @@
 import styled from 'styled-components/macro';
 
 export const Container = styled.div`
-  height: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  position: fixed;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
 `;
-
-export const Board = styled.div`
-  background-color: #fff;
-  min-height: 200px;
-  -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
-`;
-
-export const HeaderWrapper = styled.div`
-  padding: 5px;
-  border-bottom: 1px solid #eee;
-`;
-
-export const Header = styled.h3`
-  margin: 5px;
-`;
-
-export const List = styled.ul``;
 
 export const ListItem = styled.li`
+  border-radius: 5px;
+  margin: auto;
+  background-color: #fff;
+  width: 80%;
   display: flex;
   flex-direction: row;
   padding: 7px 12px;
-  border-bottom: 1px solid #eee;
   cursor: pointer;
-
-  &:hover {
-    background-color: #eee;
-  }
 `;
 
 export const ListItemContent = styled.div`
@@ -69,3 +54,5 @@ export const ItemGroup = styled.span`
 `;
 
 export const Icon = styled.i``;
+
+export const CommentContainer = styled.div``;

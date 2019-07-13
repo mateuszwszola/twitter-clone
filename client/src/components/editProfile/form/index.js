@@ -1,27 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Moment from 'react-moment';
-import { Link } from 'react-router-dom';
 import { Input, FeedbackMessage } from 'shared/components';
 import {
-    StyledForm,
-    Label,
-    InputGroup,
-    ButtonGroup,
-    SaveButton,
-    CancelButton
+  StyledForm,
+  Label,
+  InputGroup,
+  ButtonGroup,
+  SaveButton,
+  CancelButton
 } from './style';
 
 function getBirthdayDate(birthday) {
-    if (!birthday) {
-        return '';
-    }
-    const prependWithZero = number => number < 10 ? '0' + number : number;
-    const date = new Date(birthday);
-    const year = date.getFullYear();
-    const month = prependWithZero(date.getMonth() + 1);
-    const day = prependWithZero(date.getDate());
-    return `${year}-${month}-${day}`;
+  if (!birthday) {
+    return '';
+  }
+  const prependWithZero = number => (number < 10 ? '0' + number : number);
+  const date = new Date(birthday);
+  const year = date.getFullYear();
+  const month = prependWithZero(date.getMonth() + 1);
+  const day = prependWithZero(date.getDate());
+  return `${year}-${month}-${day}`;
 }
 
 function Form({
@@ -35,9 +33,13 @@ function Form({
   backgroundPicture,
   handleChange,
   handleSubmit,
-  errors
+  errors,
+  history
 }) {
-
+  const back = e => {
+    e.stopPropagation();
+    history.goBack();
+  };
   return (
     <StyledForm onSubmit={handleSubmit}>
       <InputGroup>
@@ -145,9 +147,9 @@ function Form({
       </InputGroup>
 
       <ButtonGroup>
-        <SaveButton type="submit">Save Changes</SaveButton>
-        <CancelButton as={Link} to={`/${username}`}>
-          Cancel
+        <SaveButton type="submit">Update Changes</SaveButton>
+        <CancelButton type="button" onClick={back}>
+          Go Back
         </CancelButton>
       </ButtonGroup>
     </StyledForm>
@@ -163,7 +165,8 @@ Form.propTypes = {
   birthday: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default Form;

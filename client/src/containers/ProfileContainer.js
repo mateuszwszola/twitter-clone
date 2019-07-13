@@ -10,7 +10,7 @@ import isEmpty from 'utils/isEmpty';
 function ProfileContainer({
   match,
   auth,
-  profile,
+  profile: { profile, loading },
   tweet,
   getProfileWithTweetsByUsername,
   errors
@@ -32,33 +32,31 @@ function ProfileContainer({
 
   useEffect(() => {
     getProfileWithTweetsByUsername(username);
-  }, [username]);
+  }, [getProfileWithTweetsByUsername]);
 
   if (!isEmpty(errors)) {
     return <DisplayErrors error={errors.message} />;
   }
 
-  if (profile.loading || profile.profile === null) {
+  if (loading || profile === null) {
     return <Loading />;
   }
 
-  const followed =
+  const followed = !!(
     auth.user &&
-    profile.profile.followers.find(follower => follower.user === auth.user._id)
-      ? true
-      : false;
+    profile.followers.find(follower => follower.user === auth.user._id)
+  );
 
   return (
-    <div>
-      {owner ? <h1>Owner</h1> : <h1>Not the owner</h1>}
+    <>
       <Profile
-        profile={profile.profile}
+        profile={profile}
         tweet={tweet}
         owner={owner}
         isAuthenticated={auth.isAuthenticated}
         followed={followed}
       />
-    </div>
+    </>
   );
 }
 

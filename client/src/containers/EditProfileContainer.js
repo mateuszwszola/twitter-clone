@@ -98,6 +98,7 @@ function EditProfileContainer({
       handleChange={handleChange}
       handleSubmit={handleSubmit}
       errors={errors}
+      history={history}
     />
   );
 }

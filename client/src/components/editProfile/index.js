@@ -14,7 +14,8 @@ function EditProfile({
   backgroundPicture,
   handleChange,
   handleSubmit,
-  errors
+  errors,
+  history
 }) {
   return (
     <Container>
@@ -30,6 +31,7 @@ function EditProfile({
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         errors={errors}
+        history={history}
       />
     </Container>
   );
@@ -46,7 +48,8 @@ EditProfile.propTypes = {
   backgroundPicture: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 export default EditProfile;

@@ -12,7 +12,8 @@ const Input = styled.input`
   width: 100%;
   margin: 10px 0;
   padding: 10px 5px;
-  border: 1px solid ${props => props.error ? props.theme.colors.red : '#e6ecf0'};
+  border: 1px solid
+    ${props => (props.error ? props.theme.colors.red : '#e6ecf0')};
   border-radius: 3px;
 
   :focus {
@@ -97,7 +98,6 @@ const UserAvatar = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  border: 2px solid #fff;
   flex-shrink: 0;
   margin: 0.7rem;
 
