@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'react-moment';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { UserAvatar } from 'shared/components';
+import { connect } from 'react-redux';
+import { setCurrentTweet } from 'actions/tweetActions';
 import {
   Container,
   Board,
@@ -22,7 +24,7 @@ import {
 import portretPlaceholder from 'img/portret-placeholder.png';
 
 function TweetsBoard(props) {
-  const { tweets } = props;
+  const { tweets, setCurrentTweet } = props;
   if (tweets.length === 0) {
     return (
       <Container>
@@ -31,9 +33,11 @@ function TweetsBoard(props) {
     );
   }
 
-  const handleTweetClick = (username, tweetId) => {
+  const handleTweetClick = tweet => {
+    const { user, _id } = tweet;
+    setCurrentTweet(tweet);
     props.history.push({
-      pathname: `/${username}/status/${tweetId}`,
+      pathname: `/${user.username}/status/${_id}`,
       state: { modal: true }
     });
   };
@@ -49,9 +53,7 @@ function TweetsBoard(props) {
             ? tweets.map(tweet => (
                 <ListItem
                   key={tweet._id}
-                  onClick={() =>
-                    handleTweetClick(tweet.user.username, tweet._id)
-                  }
+                  onClick={() => handleTweetClick(tweet)}
                 >
                   <UserAvatar
                     small
@@ -102,7 +104,11 @@ function TweetsBoard(props) {
 }
 
 TweetsBoard.propTypes = {
-  tweets: PropTypes.array.isRequired
+  tweets: PropTypes.array.isRequired,
+  setCurrentTweet: PropTypes.func.isRequired
 };
 
-export default withRouter(TweetsBoard);
+export default connect(
+  null,
+  { setCurrentTweet }
+)(withRouter(TweetsBoard));

@@ -8,6 +8,11 @@ import {
 } from './types';
 import { closeCreateTweetModal } from './uiActions';
 
+export const setCurrentTweet = tweet => ({
+  type: GET_CURRENT_TWEET,
+  payload: tweet
+});
+
 export const getTweetById = tweet_id => async dispatch => {
   dispatch(setTweetLoading());
 

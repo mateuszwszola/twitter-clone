@@ -16,7 +16,7 @@ import EditProfileContainer from './containers/EditProfileContainer';
 import PrivateRoute from './components/route/PrivateRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Alert from 'components/Alert';
-import TweetView from './components/Tweet/TweetView';
+import { TweetView } from './components/Tweet';
 import ModalSwitch from './components/ModalSwitch';
 
 import { Provider } from 'react-redux';

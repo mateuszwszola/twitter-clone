@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import TweetModal from './Tweet/TweetModal';
+import { TweetModal } from './Tweet';
 
 class ModalSwitch extends Component {
   previousLocation = this.props.location;
