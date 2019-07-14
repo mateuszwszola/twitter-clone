@@ -12,7 +12,11 @@ router.post('/:tweet_id', auth, async (req, res, next) => {
   const { tweet_id } = req.params;
   try {
     const profile = await Profile.findOne({ user: req.user.id });
-    const tweet = await Tweet.findById(tweet_id);
+    const tweet = await Tweet.findById(tweet_id).populate('user', [
+      'name',
+      'username',
+      'avatar'
+    ]);
     if (!tweet) {
       return res.status(404).json({ msg: 'Tweet does not exists' });
     }

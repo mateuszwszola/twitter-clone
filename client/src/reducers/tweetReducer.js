@@ -4,7 +4,9 @@ import {
   TWEET_LOADING,
   GET_TWEETS,
   CREATE_TWEET,
-  GET_ERRORS
+  GET_ERRORS,
+  LIKE_TWEET,
+  REMOVE_TWEET
 } from 'actions/types';
 
 const initialState = {
@@ -49,6 +51,24 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false
+      };
+    case LIKE_TWEET:
+      const { tweet_id, updatedTweet } = payload;
+      const tweetIndex = state.tweets.findIndex(
+        tweet => tweet._id === tweet_id
+      );
+      return {
+        ...state,
+        tweets: [
+          ...state.tweets.slice(0, tweetIndex),
+          updatedTweet,
+          ...state.tweets.slice(tweetIndex + 1)
+        ]
+      };
+    case REMOVE_TWEET:
+      return {
+        ...state,
+        tweets: state.tweets.filter(tweet => tweet._id !== payload)
       };
     default:
       return state;

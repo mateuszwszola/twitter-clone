@@ -17,7 +17,7 @@ import Followers from './Followers';
 import Likes from './Likes';
 
 const backgroundPlaceholderSrc =
-  'https://via.placeholder.com/1280x250?text=Background+Picture';
+  'https://via.placeholder.com/1920x250?text=Background+Picture';
 
 function ProfileTweets({ loading, tweets }) {
   return (
@@ -47,10 +47,14 @@ function Profile({
   return (
     <Container>
       <BackgroundContainer>
-        <Background
-          alt={`${profile.user.name} background`}
-          src={profile.user.background || backgroundPlaceholderSrc}
-        />
+        {profile.user.backgroundPicture ? (
+          <Background
+            alt={`${profile.user.name} background`}
+            src={profile.user.background}
+          />
+        ) : (
+          ''
+        )}
       </BackgroundContainer>
       <UserStatsHeader
         profile={profile}

@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { Button } from 'shared/components';
 
 export const Container = styled.div`
   height: 100%;
@@ -26,8 +27,10 @@ export const Header = styled.h3`
 export const List = styled.ul``;
 
 export const ListItem = styled.li`
+  position: relative;
   display: flex;
   flex-direction: row;
+  align-items: center;
   padding: 7px 12px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
@@ -69,6 +72,19 @@ export const ItemGroup = styled.span`
 `;
 
 export const Icon = styled.i``;
+
+export const LikeIcon = styled.i`
+  &:hover {
+    color: ${props => props.theme.colors.red};
+  }
+`;
+
+export const DeleteButton = styled(Button)`
+  background-color: ${props => props.theme.colors.red};
+  color: #fff;
+  position: absolute;
+  right: 10px;
+`;
 
 export const InfoText = styled.p`
   padding: 10px 15px;

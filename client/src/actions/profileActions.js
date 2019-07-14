@@ -3,23 +3,28 @@ import {
   GET_ERRORS,
   GET_PROFILE,
   PROFILE_LOADING,
-  GET_TWEETS
-  // FOLLOW
+  GET_TWEETS,
+  FOLLOW
 } from './types';
 import { setTweetLoading } from './tweetActions';
 import { clearErrors } from './errorActions';
 import { setAlert } from './alertActions';
 
-// export const followProfile = () => async dispatch => {
-//   try {
-//     const res = await axios.post()
-//   } catch (err) {
-//     dispatch({
-//       type: GET_ERRORS,
-//       payload: err.reponse.data
-//     })
-//   }
-// }
+export const followProfile = userToFollowId => async dispatch => {
+  try {
+    const res = await axios.post(`/api/profiles/follow/${userToFollowId}`);
+
+    dispatch({
+      type: FOLLOW,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.reponse.data
+    });
+  }
+};
 
 export const updateProfile = data => async dispatch => {
   dispatch(setProfileLoading());
