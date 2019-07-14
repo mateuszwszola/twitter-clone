@@ -63,7 +63,8 @@ export default function(state = initialState, action) {
           ...state.tweets.slice(0, tweetIndex),
           updatedTweet,
           ...state.tweets.slice(tweetIndex + 1)
-        ]
+        ],
+        tweet: updatedTweet || state.tweet
       };
     case REMOVE_TWEET:
       return {

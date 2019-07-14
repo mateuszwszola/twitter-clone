@@ -71,12 +71,19 @@ export const ItemGroup = styled.span`
   padding: 0 5px;
 `;
 
-export const Icon = styled.i``;
-
-export const LikeIcon = styled.i`
-  &:hover {
+export const LikeItemGroup = styled(ItemGroup)`
+  &:hover i {
     color: ${props => props.theme.colors.red};
   }
+`;
+
+export const Icon = styled.i`
+  font-size: 1.25em;
+`;
+
+export const LikeIcon = styled(Icon)`
+  color: ${props =>
+    props.liked === true ? props.theme.colors.red : 'inherit'};
 `;
 
 export const DeleteButton = styled(Button)`

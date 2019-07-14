@@ -21,6 +21,7 @@ import {
   Icon,
   LikeIcon,
   ItemGroup,
+  LikeItemGroup,
   InfoText,
   DeleteButton
 } from './style';
@@ -73,64 +74,70 @@ function TweetsBoard(props) {
         </HeaderWrapper>
         <List>
           {tweets.length > 0
-            ? tweets.map(tweet => (
-                <ListItem
-                  key={tweet._id}
-                  onClick={() => handleTweetClick(tweet)}
-                >
-                  <UserAvatar
-                    small
-                    src={tweet.user.avatar || portretPlaceholder}
-                    alt="User Avatar"
-                  />
-                  <ListItemContent>
-                    <TweetUserGroup>
-                      <ItemGroup>
-                        <TweetUserName>{tweet.user.name}</TweetUserName>
-                      </ItemGroup>
-                      <ItemGroup>
-                        @
-                        <TweetUserUsername>
-                          {tweet.user.username}
-                        </TweetUserUsername>
-                      </ItemGroup>
-                      <ItemGroup>
-                        <Moment format="DD/MM/YYYY" withTitle>
-                          {tweet.created}
-                        </Moment>
-                      </ItemGroup>
-                    </TweetUserGroup>
-                    <div>
-                      <TweetText>{tweet.text}</TweetText>
-                    </div>
-                    <TweetBottomGroup>
-                      <ItemGroup>
-                        <Icon className="far fa-comment" />{' '}
-                        {tweet.comments.length}
-                      </ItemGroup>
-                      <ItemGroup>
-                        <Icon className="fas fa-retweet" />{' '}
-                        {tweet.retweets.length}
-                      </ItemGroup>
-                      <ItemGroup>
-                        <LikeIcon
-                          className="far fa-heart"
+            ? tweets.map(tweet => {
+                const owner = auth.user && auth.user._id === tweet.user._id;
+                const liked = !!(
+                  auth.user &&
+                  tweet.likes.find(like => like.user === auth.user._id)
+                );
+                return (
+                  <ListItem
+                    key={tweet._id}
+                    onClick={() => handleTweetClick(tweet)}
+                  >
+                    <UserAvatar
+                      small
+                      src={tweet.user.avatar || portretPlaceholder}
+                      alt="User Avatar"
+                    />
+                    <ListItemContent>
+                      <TweetUserGroup>
+                        <ItemGroup>
+                          <TweetUserName>{tweet.user.name}</TweetUserName>
+                        </ItemGroup>
+                        <ItemGroup>
+                          @
+                          <TweetUserUsername>
+                            {tweet.user.username}
+                          </TweetUserUsername>
+                        </ItemGroup>
+                        <ItemGroup>
+                          <Moment format="DD/MM/YYYY" withTitle>
+                            {tweet.created}
+                          </Moment>
+                        </ItemGroup>
+                      </TweetUserGroup>
+                      <div>
+                        <TweetText>{tweet.text}</TweetText>
+                      </div>
+                      <TweetBottomGroup>
+                        <ItemGroup>
+                          <Icon className="far fa-comment" />{' '}
+                          {tweet.comments.length}
+                        </ItemGroup>
+                        <ItemGroup>
+                          <Icon className="fas fa-retweet" />{' '}
+                          {tweet.retweets.length}
+                        </ItemGroup>
+                        <LikeItemGroup
                           onClick={e => handleActionClick(e, 'like', tweet._id)}
-                        />{' '}
-                        {tweet.likes.length}
-                      </ItemGroup>
-                    </TweetBottomGroup>
-                  </ListItemContent>
+                        >
+                          <LikeIcon className="far fa-heart" liked={liked} />{' '}
+                          {tweet.likes.length}
+                        </LikeItemGroup>
+                      </TweetBottomGroup>
+                    </ListItemContent>
 
-                  {auth.user && auth.user._id === tweet.user._id ? (
-                    <DeleteButton
-                      onClick={e => handleActionClick(e, 'remove', tweet._id)}
-                    >
-                      Delete
-                    </DeleteButton>
-                  ) : null}
-                </ListItem>
-              ))
+                    {owner ? (
+                      <DeleteButton
+                        onClick={e => handleActionClick(e, 'remove', tweet._id)}
+                      >
+                        Delete
+                      </DeleteButton>
+                    ) : null}
+                  </ListItem>
+                );
+              })
             : ''}
         </List>
       </Board>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { getTweetById } from 'actions/tweetActions';
+import { getTweetById, removeTweet, likeTweet } from 'actions/tweetActions';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
 import TweetsBoard from '../layout/TweetsBoard';
@@ -19,16 +19,17 @@ import {
   TweetUserUsername,
   TweetText,
   Icon,
-  CloseButton,
+  LikeIcon,
   TweetDate,
   UserGroup,
   UserInfo,
   SocialGroup,
   TweetActionGroup,
   FollowButton,
-  TweetAction
+  TweetAction,
+  LikeTweetAction
 } from './style';
-import { UserAvatar } from 'shared/components';
+import { UserAvatar, CloseButton } from 'shared/components';
 import { Link } from 'react-router-dom';
 import AddComment from './AddComment';
 
@@ -45,7 +46,7 @@ import AddComment from './AddComment';
 //   retweets: [1, 2]
 // };
 
-function TweetModal({ back, containerRef, tweet }) {
+function TweetModal({ back, containerRef, tweet, liked, handleActionClick }) {
   return createPortal(
     <Container onClick={back} ref={containerRef}>
       <CloseButton />
@@ -81,10 +82,9 @@ function TweetModal({ back, containerRef, tweet }) {
           <TweetContent>
             <TweetText>{tweet.text}</TweetText>
             <TweetDate>
-              13/07/2019
-              {/* <Moment format="DD/MM/YYYY" withTitle>
+              <Moment format="DD/MM/YYYY" withTitle>
                 {tweet.created}
-              </Moment> */}
+              </Moment>
             </TweetDate>
 
             <SocialGroup>
@@ -111,10 +111,12 @@ function TweetModal({ back, containerRef, tweet }) {
                 />{' '}
                 <strong>{tweet.retweets.length}</strong>
               </TweetAction>
-              <TweetAction>
-                <Icon className="far fa-heart" onClick={() => alert('Like')} />{' '}
+              <LikeTweetAction
+                onClick={e => handleActionClick(e, 'like', tweet._id)}
+              >
+                <LikeIcon className="far fa-heart" liked={liked} />{' '}
                 <strong>{tweet.likes.length}</strong>
-              </TweetAction>
+              </LikeTweetAction>
             </TweetActionGroup>
           </TweetContent>
         </Main>
@@ -129,7 +131,9 @@ function TweetModal({ back, containerRef, tweet }) {
 
 TweetModal.propTypes = {
   back: PropTypes.func.isRequired,
-  tweet: PropTypes.object.isRequired
+  tweet: PropTypes.object.isRequired,
+  handleActionClick: PropTypes.func.isRequired,
+  liked: PropTypes.bool.isRequired
 };
 
 function TweetModalContainer(props) {
@@ -137,9 +141,12 @@ function TweetModalContainer(props) {
   const containerRef = useRef(null);
 
   const {
+    auth,
     tweet: { tweet, loading },
     errors,
     getTweetById,
+    removeTweet,
+    likeTweet,
     history
   } = props;
 
@@ -160,13 +167,37 @@ function TweetModalContainer(props) {
     props.history.goBack();
   };
 
-  return <TweetModal containerRef={containerRef} back={back} tweet={tweet} />;
+  const handleActionClick = (e, action, tweet_id) => {
+    e.stopPropagation();
+    if (action === 'like') {
+      likeTweet(tweet_id);
+    } else if (action === 'remove') {
+      removeTweet(tweet_id);
+    }
+  };
+
+  const liked = !!(
+    auth.user && tweet.likes.find(like => like.user === auth.user._id)
+  );
+
+  return (
+    <TweetModal
+      containerRef={containerRef}
+      back={back}
+      tweet={tweet}
+      liked={liked}
+      handleActionClick={handleActionClick}
+    />
+  );
 }
 
 TweetModalContainer.propTypes = {
+  auth: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  getTweetById: PropTypes.func.isRequired
+  getTweetById: PropTypes.func.isRequired,
+  removeTweet: PropTypes.func.isRequired,
+  likeTweet: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -177,5 +208,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTweetById }
+  { getTweetById, removeTweet, likeTweet }
 )(withRouter(TweetModalContainer));

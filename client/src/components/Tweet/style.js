@@ -10,32 +10,6 @@ export const Container = styled.div`
   left: 0;
 `;
 
-export const CloseButton = styled.a`
-  position: absolute;
-  right: 32px;
-  top: 32px;
-  width: 32px;
-  height: 32px;
-  opacity: 0.3;
-  &:hover {
-    opacity: 1;
-  }
-  &:before, &:after {
-    position: absolute;
-    left: 15px;
-    content: ' ',
-    height: 33px;
-    width: 2px;
-    background-color: #fff;
-  }
-  &:before {
-    transform: rotate(45deg);
-  }
-  &:after {
-    transform: rotate(-45deg);
-  }
-`;
-
 export const StyledTweet = styled.div`
   position: absolute;
   top: 50%;
@@ -121,6 +95,12 @@ export const TweetAction = styled.span`
   cursor: pointer;
 `;
 
+export const LikeTweetAction = styled(TweetAction)`
+  &:hover i {
+    color: ${props => props.theme.colors.red};
+  }
+`;
+
 export const TweetBottomGroup = styled.div`
   margin-top: 10px;
 `;
@@ -142,7 +122,18 @@ export const ItemGroup = styled.span`
   cursor: pointer;
 `;
 
+export const LikeItemGroup = styled(ItemGroup)`
+  &:hover i {
+    color: ${props => props.theme.colors.red};
+  }
+`;
+
 export const Icon = styled.i``;
+
+export const LikeIcon = styled(Icon)`
+  color: ${props =>
+    props.liked === true ? props.theme.colors.red : 'inherit'};
+`;
 
 // AddComment.js
 export const CommentContainer = styled.div`
