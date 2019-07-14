@@ -15,9 +15,11 @@ import { Route, Switch } from 'react-router-dom';
 import Following from './Following';
 import Followers from './Followers';
 import Likes from './Likes';
+import { connect } from 'react-redux';
+import { followProfile } from 'actions/profileActions';
 
-const backgroundPlaceholderSrc =
-  'https://via.placeholder.com/1920x250?text=Background+Picture';
+// const backgroundPlaceholderSrc =
+//   'https://via.placeholder.com/1920x250?text=Background+Picture';
 
 function ProfileTweets({ loading, tweets }) {
   return (
@@ -42,8 +44,13 @@ function Profile({
   owner,
   isAuthenticated,
   followed,
-  match
+  match,
+  followProfile
 }) {
+  const handleFollowClick = () => {
+    // followProfile()
+  };
+
   return (
     <Container>
       <BackgroundContainer>
@@ -85,7 +92,11 @@ Profile.propTypes = {
   tweet: PropTypes.object.isRequired,
   owner: PropTypes.bool.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  followed: PropTypes.bool.isRequired
+  followed: PropTypes.bool.isRequired,
+  followProfile: PropTypes.func.isRequired
 };
 
-export default Profile;
+export default connect(
+  null,
+  { followProfile }
+)(Profile);
