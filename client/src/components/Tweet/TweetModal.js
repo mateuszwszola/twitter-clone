@@ -46,10 +46,17 @@ import AddComment from './AddComment';
 //   retweets: [1, 2]
 // };
 
-function TweetModal({ back, containerRef, tweet, liked, handleActionClick }) {
+function TweetModal({
+  back,
+  containerRef,
+  closeButtonRef,
+  tweet,
+  liked,
+  handleActionClick
+}) {
   return createPortal(
     <Container onClick={back} ref={containerRef}>
-      <CloseButton />
+      <CloseButton ref={closeButtonRef} />
       <StyledTweet>
         <Main>
           <TopFlex>
@@ -139,6 +146,7 @@ TweetModal.propTypes = {
 function TweetModalContainer(props) {
   const { status_id } = props.match.params;
   const containerRef = useRef(null);
+  const closeButtonRef = useRef(null);
 
   const {
     auth,
@@ -161,10 +169,13 @@ function TweetModalContainer(props) {
   }
 
   const back = e => {
-    if (e.target !== containerRef.current) {
+    if (
+      e.target !== containerRef.current &&
+      e.target !== closeButtonRef.current
+    ) {
       return;
     }
-    props.history.goBack();
+    history.goBack();
   };
 
   const handleActionClick = (e, action, tweet_id) => {
@@ -183,6 +194,7 @@ function TweetModalContainer(props) {
   return (
     <TweetModal
       containerRef={containerRef}
+      closeButtonRef={closeButtonRef}
       back={back}
       tweet={tweet}
       liked={liked}

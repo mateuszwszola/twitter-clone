@@ -122,6 +122,7 @@ const UserAvatar = styled.img`
 `;
 
 const CloseButton = styled.a`
+  cursor: pointer;
   position: absolute;
   right: 32px;
   top: 32px;
@@ -131,10 +132,11 @@ const CloseButton = styled.a`
   &:hover {
     opacity: 1;
   }
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
     left: 15px;
-    content: ' ',
+    content: ' ';
     height: 33px;
     width: 2px;
     background-color: #fff;
