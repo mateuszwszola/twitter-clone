@@ -6,6 +6,7 @@ import { logoutUser } from 'actions/authActions';
 import DropdownMenu from './DropdownMenu';
 import { Button, StyledNavLink } from 'shared/components';
 import { MainNav, NavItem, StyledDropdown, NavAvatar } from './style';
+import Search from 'components/Search';
 
 function AuthNavView({
   openCreateTweetModal,
@@ -16,6 +17,9 @@ function AuthNavView({
 }) {
   return (
     <MainNav>
+      <NavItem>
+        <Search />
+      </NavItem>
       <NavItem>
         <StyledNavLink to="/">
           <i className="fas fa-home" /> Home

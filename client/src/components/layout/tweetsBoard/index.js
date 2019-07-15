@@ -59,10 +59,16 @@ function TweetsBoard(props) {
 
   const handleActionClick = (e, action, tweet_id) => {
     e.stopPropagation();
-    if (action === 'like') {
-      likeTweet(tweet_id);
-    } else if (action === 'remove') {
-      removeTweet(tweet_id);
+    if (auth.isAuthenticated) {
+      if (action === 'like') {
+        likeTweet(tweet_id);
+      } else if (action === 'remove') {
+        removeTweet(tweet_id);
+      }
+    } else {
+      props.history.push({
+        pathname: '/signin'
+      });
     }
   };
 

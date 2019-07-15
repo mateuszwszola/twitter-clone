@@ -140,7 +140,8 @@ TweetModal.propTypes = {
   back: PropTypes.func.isRequired,
   tweet: PropTypes.object.isRequired,
   handleActionClick: PropTypes.func.isRequired,
-  liked: PropTypes.bool.isRequired
+  liked: PropTypes.bool.isRequired,
+  pushToLogin: PropTypes.func.isRequired
 };
 
 function TweetModalContainer(props) {
@@ -178,12 +179,20 @@ function TweetModalContainer(props) {
     history.goBack();
   };
 
+  const pushToLogin = () => {
+    history.push('/signin');
+  };
+
   const handleActionClick = (e, action, tweet_id) => {
-    e.stopPropagation();
-    if (action === 'like') {
-      likeTweet(tweet_id);
-    } else if (action === 'remove') {
-      removeTweet(tweet_id);
+    if (auth.isAuthenticated) {
+      e.stopPropagation();
+      if (action === 'like') {
+        likeTweet(tweet_id);
+      } else if (action === 'remove') {
+        removeTweet(tweet_id);
+      }
+    } else {
+      pushToLogin();
     }
   };
 

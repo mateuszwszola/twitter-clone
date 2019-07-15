@@ -6,7 +6,8 @@ import {
   UPDATE_PROFILE,
   CREATE_TWEET,
   FOLLOW,
-  GET_ERRORS
+  GET_ERRORS,
+  REMOVE_TWEET
 } from 'actions/types';
 
 const initialState = {
@@ -61,6 +62,22 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false
+      };
+    case REMOVE_TWEET:
+      const { tweet_id } = payload;
+      const newTweets = state.profile.tweets.filter(tweet =>
+        tweet._id ? tweet._id !== tweet_id : true
+      );
+      const newHomepageTweets = state.profile.homepageTweets.filter(tweet =>
+        tweet._id ? tweet._id !== tweet_id : true
+      );
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          tweets: newTweets,
+          homepageTweets: newHomepageTweets
+        }
       };
     default:
       return state;

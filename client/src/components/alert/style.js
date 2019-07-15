@@ -14,4 +14,8 @@ export const StyledAlert = styled.div`
   padding: 10px 15px;
   box-shadow: 2px 3px 5px 0px rgba(0, 0, 0, 0.75);
   z-index: 100;
+
+  &:empty {
+    display: none;
+  }
 `;
