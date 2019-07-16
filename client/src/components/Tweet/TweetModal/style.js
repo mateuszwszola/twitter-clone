@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { Button, Input } from 'shared/components';
+import { Button } from 'shared/components';
 
 export const Container = styled.div`
   position: fixed;
@@ -17,7 +17,7 @@ export const StyledTweet = styled.div`
   transform: translate(-50%, -50%);
   border-radius: 5px;
   background-color: #fff;
-  width: 50%;
+  width: 80%;
   max-width: 650px;
   display: flex;
   flex-direction: column;
@@ -133,28 +133,4 @@ export const Icon = styled.i``;
 export const LikeIcon = styled(Icon)`
   color: ${props =>
     props.liked === true ? props.theme.colors.red : 'inherit'};
-`;
-
-// AddComment.js
-export const CommentContainer = styled.div`
-  background-color: #f6f8fa;
-  width: 100%;
-  height: 50px;
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  align-items: center;
-  padding: 10px 40px;
-  border-top: 1px solid #cadae4;
-  border-bottom: 1px solid #cadae4;
-`;
-
-export const CommentForm = styled.form`
-  flex: 1;
-`;
-
-export const CommentInput = styled(Input)`
-  height: 35px;
-  flex: 1;
-  border-radius: 5px;
 `;

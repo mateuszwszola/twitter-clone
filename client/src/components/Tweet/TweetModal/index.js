@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { getTweetById, removeTweet, likeTweet } from 'actions/tweetActions';
 import { connect } from 'react-redux';
-import Loading from '../Loading';
-import TweetsBoard from '../layout/TweetsBoard';
+import Loading from 'components/Loading';
+import TweetsBoard from 'components/layout/TweetsBoard';
 import portretPlaceholder from 'img/portret-placeholder.png';
 import Moment from 'react-moment';
 import {
@@ -31,20 +31,7 @@ import {
 } from './style';
 import { UserAvatar, CloseButton } from 'shared/components';
 import { Link } from 'react-router-dom';
-import AddComment from './AddComment';
-
-// const tweet = {
-//   user: {
-//     name: 'Bob Doe',
-//     username: 'bobdoe'
-//   },
-//   created: '13-07-2019',
-//   text:
-//     'Hello everyone, this is my first tweet. I would like to share with you some of my recent thoughts about Tools Of Titans book',
-//   comments: [],
-//   likes: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-//   retweets: [1, 2]
-// };
+import AddComment from '../AddComment';
 
 function TweetModal({
   back,
@@ -140,8 +127,7 @@ TweetModal.propTypes = {
   back: PropTypes.func.isRequired,
   tweet: PropTypes.object.isRequired,
   handleActionClick: PropTypes.func.isRequired,
-  liked: PropTypes.bool.isRequired,
-  pushToLogin: PropTypes.func.isRequired
+  liked: PropTypes.bool.isRequired
 };
 
 function TweetModalContainer(props) {
@@ -160,14 +146,10 @@ function TweetModalContainer(props) {
   } = props;
 
   useEffect(() => {
-    if (!tweet && loading === false) {
+    if (!tweet) {
       getTweetById(status_id);
     }
   }, [status_id]);
-
-  if (loading || !tweet) {
-    return <Loading />;
-  }
 
   const back = e => {
     if (
@@ -184,8 +166,8 @@ function TweetModalContainer(props) {
   };
 
   const handleActionClick = (e, action, tweet_id) => {
+    e.stopPropagation();
     if (auth.isAuthenticated) {
-      e.stopPropagation();
       if (action === 'like') {
         likeTweet(tweet_id);
       } else if (action === 'remove') {
@@ -195,6 +177,10 @@ function TweetModalContainer(props) {
       pushToLogin();
     }
   };
+
+  if (loading || !tweet) {
+    return <Loading />;
+  }
 
   const liked = !!(
     auth.user && tweet.likes.find(like => like.user === auth.user._id)

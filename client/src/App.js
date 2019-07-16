@@ -16,8 +16,6 @@ import EditProfileContainer from './containers/EditProfileContainer';
 import PrivateRoute from './components/route/PrivateRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Alert from 'components/Alert';
-import { TweetView } from './components/Tweet';
-import { TweetModal } from './components/Tweet';
 import ModalSwitch from './components/ModalSwitch';
 
 import { Provider } from 'react-redux';
@@ -50,10 +48,6 @@ function App() {
                     component={EditProfileContainer}
                   />
                   <Route exact path="/" component={PrivateHomepage} />
-                  <Route
-                    path="/:username/status/:status_id"
-                    component={TweetView}
-                  />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />
                   <Route exact path="/settings" component={SettingsContainer} />
