@@ -34,7 +34,7 @@ function ProfileContainer({
 
   useEffect(() => {
     getProfileWithTweetsByUsername(username);
-  }, [getProfileWithTweetsByUsername]);
+  }, [username]);
 
   if (!isEmpty(errors)) {
     return <DisplayErrors error={errors.message} />;

@@ -25,7 +25,6 @@ import {
   UserInfo,
   SocialGroup,
   TweetActionGroup,
-  FollowButton,
   TweetAction,
   LikeTweetAction
 } from './style';
@@ -69,8 +68,6 @@ function TweetModal({
                 </ItemGroup>
               </UserInfo>
             </UserGroup>
-
-            {/* <FollowButton primary>Following</FollowButton> */}
           </TopFlex>
 
           <TweetContent>

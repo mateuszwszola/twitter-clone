@@ -25,7 +25,7 @@ const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => {
       </HeaderMenuList>
       {owner ? (
         <div>
-          <EditProfileButton as={Link} primary to="/edit-profile">
+          <EditProfileButton as={Link} primary="true" to="/edit-profile">
             Edit Profile
           </EditProfileButton>
         </div>

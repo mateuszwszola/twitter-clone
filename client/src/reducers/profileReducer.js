@@ -65,11 +65,11 @@ export default function(state = initialState, action) {
       };
     case REMOVE_TWEET:
       const { tweet_id } = payload;
-      const newTweets = state.profile.tweets.filter(tweet =>
-        tweet._id ? tweet._id !== tweet_id : true
+      const newTweets = state.profile.tweets.filter(
+        tweet => tweet._id !== tweet_id
       );
-      const newHomepageTweets = state.profile.homepageTweets.filter(tweet =>
-        tweet._id ? tweet._id !== tweet_id : true
+      const newHomepageTweets = state.profile.homepageTweets.filter(
+        tweet => tweet._id !== tweet_id
       );
       return {
         ...state,
