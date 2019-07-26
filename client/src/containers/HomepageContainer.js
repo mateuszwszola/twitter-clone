@@ -7,19 +7,19 @@ import { getUserProfileWithHomepageTweets } from 'actions/profileActions';
 
 function HomepageContainer({
   getUserProfileWithHomepageTweets,
-  profile,
+  profile: { loading, profile },
   tweet,
   errors
 }) {
   useEffect(() => {
     getUserProfileWithHomepageTweets();
-  }, []);
+  }, [getUserProfileWithHomepageTweets]);
 
-  if (profile.loading || profile.profile === null) {
+  if (loading || profile === null) {
     return <Loading />;
   }
 
-  return <Homepage profile={profile.profile} tweet={tweet} />;
+  return <Homepage profile={profile} tweet={tweet} />;
 }
 
 HomepageContainer.propTypes = {
