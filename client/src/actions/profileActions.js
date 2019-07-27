@@ -4,7 +4,8 @@ import {
   GET_PROFILE,
   PROFILE_LOADING,
   GET_TWEETS,
-  FOLLOW
+  FOLLOW,
+  GET_PROFILES
 } from './types';
 import { setTweetLoading } from './tweetActions';
 import { clearErrors } from './errorActions';
@@ -21,7 +22,7 @@ export const followProfile = userToFollowId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.reponse.data
+      payload: err.response.data
     });
   }
 };
@@ -151,6 +152,7 @@ export const getProfileWithTweetsByUsername = username => async dispatch => {
 
   try {
     const res = await axios.get(`/api/profiles/username/${username}/tweets`);
+
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -166,6 +168,42 @@ export const getProfileWithTweetsByUsername = username => async dispatch => {
     dispatch({
       type: GET_ERRORS,
       payload: error.response.data
+    });
+  }
+};
+
+export const getProfileFollowersProfiles = userId => async dispatch => {
+  dispatch(setProfileLoading());
+
+  try {
+    const res = await axios.get(`/api/profiles/follow/${userId}/followers`);
+
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    });
+  }
+};
+
+export const getProfileFollowingProfiles = userId => async dispatch => {
+  dispatch(setProfileLoading());
+
+  try {
+    const res = await axios.get(`/api/profiles/follow/${userId}/following`);
+
+    dispatch({
+      type: GET_PROFILES,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
     });
   }
 };

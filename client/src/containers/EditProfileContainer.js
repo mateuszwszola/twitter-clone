@@ -42,7 +42,7 @@ function EditProfileContainer({
     if (profile === null && loading === false) {
       getUserProfile();
     }
-  }, []);
+  }, [getUserProfile]);
 
   useEffect(() => {
     if (profile === null) {

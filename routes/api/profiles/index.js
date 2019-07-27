@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const auth = require('../../../middleware/auth');
 // Load models
 const Profile = require('../../../models/Profile');
@@ -26,8 +25,7 @@ router.get('/', auth, async (req, res, next) => {
       ['name', 'username', 'avatar']
     );
     if (!profile) {
-      errors.noprofile = 'There is no profile for this user';
-      return res.status(404).json(errors);
+      return res.status(404).json({ msg: 'Profile does not exists' });
     }
 
     res.json(profile);
@@ -109,8 +107,7 @@ router.get('/:user_id', async (req, res, next) => {
     ]);
 
     if (!profile) {
-      errors.noprofile = 'Profile not found';
-      return res.status(404).json(errors);
+      return res.status(404).json({ msg: 'Profile not found' });
     }
 
     res.json(profile);
@@ -257,12 +254,10 @@ router.delete('/', auth, async (req, res, next) => {
 // @desc    Get all tweets from profile.homepageTweets to display them in the profile homepage
 // @access  Private
 router.get('/homepageTweets/all', auth, async (req, res, next) => {
-  const errors = {};
   try {
     const profile = await Profile.findOne({ user: req.user.id });
     if (!profile) {
-      errors.noprofile = 'Profile does not exists';
-      return res.status(404).json(errors);
+      return res.status(404).json({ msg: 'Profile does not exists' });
     }
     const homepageTweets = profile.homepageTweets.map(
       homepageTweet => homepageTweet.tweet

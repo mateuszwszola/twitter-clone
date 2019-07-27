@@ -1,7 +1,7 @@
 const validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = (name, nameErrors) => {
+module.exports = (name) => {
   name = isEmpty(name) ? '' : name;
   const nameErrors = {};
 

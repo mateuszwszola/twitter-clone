@@ -19,7 +19,7 @@ const CreateTweetContainer = ({
     return () => document.removeEventListener('click', closeModal);
   }, []);
 
-  const closeModal = e => {
+  function closeModal(e) {
     if (wrapperRef !== null && e.target === wrapperRef.current) {
       closeCreateTweetModal();
     }

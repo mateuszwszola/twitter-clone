@@ -2,6 +2,7 @@ import {
   GET_PROFILE,
   CLEAR_PROFILE,
   GET_PROFILES,
+  CLEAR_PROFILES,
   PROFILE_LOADING,
   UPDATE_PROFILE,
   CREATE_TWEET,
@@ -37,6 +38,11 @@ export default function(state = initialState, action) {
         ...state,
         profiles: payload,
         loading: false
+      };
+    case CLEAR_PROFILES:
+      return {
+        ...state,
+        profiles: null
       };
     case CLEAR_PROFILE:
       return {

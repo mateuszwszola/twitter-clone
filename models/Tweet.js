@@ -26,31 +26,10 @@ const TweetSchema = new Schema({
   media: {
     type: String // url to the photo/video
   },
-  comments: [
-    {
-      tweet: {
-        type: Schema.Types.ObjectId,
-        ref: 'Tweet'
-      }
-    }
-  ],
-  likes: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }
-  ],
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   // retweets are ids of people who retweeted
-  retweets: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }
-  ],
+  retweets: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   editted: {
     type: Boolean
   }

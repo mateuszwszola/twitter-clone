@@ -1,12 +1,8 @@
 // @route   /api
 const router = require('express').Router();
 
-const usersRouter = require('./users');
-const profilesRouter = require('./profiles');
-const tweetsRouter = require('./tweets');
-
-router.use('/users', usersRouter);
-router.use('/profiles', profilesRouter);
-router.use('/tweets', tweetsRouter);
+router.use('/users', require('./users'));
+router.use('/profiles', require('./profiles'));
+router.use('/tweets', require('./tweets'));
 
 module.exports = router;

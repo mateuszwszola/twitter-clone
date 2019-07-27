@@ -1,17 +1,13 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const auth = require('../../../middleware/auth');
 
 const Tweet = require('../../../models/Tweet');
 const Profile = require('../../../models/Profile');
 
-const likeRouter = require('./like');
-const commentRouter = require('./comment');
-
 const validateTweet = require('../../../validation/createTweet');
 
-router.use('/like', likeRouter);
-router.use('/comment', commentRouter);
+router.use('/like', require('./like'));
+router.use('/comment', require('./comment'));
 
 // @route   GET api/tweets/all
 // @desc    Get all tweets
@@ -20,7 +16,7 @@ router.get('/all', async (req, res, next) => {
   try {
     const tweets = await Tweet.find({})
       .sort({ created: -1 })
-      .populate('User', ['name', 'username', 'avatar']);
+      .populate('user', ['name', 'username', 'avatar']);
     res.json(tweets);
   } catch (err) {
     console.error(err.message);
@@ -33,6 +29,7 @@ router.get('/all', async (req, res, next) => {
 // @access  Public
 router.get('/:tweet_id', async (req, res, next) => {
   const { tweet_id } = req.params;
+
   try {
     const tweet = await Tweet.findById(tweet_id).populate('user', [
       'name',
@@ -100,20 +97,17 @@ router.post('/', auth, async (req, res, next) => {
 
     // User created a tweet, add a reference (tweet_id) to user profile.tweets array, and to every follower profile.homepageTweets array
     const profile = await Profile.findOne({ user: req.user.id });
-    // profile -> profil uzytkownika, ktory dodaje danego tweet
-    profile.tweets = [{ _id: tweet.id }, ...profile.tweets];
-    profile.homepageTweets = [{ _id: tweet.id }, ...profile.homepageTweets];
-    await profile.save();
 
-    // loop through profiles and for each add a tweet_id
-    profile.followers.forEach(async follower => {
-      const followerProfile = await Profile.findOne({ user: follower.user });
-      followerProfile.homepageTweets = [
-        { _id: tweet.id },
-        ...followerProfile.homepageTweets
-      ];
-      await followerProfile.save();
-    });
+    await Profile.updateOne(
+      { user: req.user.id },
+      { $push: { tweets: tweet.id, homepageTweets: tweet.id } }
+    );
+
+    // loop through profile followers and for each add a tweet_id to their homepageTweets
+    await Profile.updateMany(
+      { user: { $in: profile.followers } },
+      { $push: { homepageTweets: tweet.id } }
+    );
 
     res.json(tweet);
   } catch (err) {
@@ -126,11 +120,6 @@ router.post('/', auth, async (req, res, next) => {
 // @desc    Update tweet (only by tweet author)
 // @access  Private
 router.put('/:tweet_id', auth, async (req, res, next) => {
-  // 1. Validate tweet_id
-  // 2. Check if tweet does exists
-  // 3. If yes, make sure user is the author
-  // 4. If tweet does not exists, return with appropriate message and status code
-  // 5. If user is not author of this tweet, also send appropriate content
   const { tweet_id } = req.params;
 
   const { errors, isValid } = validateTweet(req.body);
@@ -143,6 +132,7 @@ router.put('/:tweet_id', auth, async (req, res, next) => {
     if (!tweet) {
       return res.status(404).json({ msg: 'Tweet does not exists' });
     }
+
     // Make sure user is the owner of this tweet, if it is, then validate and update it
     if (req.user.id !== tweet.user.toString()) {
       return res
@@ -180,14 +170,12 @@ router.put('/:tweet_id', auth, async (req, res, next) => {
 router.delete('/:tweet_id', auth, async (req, res, next) => {
   const { tweet_id } = req.params;
   try {
-    // Make sure tweet does exists
     const tweet = await Tweet.findById(tweet_id);
-    // Tweet does not exists
+
     if (!tweet) {
       return res.status(404).json({ msg: 'Tweet does not exists' });
     }
-    // Tweet does exists
-    // Make sure the user is the owner of that tweet
+
     if (req.user.id !== tweet.user.toString()) {
       return res
         .status(401)
@@ -196,27 +184,16 @@ router.delete('/:tweet_id', auth, async (req, res, next) => {
 
     // Delete tweet
     await tweet.remove();
-    // remove it from profile.tweets
+    await Profile.updateOne(
+      { user: req.user.id },
+      { $pull: { tweets: tweet_id, homepageTweets: tweet_id } }
+    );
+
     const profile = await Profile.findOne({ user: req.user.id });
-
-    console.log('tweet.id', tweet.id);
-    profile.tweets = profile.tweets.filter(
-      tweet => tweet._id.toString() !== tweet_id
+    await Profile.updateMany(
+      { user: { $in: profile.followers } },
+      { $pull: { homepageTweets: tweet_id } }
     );
-    profile.homepageTweets = profile.homepageTweets.filter(
-      tweet => tweet._id.toString() !== tweet_id
-    );
-
-    await profile.save();
-
-    // remove tweet_id from all followers profile.homepageTweets
-    profile.followers.forEach(async follower => {
-      const followerProfile = await Profile.findOne({ user: follower.user });
-      followerProfile.homepageTweets = followerProfile.homepageTweets.filter(
-        followerTweet => followerTweet._id.toString() !== tweet_id
-      );
-      await followerProfile.save();
-    });
 
     res.json(tweet);
   } catch (err) {

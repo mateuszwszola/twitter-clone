@@ -1,8 +1,51 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const auth = require('../../../middleware/auth');
 
 const Profile = require('../../../models/Profile');
+
+// @route   GET api/profiles/follow/:user_id/followers
+// @desc    Get profile list of followers profiles
+// @access  Public
+router.get('/:user_id/followers', async (req, res, next) => {
+  const { user_id } = req.params;
+
+  try {
+    const { followers } = await Profile.find({ user: user_id });
+    const profiles = await Profile.find({
+      user: { $in: followers }
+    }).populate('user', ['name', 'username', 'avatar']);
+
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Profile does not exists' });
+    }
+    next(err);
+  }
+});
+
+// @route   GET api/profiles/follow/:user_id/following
+// @desc    Get profile list of following profiles
+// @access  Public
+router.get('/:user_id/following', async (req, res, next) => {
+  const { user_id } = req.params;
+
+  try {
+    const { following } = await Profile.find({ user: user_id });
+    const profiles = await Profile.find({
+      user: { $in: following }
+    }).populate('user', ['name', 'username', 'avatar']);
+
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Profile does not exists' });
+    }
+    next(err);
+  }
+});
 
 // @route   POST api/profiles/follow/:user_id
 // @desc    Add or remove following
@@ -10,57 +53,52 @@ const Profile = require('../../../models/Profile');
 router.post('/:user_id', auth, async (req, res, next) => {
   const { user_id } = req.params; // profile to follow user ID
 
-  if (req.user.id === user_id.toString()) {
+  if (req.user.id === user_id) {
     return res.status(400).json({
       message: 'You cannot follow your own profile'
     });
   }
 
   try {
-    const userProfile = await Profile.findOne({ user: req.user.id }).populate(
-      'user',
-      ['name', 'username', 'avatar']
-    );
+    const userProfile = await Profile.findOne({ user: req.user.id });
     const profileToFollow = await Profile.findOne({ user: user_id });
+
     if (!profileToFollow) {
       return res
         .status(400)
-        .json({ message: 'Profile to follow does not exists' });
+        .json({ message: 'Following profile does not exists' });
     }
 
     // Determine to follow or unfollow
     const index = userProfile.following.findIndex(
-      follow => follow.user.toString() === user_id
+      user => user.toString() === user_id
     );
     if (index > -1) {
       // Index was found => unfollow
       userProfile.following = userProfile.following.filter(
-        follow => !follow.user.toString() === user_id
+        follow => follow.toString() !== user_id
       );
       profileToFollow.followers = profileToFollow.followers.filter(
-        follower => !follower.user.toString() === userProfile.user
+        follower => follower.toString() !== req.user.id
       );
     } else {
       // Index was not found => follow that profile
       // Add profile to your following profiles
-      userProfile.following = [{ user: user_id }, ...userProfile.following];
+      userProfile.following = [user_id, ...userProfile.following];
       // Add your profile to profile to follow followers array
-      profileToFollow.followers = [
-        { user: userProfile.user },
-        ...profileToFollow.followers
-      ];
+      profileToFollow.followers = [req.user.id, ...profileToFollow.followers];
     }
 
     // Save your profile
     await userProfile.save();
     // Save someone's profile
     await profileToFollow.save();
-    res.json(userProfile);
+    res.json(userProfile.following);
   } catch (err) {
+    console.error(err.message);
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ msg: 'Profile to follow does not exists' });
     }
-    console.error(err.message);
     next(err);
   }
 });

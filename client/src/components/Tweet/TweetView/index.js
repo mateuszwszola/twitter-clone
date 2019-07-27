@@ -30,7 +30,7 @@ function TweetViewContainer({
     if (!tweet && !loading) {
       getTweetById(status_id);
     }
-  }, [status_id]);
+  }, [getTweetById, status_id]);
 
   const pushToLogin = () => history.push('/signin');
   const handleActionClick = (e, action, tweet_id) => {

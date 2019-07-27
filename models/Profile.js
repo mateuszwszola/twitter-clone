@@ -18,30 +18,9 @@ const ProfileSchema = new Schema({
   birthday: {
     type: Date
   },
-  following: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }
-  ],
-  followers: [
-    {
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    }
-  ],
-  likes: [
-    {
-      tweet: {
-        type: Schema.Types.ObjectId,
-        ref: 'Tweet'
-      }
-    }
-  ],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   // Tweets that will be displayed on the logged in user homepage
   homepageTweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],

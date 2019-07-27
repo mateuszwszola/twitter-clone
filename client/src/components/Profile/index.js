@@ -39,17 +39,21 @@ ProfileTweets.propTypes = {
 };
 
 function Profile({
-  profile,
-  tweet: { loading, tweets },
+  profile: { profile },
+  tweet: { tweets, loading },
   owner,
-  isAuthenticated,
-  followed,
+  auth,
   match,
-  followProfile
+    followProfile
 }) {
   const handleFollowClick = () => {
     // followProfile()
   };
+
+  const followed = !!(
+    auth.user &&
+    profile.followers.find(follower => follower.user === auth.user._id)
+  );
 
   return (
     <Container>
@@ -66,7 +70,7 @@ function Profile({
       <UserStatsHeader
         profile={profile}
         owner={owner}
-        isAuthenticated={isAuthenticated}
+        isAuthenticated={auth.isAuthenticated}
         followed={followed}
       />
       <div>
@@ -75,7 +79,9 @@ function Profile({
           <Route
             exact
             path={`${match.path}`}
-            render={() => <ProfileTweets loading={loading} tweets={tweets} />}
+            render={() => (
+              <ProfileTweets loading={loading} tweets={tweets} />
+            )}
           />
           <Route path={`${match.path}/following`} component={Following} />
           <Route path={`${match.path}/followers`} component={Followers} />
@@ -91,8 +97,8 @@ Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
   owner: PropTypes.bool.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  followed: PropTypes.bool.isRequired,
+  auth: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   followProfile: PropTypes.func.isRequired
 };
 
