@@ -5,15 +5,12 @@ const Profile = require('../../../models/Profile');
 const Tweet = require('../../../models/Tweet');
 const User = require('../../../models/User');
 
-// Load additional routers
-const followRouter = require('./follow');
-
 // Load validation functions
 const validateProfileInput = require('../../../validation/profile');
 // Load helper functions
 const startCase = require('../../../helpers/startCase');
 
-router.use('/follow', followRouter);
+router.use('/follow', require('./follow'));
 
 // @route   GET api/profiles/
 // @desc    Get logged in user profile
@@ -72,6 +69,23 @@ router.get('/tweets', auth, async (req, res, next) => {
       return res.status(404).json({ message: 'Profile Not Found' });
     }
     res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
+// @route   GET api/profiles/likes
+// @desc    Get list of profile likes
+// @access  Private
+router.get('/likes', auth, async (req, res, next) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+    const profiles = Profile.find({
+      user: { $in: profile.likes }
+    }).populate('user', ['name', 'username', 'avatar']);
+
+    res.json(profiles);
   } catch (err) {
     console.error(err.message);
     next(err);
@@ -198,10 +212,10 @@ router.post('/', auth, async (req, res, next) => {
     }
     if (req.body['avatar']) {
       await User.findOneAndUpdate(
-          { _id: req.user.id },
-          { $set: { avatar: req.body['avatar'] } },
-          { new: true }
-      )
+        { _id: req.user.id },
+        { $set: { avatar: req.body['avatar'] } },
+        { new: true }
+      );
     }
 
     const profileFields = {};
