@@ -1,12 +1,12 @@
 import {
-  GET_CURRENT_TWEET,
-  CLEAR_CURRENT_TWEET,
   TWEET_LOADING,
+  GET_TWEET,
+  CLEAR_TWEET,
   GET_TWEETS,
   CREATE_TWEET,
-  GET_ERRORS,
+  REMOVE_TWEET,
   LIKE_TWEET,
-  REMOVE_TWEET
+  GET_ERRORS
 } from 'actions/types';
 
 const initialState = {
@@ -24,13 +24,13 @@ export default function(state = initialState, action) {
         ...state,
         loading: true
       };
-    case GET_CURRENT_TWEET:
+    case GET_TWEET:
       return {
         ...state,
         tweet: payload,
         loading: false
       };
-    case CLEAR_CURRENT_TWEET:
+    case CLEAR_TWEET:
       return {
         ...state,
         tweet: null
@@ -40,6 +40,11 @@ export default function(state = initialState, action) {
         ...state,
         tweets: payload,
         loading: false
+      };
+    case CLEAR_TWEETS:
+      return {
+        ...state,
+        tweets: null
       };
     case CREATE_TWEET:
       return {
@@ -53,10 +58,8 @@ export default function(state = initialState, action) {
         loading: false
       };
     case LIKE_TWEET:
-      const { tweet_id, updatedTweet } = payload;
-      const tweetIndex = state.tweets.findIndex(
-        tweet => tweet._id === tweet_id
-      );
+      const { tweetId, updatedTweet } = payload;
+      const tweetIndex = state.tweets.findIndex(tweet => tweet._id === tweetId);
       return {
         ...state,
         tweets: [
@@ -69,7 +72,8 @@ export default function(state = initialState, action) {
     case REMOVE_TWEET:
       return {
         ...state,
-        tweets: state.tweets.filter(tweet => tweet._id !== payload)
+        tweets: state.tweets.filter(tweet => tweet._id !== payload),
+        tweet: state.tweet._id === payload ? null : state.tweet
       };
     default:
       return state;

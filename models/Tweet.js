@@ -32,6 +32,10 @@ const TweetSchema = new Schema({
   retweets: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   editted: {
     type: Boolean
+  },
+  comment: {
+    type: Boolean,
+    default: false
   }
 });
 
