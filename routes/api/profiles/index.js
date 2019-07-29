@@ -75,23 +75,6 @@ router.get('/tweets', auth, async (req, res, next) => {
   }
 });
 
-// @route   GET api/profiles/likes
-// @desc    Get list of profile likes
-// @access  Private
-router.get('/likes', auth, async (req, res, next) => {
-  try {
-    const profile = await Profile.findOne({ user: req.user.id });
-    const profiles = Profile.find({
-      user: { $in: profile.likes }
-    }).populate('user', ['name', 'username', 'avatar']);
-
-    res.json(profiles);
-  } catch (err) {
-    console.error(err.message);
-    next(err);
-  }
-});
-
 // @route   GET api/profiles/all
 // @desc    Get all profiles
 // @access  Public
@@ -273,10 +256,8 @@ router.get('/homepageTweets/all', auth, async (req, res, next) => {
     if (!profile) {
       return res.status(404).json({ msg: 'Profile does not exists' });
     }
-    const homepageTweets = profile.homepageTweets.map(
-      homepageTweet => homepageTweet.tweet
-    );
-    const tweets = await Tweet.find({ id: { $in: homepageTweets } })
+
+    const tweets = await Tweet.find({ id: { $in: profile.homepageTweets } })
       .populate('user', ['name', 'username', 'avatar'])
       .sort({ created: -1 });
 

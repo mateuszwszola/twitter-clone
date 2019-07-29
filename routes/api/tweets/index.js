@@ -24,6 +24,43 @@ router.get('/all', async (req, res, next) => {
   }
 });
 
+// @route   GET api/tweets/all/:user_id
+// @desc    Get all tweets posted by the user
+// @access  Public
+router.get('/all/:user_id', async (req, res, next) => {
+  const { user_id } = req.params;
+
+  try {
+    const tweets = await Tweet.find({ user: user_id })
+      .sort({ created: -1 })
+      .populate('user', ['name', 'username', 'avatar']);
+
+    res.json(tweets);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'User does not exists' });
+    }
+    next(err);
+  }
+});
+
+// @route   GET api/tweets/homepageTweets
+// @desc    Get all profile's homepageTweets
+// @access  Public
+router.get('/homepageTweets', auth, async (req, res, next) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+    const tweets = await Tweet.find({
+      _id: { $in: profile.homepageTweets }
+    });
+    res.json(tweets);
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
 // @route   GET api/tweets/:tweet_id
 // @desc    Get tweet by tweet ID
 // @access  Public
@@ -44,27 +81,6 @@ router.get('/:tweet_id', async (req, res, next) => {
     console.error(err.message);
     if (err.kind === 'ObjectId') {
       return res.status(404).json({ msg: 'Tweet does not exists' });
-    }
-    next(err);
-  }
-});
-
-// @route   GET api/tweets/all/:user_id
-// @desc    Get all tweets posted by the user
-// @access  Public
-router.get('/all/:user_id', async (req, res, next) => {
-  const { user_id } = req.params;
-
-  try {
-    const tweets = await Tweet.find({ user: user_id })
-      .sort({ created: -1 })
-      .populate('user', ['name', 'username', 'avatar']);
-
-    res.json(tweets);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind === 'ObjectId') {
-      return res.status(404).json({ msg: 'User that not exists' });
     }
     next(err);
   }
