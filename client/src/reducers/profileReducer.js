@@ -7,6 +7,7 @@ import {
   UPDATE_PROFILE,
   CREATE_TWEET,
   FOLLOW,
+  UNFOLLOW,
   GET_ERRORS,
   REMOVE_TWEET
 } from 'actions/types';
@@ -47,8 +48,53 @@ export default function(state = initialState, action) {
     case CLEAR_PROFILE:
       return {
         ...state,
-        profile: null,
-        loading: false
+        profile: null
+      };
+    case FOLLOW:
+      const { authUserId, userId } = payload;
+
+      return {
+        ...state,
+        profiles: state.profiles.map(profile =>
+          profile.user === userId
+            ? {
+                ...profile,
+                followers: [...profile.followers, authUserId]
+              }
+            : profile
+        ),
+        profile:
+          state.profile.user === authUserId
+            ? {
+                ...state.profile,
+                following: [state.profile.following, userId]
+              }
+            : state.profile
+      };
+    case UNFOLLOW:
+      const { authUserId, userId } = payload;
+
+      return {
+        ...state,
+        profiles: state.profiles.map(profile =>
+          profile.user === userId
+            ? {
+                ...profile,
+                followers: profile.followers.filter(
+                  follower => follower !== authUserId
+                )
+              }
+            : profile
+        ),
+        profile:
+          state.profile.user === authUserId
+            ? {
+                ...state.profile,
+                following: state.profile.following.filter(
+                  user => user !== userId
+                )
+              }
+            : state.profile
       };
     case CREATE_TWEET:
       const updatedProfile = {
@@ -58,11 +104,6 @@ export default function(state = initialState, action) {
       return {
         ...state,
         profile: updatedProfile
-      };
-    case FOLLOW:
-      return {
-        ...state,
-        profile: payload
       };
     case GET_ERRORS:
       return {

@@ -6,7 +6,7 @@ const Profile = require('../../../models/Profile');
 // @route   GET api/profiles/follow/:user_id/followers
 // @desc    Get profile list of followers profiles
 // @access  Public
-router.get('/:user_id/followers', async (req, res, next) => {
+router.get('/follow/:user_id/followers', async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
@@ -28,7 +28,7 @@ router.get('/:user_id/followers', async (req, res, next) => {
 // @route   GET api/profiles/follow/:user_id/following
 // @desc    Get profile list of following profiles
 // @access  Public
-router.get('/:user_id/following', async (req, res, next) => {
+router.get('/follow/:user_id/following', async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
@@ -48,14 +48,60 @@ router.get('/:user_id/following', async (req, res, next) => {
 });
 
 // @route   POST api/profiles/follow/:user_id
-// @desc    Add or remove following
+// @desc    Follow a user
 // @access  Private
-router.post('/:user_id', auth, async (req, res, next) => {
-  const { user_id } = req.params; // profile to follow user ID
+router.post('/follow/:user_id', auth, async (req, res, next) => {
+  const { user_id } = req.params;
 
   if (req.user.id === user_id) {
     return res.status(400).json({
       message: 'You cannot follow your own profile'
+    });
+  }
+
+  try {
+    const userProfile = await Profile.findOne({ user: req.user.id });
+    const profileToFollow = await Profile.findOne({ user: user_id });
+
+    if (!profileToFollow) {
+      return res.status(400).json({ message: 'Profile does not exists' });
+    }
+
+    const index = userProfile.following.findIndex(
+      user => user.toString() === user_id
+    );
+
+    if (index > -1) {
+      return res.status(400).json({
+        message: 'You have already followed that profile'
+      });
+    } else {
+      userProfile.following = [user_id, ...userProfile.following];
+      profileToFollow.followers = [req.user.id, ...profileToFollow.followers];
+    }
+
+    await userProfile.save();
+    await profileToFollow.save();
+
+    res.json(userProfile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Profile to follow does not exists' });
+    }
+    next(err);
+  }
+});
+
+// @route   POST api/profiles/unfollow/:user_id
+// @desc    Unfollow a user
+// @access  Private
+router.post('/unfollow/:user_id', auth, async (req, res, next) => {
+  const { user_id } = req.params; // profile to follow user ID
+
+  if (req.user.id === user_id) {
+    return res.status(400).json({
+      message: 'You cannot unfollow your own profile'
     });
   }
 
@@ -69,12 +115,10 @@ router.post('/:user_id', auth, async (req, res, next) => {
         .json({ message: 'Following profile does not exists' });
     }
 
-    // Determine to follow or unfollow
     const index = userProfile.following.findIndex(
       user => user.toString() === user_id
     );
     if (index > -1) {
-      // Index was found => unfollow
       userProfile.following = userProfile.following.filter(
         follow => follow.toString() !== user_id
       );
@@ -82,18 +126,14 @@ router.post('/:user_id', auth, async (req, res, next) => {
         follower => follower.toString() !== req.user.id
       );
     } else {
-      // Index was not found => follow that profile
-      // Add profile to your following profiles
-      userProfile.following = [user_id, ...userProfile.following];
-      // Add your profile to profile to follow followers array
-      profileToFollow.followers = [req.user.id, ...profileToFollow.followers];
+      return res.status(400).json({
+        message: 'You cannot unfollow that profile'
+      });
     }
 
-    // Save your profile
     await userProfile.save();
-    // Save someone's profile
     await profileToFollow.save();
-    res.json(userProfile.following);
+    res.json(userProfile);
   } catch (err) {
     console.error(err.message);
     if (err.kind === 'ObjectId') {

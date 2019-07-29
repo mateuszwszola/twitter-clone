@@ -10,7 +10,7 @@ const validateProfileInput = require('../../../validation/profile');
 // Load helper functions
 const startCase = require('../../../helpers/startCase');
 
-router.use('/follow', require('./follow'));
+router.use('/', require('./follow'));
 
 // @route   GET api/profiles/
 // @desc    Get logged in user profile
