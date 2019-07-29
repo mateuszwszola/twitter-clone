@@ -51,47 +51,43 @@ export default function(state = initialState, action) {
         profile: null
       };
     case FOLLOW:
-      const { authUserId, userId } = payload;
-
       return {
         ...state,
         profiles: state.profiles.map(profile =>
-          profile.user === userId
+          profile.user === payload.userId
             ? {
                 ...profile,
-                followers: [...profile.followers, authUserId]
+                followers: [...profile.followers, payload.authUserId]
               }
             : profile
         ),
         profile:
-          state.profile.user === authUserId
+          state.profile.user === payload.authUserId
             ? {
                 ...state.profile,
-                following: [state.profile.following, userId]
+                following: [state.profile.following, payload.userId]
               }
             : state.profile
       };
     case UNFOLLOW:
-      const { authUserId, userId } = payload;
-
       return {
         ...state,
         profiles: state.profiles.map(profile =>
-          profile.user === userId
+          profile.user === payload.userId
             ? {
                 ...profile,
                 followers: profile.followers.filter(
-                  follower => follower !== authUserId
+                  follower => follower !== payload.authUserId
                 )
               }
             : profile
         ),
         profile:
-          state.profile.user === authUserId
+          state.profile.user === payload.authUserId
             ? {
                 ...state.profile,
                 following: state.profile.following.filter(
-                  user => user !== userId
+                  user => user !== payload.userId
                 )
               }
             : state.profile

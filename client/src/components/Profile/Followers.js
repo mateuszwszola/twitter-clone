@@ -1,21 +1,17 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { getProfileFollowersProfiles } from '../../actions/profileActions';
+import { getProfileFollowers } from '../../actions/profileActions';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
 
 const Followers = ({
   profile: { profile, profiles, loading },
-  getProfileFollowersProfiles
+  getProfileFollowers
 }) => {
   useEffect(() => {
-    getProfileFollowersProfiles(profile.user._id);
-  }, [getProfileFollowersProfiles, profile.user._id]);
-  return <>{loading ? <Loading /> : (
-      <>
-        {JSON.stringify(profiles)}
-      </>
-  )}</>;
+    getProfileFollowers(profile.user._id);
+  }, [getProfileFollowers, profile.user._id]);
+  return <>{loading ? <Loading /> : <>{JSON.stringify(profiles)}</>}</>;
 };
 
 Followers.propTypes = {
@@ -29,5 +25,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProfileFollowersProfiles }
+  { getProfileFollowers }
 )(Followers);

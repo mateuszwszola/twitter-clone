@@ -127,7 +127,7 @@ export const likeTweet = tweetId => async dispatch => {
     dispatch({
       type: LIKE_TWEET,
       payload: {
-        tweet_id,
+        tweetId,
         updatedTweet: res.data
       }
     });
