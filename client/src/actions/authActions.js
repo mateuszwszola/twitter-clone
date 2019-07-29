@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import setAuthToken from '../utils/setAuthToken';
+import setAuthToken from '../utils/setAuthToken';
 
 import {
   USER_LOADED,
@@ -8,16 +8,15 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  // CLEAR_PROFILE,
   GET_ERRORS,
   AUTH_ERROR
 } from './types';
 
 // Load user
 export const loadUser = () => async dispatch => {
-  // if (localStorage.getItem('token')) {
-  // setAuthToken(localStorage.getItem('token'));
-  // }
+  if (localStorage.getItem('token')) {
+    setAuthToken(localStorage.getItem('token'));
+  }
   try {
     const res = await axios.get('/api/users/current');
 
@@ -93,6 +92,5 @@ export const loginUser = userData => async dispatch => {
 };
 
 export const logoutUser = () => dispatch => {
-  // dispatch({ type: CLEAR_PROFILE }); TODO: When user logs out, but they view user profile, I do not want to clear it
   dispatch({ type: LOGOUT });
 };
