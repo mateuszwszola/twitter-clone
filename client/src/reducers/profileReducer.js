@@ -9,6 +9,7 @@ import {
   FOLLOW,
   UNFOLLOW,
   GET_ERRORS,
+  LIKE_TWEET,
   REMOVE_TWEET
 } from 'actions/types';
 
@@ -101,11 +102,6 @@ export default function(state = initialState, action) {
         ...state,
         profile: updatedProfile
       };
-    case GET_ERRORS:
-      return {
-        ...state,
-        loading: false
-      };
     case REMOVE_TWEET:
       const { tweet_id } = payload;
       const newTweets = state.profile.tweets.filter(
@@ -120,6 +116,23 @@ export default function(state = initialState, action) {
           ...state.profile,
           tweets: newTweets,
           homepageTweets: newHomepageTweets
+        }
+      };
+    case GET_ERRORS:
+      return {
+        ...state,
+        loading: false
+      };
+    case LIKE_TWEET:
+      const index = state.profile.likes.findIndex(id => id === payload.tweetId);
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          likes:
+            index > -1
+              ? state.profile.likes.filter(id => id !== payload.tweetId)
+              : [...state.profile.likes, payload.tweetId]
         }
       };
     default:

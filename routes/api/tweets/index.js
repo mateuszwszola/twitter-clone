@@ -53,7 +53,9 @@ router.get('/homepageTweets', auth, async (req, res, next) => {
     const profile = await Profile.findOne({ user: req.user.id });
     const tweets = await Tweet.find({
       _id: { $in: profile.homepageTweets }
-    }).populate('user', ['name', 'username', 'avatar']);
+    })
+      .sort({ created: -1 })
+      .populate('user', ['name', 'username', 'avatar']);
     res.json(tweets);
   } catch (err) {
     console.error(err.message);

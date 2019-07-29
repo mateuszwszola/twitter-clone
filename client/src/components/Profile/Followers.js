@@ -16,7 +16,7 @@ const Followers = ({
 
 Followers.propTypes = {
   profile: PropTypes.object.isRequired,
-  getProfileFollowersProfiles: PropTypes.func.isRequired
+  getProfileFollowers: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
