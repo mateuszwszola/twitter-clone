@@ -18,7 +18,7 @@ function Homepage({ profile, tweet, ...rest }) {
           <TweetsBoard tweets={tweet.tweets} />
         )}
       </Main>
-      <RightSidebar>Right Sidebar</RightSidebar>
+      {/* <RightSidebar>Right Sidebar</RightSidebar> */}
     </Container>
   );
 }

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  getProfileWithTweetsByUsername,
-  followProfile
-} from 'actions/profileActions';
+import { getProfileByUsername, followProfile } from 'actions/profileActions';
+import { getUserTweets } from 'actions/tweetActions';
 import Profile from 'components/Profile';
 import Loading from 'components/Loading';
 import DisplayErrors from 'components/DisplayErrors';
@@ -17,7 +15,8 @@ function ProfileContainer({
   auth,
   profile,
   tweet,
-  getProfileWithTweetsByUsername,
+  getProfileByUsername,
+  getUserTweets,
   followProfile,
   errors
 }) {
@@ -33,8 +32,14 @@ function ProfileContainer({
   }, [auth, username]);
 
   useEffect(() => {
-    getProfileWithTweetsByUsername(username);
-  }, [getProfileWithTweetsByUsername, username]);
+    getProfileByUsername(username);
+  }, [getProfileByUsername, username]);
+
+  useEffect(() => {
+    if (profile.profile && profile.profile.user._id) {
+      getUserTweets(profile.profile.user._id);
+    }
+  }, [getUserTweets, profile.profile]);
 
   if (!isEmpty(errors)) {
     return <DisplayErrors error={errors.message} />;
@@ -42,7 +47,7 @@ function ProfileContainer({
 
   return (
     <>
-      {profile.profile === null ? (
+      {profile.profile === null || profile.loading ? (
         <Loading />
       ) : (
         <Profile
@@ -64,7 +69,8 @@ ProfileContainer.propTypes = {
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-  getProfileWithTweetsByUsername: PropTypes.func.isRequired,
+  getProfileByUsername: PropTypes.func.isRequired,
+  getUserTweets: PropTypes.func.isRequired,
   followProfile: PropTypes.func.isRequired
 };
 
@@ -77,5 +83,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProfileWithTweetsByUsername, followProfile }
+  { getProfileByUsername, getUserTweets, followProfile }
 )(ProfileContainer);
