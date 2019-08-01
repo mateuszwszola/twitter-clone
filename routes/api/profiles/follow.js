@@ -10,7 +10,7 @@ router.get('/follow/:user_id/followers', async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
-    const { followers } = await Profile.find({ user: user_id });
+    const { followers } = await Profile.findOne({ user: user_id });
     const profiles = await Profile.find({
       user: { $in: followers }
     }).populate('user', ['name', 'username', 'avatar']);
@@ -32,9 +32,9 @@ router.get('/follow/:user_id/following', async (req, res, next) => {
   const { user_id } = req.params;
 
   try {
-    const { following } = await Profile.find({ user: user_id });
+    const profile = await Profile.findOne({ user: user_id });
     const profiles = await Profile.find({
-      user: { $in: following }
+      user: { $in: profile.following }
     }).populate('user', ['name', 'username', 'avatar']);
 
     res.json(profiles);

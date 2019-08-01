@@ -187,6 +187,7 @@ router.put('/:tweet_id', auth, async (req, res, next) => {
 // @access  Private
 router.delete('/:tweet_id', auth, async (req, res, next) => {
   const { tweet_id } = req.params;
+
   try {
     const tweet = await Tweet.findById(tweet_id);
 
@@ -204,7 +205,7 @@ router.delete('/:tweet_id', auth, async (req, res, next) => {
     await tweet.remove();
     await Profile.updateOne(
       { user: req.user.id },
-      { $pull: { tweets: tweet_id, homepageTweets: tweet_id } }
+      { $pull: { tweets: tweet_id, homepageTweets: tweet_id, likes: tweet_id } }
     );
 
     const profile = await Profile.findOne({ user: req.user.id });

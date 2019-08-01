@@ -54,27 +54,26 @@ export default function(state = initialState, action) {
     case FOLLOW:
       return {
         ...state,
+        loading: false,
         profiles: state.profiles.map(profile =>
-          profile.user === payload.userId
+          profile.user._id === payload.userId
             ? {
                 ...profile,
                 followers: [...profile.followers, payload.authUserId]
               }
             : profile
         ),
-        profile:
-          state.profile.user === payload.authUserId
-            ? {
-                ...state.profile,
-                following: [state.profile.following, payload.userId]
-              }
-            : state.profile
+        profile: {
+          ...state.profile,
+          followers: [...state.profile.followers, payload.authUserId]
+        }
       };
     case UNFOLLOW:
       return {
         ...state,
+        loading: false,
         profiles: state.profiles.map(profile =>
-          profile.user === payload.userId
+          profile.user._id === payload.userId
             ? {
                 ...profile,
                 followers: profile.followers.filter(
@@ -83,15 +82,12 @@ export default function(state = initialState, action) {
               }
             : profile
         ),
-        profile:
-          state.profile.user === payload.authUserId
-            ? {
-                ...state.profile,
-                following: state.profile.following.filter(
-                  user => user !== payload.userId
-                )
-              }
-            : state.profile
+        profile: {
+          ...state.profile,
+          followers: state.profile.followers.filter(
+            user => user !== payload.authUserId
+          )
+        }
       };
     case CREATE_TWEET:
       const updatedProfile = {
@@ -103,12 +99,11 @@ export default function(state = initialState, action) {
         profile: updatedProfile
       };
     case REMOVE_TWEET:
-      const { tweet_id } = payload;
       const newTweets = state.profile.tweets.filter(
-        tweet => tweet._id !== tweet_id
+        tweet => tweet._id !== payload
       );
       const newHomepageTweets = state.profile.homepageTweets.filter(
-        tweet => tweet._id !== tweet_id
+        tweet => tweet._id !== payload
       );
       return {
         ...state,

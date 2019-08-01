@@ -5,7 +5,13 @@ import { EditProfileButton, FollowProfileButton } from 'shared/components';
 import { ProfileHeaderMenu, HeaderMenuList } from './style';
 import { Link } from 'react-router-dom';
 
-const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => {
+const UserStatsHeader = ({
+  profile,
+  owner,
+  isAuthenticated,
+  followed,
+  handleFollowButtonClick
+}) => {
   const { user, tweets, following, followers, likes } = profile;
   return (
     <ProfileHeaderMenu>
@@ -32,7 +38,7 @@ const UserStatsHeader = ({ profile, owner, isAuthenticated, followed }) => {
       ) : (
         <div>
           {isAuthenticated ? (
-            <FollowProfileButton primary>
+            <FollowProfileButton primary onClick={handleFollowButtonClick}>
               {followed ? 'Unfollow' : 'Follow'}
             </FollowProfileButton>
           ) : (
@@ -48,7 +54,8 @@ UserStatsHeader.propTypes = {
   profile: PropTypes.object.isRequired,
   owner: PropTypes.bool.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  followed: PropTypes.bool.isRequired
+  followed: PropTypes.bool.isRequired,
+  handleFollowButtonClick: PropTypes.func.isRequired
 };
 
 export default UserStatsHeader;

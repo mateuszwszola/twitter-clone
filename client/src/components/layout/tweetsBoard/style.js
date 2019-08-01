@@ -94,6 +94,7 @@ export const DeleteButton = styled(Button)`
 `;
 
 export const InfoText = styled.p`
+  text-align: center;
   padding: 10px 15px;
   font-size: 1.15em;
   color: ${props => props.theme.colors.darkGray};

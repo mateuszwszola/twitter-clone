@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { getProfileByUsername } from 'actions/profileActions';
 import Profile from 'components/Profile';
 import Loading from 'components/Loading';
-import DisplayErrors from 'components/DisplayErrors';
-import isEmpty from 'utils/isEmpty';
 import { TweetModal } from 'components/Tweet';
 import { Route } from 'react-router-dom';
 
@@ -19,11 +17,7 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
 
   useEffect(() => {
     getProfileByUsername(username);
-  }, [getProfileByUsername, username]);
-
-  if (!isEmpty(errors)) {
-    return <DisplayErrors error={errors.message} />;
-  }
+  }, [username]);
 
   return (
     <>
