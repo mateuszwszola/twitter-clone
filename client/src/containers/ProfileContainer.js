@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import { getProfileByUsername } from 'actions/profileActions';
 import Profile from 'components/Profile';
 import Loading from 'components/Loading';
+import DisplayErrors from 'components/DisplayErrors';
 import { TweetModal } from 'components/Tweet';
 import { Route } from 'react-router-dom';
+import isEmpty from 'utils/isEmpty';
 
 function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
   // TODO: Check if user is the owner
@@ -18,6 +20,10 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
   useEffect(() => {
     getProfileByUsername(username);
   }, [username]);
+
+  if (!isEmpty(errors)) {
+    return <DisplayErrors errors={errors} />;
+  }
 
   return (
     <>

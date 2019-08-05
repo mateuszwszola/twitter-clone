@@ -125,6 +125,11 @@ router.get('/username/:username', async (req, res, next) => {
 
   try {
     const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: 'User with that username does not exists' });
+    }
     const profile = await Profile.findOne({ user: user.id }).populate('user', [
       'name',
       'username',

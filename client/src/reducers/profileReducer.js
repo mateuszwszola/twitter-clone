@@ -55,14 +55,17 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        profiles: state.profiles.map(profile =>
-          profile.user._id === payload.userId
-            ? {
-                ...profile,
-                followers: [...profile.followers, payload.authUserId]
-              }
-            : profile
-        ),
+        profiles:
+          state.profiles !== null
+            ? state.profiles.map(profile =>
+                profile.user._id === payload.userId
+                  ? {
+                      ...profile,
+                      followers: [...profile.followers, payload.authUserId]
+                    }
+                  : profile
+              )
+            : null,
         profile: {
           ...state.profile,
           followers: [...state.profile.followers, payload.authUserId]
@@ -72,16 +75,19 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        profiles: state.profiles.map(profile =>
-          profile.user._id === payload.userId
-            ? {
-                ...profile,
-                followers: profile.followers.filter(
-                  follower => follower !== payload.authUserId
-                )
-              }
-            : profile
-        ),
+        profiles:
+          state.profiles !== null
+            ? state.profiles.map(profile =>
+                profile.user._id === payload.userId
+                  ? {
+                      ...profile,
+                      followers: profile.followers.filter(
+                        follower => follower !== payload.authUserId
+                      )
+                    }
+                  : profile
+              )
+            : null,
         profile: {
           ...state.profile,
           followers: state.profile.followers.filter(
