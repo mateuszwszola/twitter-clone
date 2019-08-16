@@ -66,10 +66,7 @@ export default function(state = initialState, action) {
                   : profile
               )
             : null,
-        profile: {
-          ...state.profile,
-          followers: [...state.profile.followers, payload.authUserId]
-        }
+        profile: updateProfileFollow(state, type, payload)
       };
     case UNFOLLOW:
       return {
@@ -88,28 +85,23 @@ export default function(state = initialState, action) {
                   : profile
               )
             : null,
-        profile: {
-          ...state.profile,
-          followers: state.profile.followers.filter(
-            user => user !== payload.authUserId
-          )
-        }
+        profile: updateProfileFollow(state, type, payload)
       };
     case CREATE_TWEET:
-      const updatedProfile = {
-        ...state.profile,
-        tweets: [payload, ...state.profile.tweets]
-      };
       return {
         ...state,
-        profile: updatedProfile
+        profile:
+          state.profile !== null && state.profile.user._id === payload.user._id
+            ? {
+                ...state.profile,
+                tweets: [payload._id, ...state.profile.tweets]
+              }
+            : state.profile
       };
     case REMOVE_TWEET:
-      const newTweets = state.profile.tweets.filter(
-        tweet => tweet._id !== payload
-      );
+      const newTweets = state.profile.tweets.filter(id => id !== payload);
       const newHomepageTweets = state.profile.homepageTweets.filter(
-        tweet => tweet._id !== payload
+        id => id !== payload
       );
       return {
         ...state,
@@ -139,4 +131,35 @@ export default function(state = initialState, action) {
     default:
       return state;
   }
+}
+
+function updateProfileFollow(state, type, payload) {
+  let profile = state.profile;
+
+  if (state.profile !== null) {
+    if (state.profile.user._id === payload.userId) {
+      // Your current profile state is the user you followed, update followers
+      profile = {
+        ...profile,
+        followers:
+          type === FOLLOW
+            ? [...profile.followers, payload.authUserId]
+            : profile.followers.filter(
+                follower => follower !== payload.authUserId
+              )
+      };
+    }
+    if (state.profile.user._id === payload.authUserId) {
+      // Your current profile state is the auth user, update following
+      profile = {
+        ...profile,
+        following:
+          type === FOLLOW
+            ? [...profile.following, payload.userId]
+            : profile.following.filter(follow => follow !== payload.userId)
+      };
+    }
+  }
+
+  return profile;
 }

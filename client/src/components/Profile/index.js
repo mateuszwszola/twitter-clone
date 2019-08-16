@@ -58,7 +58,7 @@ function Profile({
           <Route path={`${match.path}/followers`} component={Followers} />
           <Route path={`${match.path}/likes`} component={Likes} />
         </Switch>
-        <Sidebar>Right sidebar</Sidebar>
+        {/* <Sidebar>Right sidebar</Sidebar> */}
       </div>
     </Container>
   );

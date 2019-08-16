@@ -19,10 +19,18 @@ export const Background = styled.img`
 `;
 
 export const ProfileTweetsBoard = styled.div`
-    padding: 7px 12px;
-    margin-bottom: 10px;
+  padding: 7px 12px;
+  margin-bottom: 10px;
 `;
 
-export const Sidebar = styled.div`
+export const Sidebar = styled.div``;
 
+export const ProfileList = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background-color: #fff;
 `;

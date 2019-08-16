@@ -53,11 +53,6 @@ export default function(state = initialState, action) {
         tweets: [payload, ...state.tweets],
         loading: false
       };
-    case GET_ERRORS:
-      return {
-        ...state,
-        loading: false
-      };
     case LIKE_TWEET:
       const { tweetId, updatedTweet } = payload;
       const tweetIndex = state.tweets.findIndex(tweet => tweet._id === tweetId);
@@ -73,8 +68,16 @@ export default function(state = initialState, action) {
     case REMOVE_TWEET:
       return {
         ...state,
-        tweets: state.tweets.filter(tweet => tweet._id !== payload),
-        tweet: state.tweet._id === payload ? null : state.tweet
+        tweets:
+          state.tweets !== null
+            ? state.tweets.filter(tweet => tweet._id !== payload)
+            : state.tweets,
+        tweet: state.tweet && state.tweet._id === payload ? null : state.tweet
+      };
+    case GET_ERRORS:
+      return {
+        ...state,
+        loading: false
       };
     default:
       return state;
