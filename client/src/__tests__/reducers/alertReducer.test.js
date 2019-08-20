@@ -6,7 +6,7 @@ import {
 
 describe('alertReducer', () => {
     describe('INITIAL_STATE', () => {
-        test('is_correct', () => {
+        test('is correct', () => {
             const action = { type: 'DUMMY_ACTION' };
             const initialState = [];
 
