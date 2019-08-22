@@ -57,7 +57,6 @@ export default function(state = initialState, action) {
       const { tweetId, authUserId } = payload;
       const tweetIndex = state.tweets && state.tweets.findIndex(tweet => tweet._id === tweetId);
       const { tweet, tweets } = state;
-
       return {
         ...state,
         tweets: tweets && tweetIndex > -1 ? [
