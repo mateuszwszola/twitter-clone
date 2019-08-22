@@ -6,7 +6,7 @@ import {
 
 describe('alertReducer', () => {
     describe('INITIAL_STATE', () => {
-        test('is_correct', () => {
+        test('is correct', () => {
             const action = { type: 'DUMMY_ACTION' };
             const initialState = [];
 
@@ -33,8 +33,8 @@ describe('alertReducer', () => {
             ];
 
             expect(alertReducer(undefined, action)).toEqual(expectedState);
-        })
-    })
+        });
+    });
 
     describe('REMOVE_ALERT', () => {
         test('removes the alert and return correct state', () => {

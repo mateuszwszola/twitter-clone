@@ -57,14 +57,21 @@ export default function(state = initialState, action) {
         loading: false,
         profiles:
           state.profiles !== null
-            ? state.profiles.map(profile =>
-                profile.user._id === payload.userId
-                  ? {
-                      ...profile,
-                      followers: [...profile.followers, payload.authUserId]
-                    }
-                  : profile
-              )
+            ? state.profiles.map(profile => {
+                if (profile.user._id === payload.userId) {
+                  return {
+                    ...profile,
+                    followers: [...profile.followers, payload.authUserId]
+                  }
+                } else if (profile.user._id === payload.authUserId) {
+                  return {
+                    ...profile,
+                    following: [...profile.following, payload.userId]
+                  }
+                } else {
+                  return profile;
+                }
+              })
             : null,
         profile: updateProfileFollow(state, type, payload)
       };
@@ -74,42 +81,41 @@ export default function(state = initialState, action) {
         loading: false,
         profiles:
           state.profiles !== null
-            ? state.profiles.map(profile =>
-                profile.user._id === payload.userId
-                  ? {
-                      ...profile,
-                      followers: profile.followers.filter(
+            ? state.profiles.map(profile => {
+                if (profile.user._id === payload.userId) {
+                  return {
+                    ...profile,
+                    followers: profile.followers.filter(
                         follower => follower !== payload.authUserId
-                      )
-                    }
-                  : profile
-              )
+                    )
+                  }
+                } else if (profile.user._id === payload.authUserId) {
+                  return {
+                    ...profile,
+                    following: profile.following.filter(
+                        id => id !== payload.userId
+                    )
+                  }
+                }
+              })
             : null,
         profile: updateProfileFollow(state, type, payload)
       };
     case CREATE_TWEET:
       return {
         ...state,
-        profile:
-          state.profile !== null && state.profile.user._id === payload.user._id
-            ? {
-                ...state.profile,
-                tweets: [payload._id, ...state.profile.tweets]
-              }
-            : state.profile
+        profile: updateProfileTweet(state, type, payload)
       };
     case REMOVE_TWEET:
-      const newTweets = state.profile.tweets.filter(id => id !== payload);
-      const newHomepageTweets = state.profile.homepageTweets.filter(
-        id => id !== payload
-      );
       return {
         ...state,
-        profile: {
+        profile: state.profile !== null ? {
           ...state.profile,
-          tweets: newTweets,
-          homepageTweets: newHomepageTweets
-        }
+          tweets: state.profile.tweets.filter(id => id !== payload),
+          homepageTweets: state.profile.homepageTweets.filter(
+              id => id !== payload
+          )
+        } : null
       };
     case GET_ERRORS:
       return {
@@ -117,46 +123,73 @@ export default function(state = initialState, action) {
         loading: false
       };
     case LIKE_TWEET:
-      const index = state.profile.likes.findIndex(id => id === payload.tweetId);
+      // Only update the state when the profile is authenticated user profile
+      const alreadyLiked = state.profile && state.profile.likes.includes(payload.tweetId);
       return {
         ...state,
-        profile: {
+        profile: state.profile && state.profile.user._id === payload.authUserId ? {
           ...state.profile,
           likes:
-            index > -1
+            alreadyLiked
               ? state.profile.likes.filter(id => id !== payload.tweetId)
               : [...state.profile.likes, payload.tweetId]
-        }
+        } : state.profile
       };
     default:
       return state;
   }
 }
 
+function updateProfileTweet(state, type, payload) {
+  const { profile } = state;
+  const tweetOwnerId = payload.user._id;
+  const tweetId = payload._id;
+
+  if (profile !== null) {
+    if (profile.user._id === tweetOwnerId) {
+        return {
+          ...profile,
+          tweets: [tweetId, ...profile.tweets],
+          homepageTweets: [tweetId, ...profile.homepageTweets]
+        };
+    }
+
+    if (profile.following.includes(tweetOwnerId)) {
+      return {
+        ...profile,
+        tweets: [tweetId, ...profile.tweets]
+      };
+    }
+  }
+
+  return profile;
+}
+
 function updateProfileFollow(state, type, payload) {
   let profile = state.profile;
+  const { authUserId, userId } = payload;
 
   if (state.profile !== null) {
-    if (state.profile.user._id === payload.userId) {
+    if (state.profile.user._id === userId) {
       // Your current profile state is the user you followed, update followers
       profile = {
         ...profile,
         followers:
           type === FOLLOW
-            ? [...profile.followers, payload.authUserId]
+            ? [...profile.followers, authUserId]
             : profile.followers.filter(
-                follower => follower !== payload.authUserId
+                follower => follower !== authUserId
               )
       };
     }
-    if (state.profile.user._id === payload.authUserId) {
+    if (state.profile.user._id === authUserId) {
       // Your current profile state is the auth user, update following
       profile = {
         ...profile,
         following:
           type === FOLLOW
-            ? [...profile.following, payload.userId]
-            : profile.following.filter(follow => follow !== payload.userId)
+            ? [...profile.following, userId]
+            : profile.following.filter(follow => follow !== userId)
       };
     }
   }
