@@ -33,8 +33,8 @@ describe('alertReducer', () => {
             ];
 
             expect(alertReducer(undefined, action)).toEqual(expectedState);
-        })
-    })
+        });
+    });
 
     describe('REMOVE_ALERT', () => {
         test('removes the alert and return correct state', () => {

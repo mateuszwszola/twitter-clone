@@ -1,0 +1,15 @@
+{
+  "comments": [],
+  "likes": [],
+  "retweets": [],
+  "comment": false,
+  "_id": "5d57262c1c9e710a66437f81",
+  "text": "Bob #1\n",
+  "created": "2019-08-16T21:54:52.484Z",
+  "user": {
+    "_id": "5d3ef09e0b9fb5248982e9a2",
+    "name": "Bob Doe",
+    "username": "bobdoe"
+  },
+  "__v": 0
+}

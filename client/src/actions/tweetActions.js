@@ -120,15 +120,15 @@ export const getUserLikeTweets = userId => async dispatch => {
   }
 };
 
-export const likeTweet = tweetId => async dispatch => {
+export const likeTweet = (tweetId, authUserId) => async dispatch => {
   try {
-    const res = await axios.post(`/api/tweets/like/${tweetId}`);
+    await axios.post(`/api/tweets/like/${tweetId}`);
 
     dispatch({
       type: LIKE_TWEET,
       payload: {
         tweetId,
-        updatedTweet: res.data
+        authUserId
       }
     });
   } catch (err) {

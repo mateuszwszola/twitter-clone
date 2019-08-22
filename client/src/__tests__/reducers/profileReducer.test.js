@@ -6,10 +6,11 @@ import {
     GET_PROFILES,
     CLEAR_PROFILES,
     FOLLOW,
-    UNFOLLOW
+    UNFOLLOW, CREATE_TWEET, REMOVE_TWEET, LIKE_TWEET
 } from "actions/types";
-import dummyProfile from '../dummyData/dummy_profile';
-import dummyProfiles from '../dummyData/dummy_profiles';
+import dummyProfile from '__tests__/dummyData/profile';
+import dummyProfiles from '__tests__/dummyData/profiles';
+import dummyTweet from '__tests__/dummyData/tweet';
 
 const initialState = {
     profile: null,
@@ -230,6 +231,174 @@ describe('profileReducer', () => {
                 };
 
                 expect(profileReducer(currentState, action)).toEqual(expectedState);
+            });
+        });
+    });
+
+    describe('Creating and removing tweet', () => {
+        describe('CREATE_TWEET', () => {
+            const action = { type: CREATE_TWEET, payload: dummyTweet };
+
+            test('does not update the state when profile is null', () => {
+                expect(profileReducer(undefined, action)).toEqual(initialState);
+            });
+
+            test('adds tweet ID to profile tweets and homepageTweets array which user is the owner of that tweet', () => {
+                const profile = dummyProfiles[1];
+                const tweetId = action.payload._id;
+
+                const currentState = {
+                    ...initialState,
+                    profile
+                };
+
+                const expectedState = {
+                    ...currentState,
+                    profile: {
+                        ...profile,
+                        tweets: [tweetId, ...profile.tweets],
+                        homepageTweets: [tweetId, ...profile.homepageTweets]
+                    }
+                };
+
+                expect(profileReducer(currentState, action)).toEqual(expectedState);
+            });
+
+            test('adds tweet ID to profile tweets array if that profile follows the owner of the tweet', () => {
+                const profile = {
+                    ...dummyProfile,
+                    following: [...dummyProfile.following, dummyProfiles[1].user._id]
+                };
+                const tweetId = action.payload._id;
+
+                const currentState = {
+                    ...initialState,
+                    profile
+                };
+
+                const expectedState = {
+                    ...currentState,
+                    profile: {
+                        ...profile,
+                        tweets: [tweetId, ...profile.tweets],
+                    }
+                };
+
+                expect(profileReducer(currentState, action)).toEqual(expectedState);
+            });
+        });
+
+        describe('REMOVE_TWEET', () => {
+            const action = { type: REMOVE_TWEET, payload: dummyTweet._id };
+
+            test('does not update the state when profile is null', () => {
+                expect(profileReducer(undefined, action)).toEqual(initialState);
+            });
+
+            test('removes tweet ID from profile tweets and homepageTweets array, when user is the owner of that tweet', () => {
+               const profile = dummyProfiles[1];
+               const tweetId = action.payload;
+
+                const currentState = {
+                   ...initialState,
+                   profile: {
+                       ...profile,
+                       tweets: [tweetId, ...profile.tweets],
+                       homepageTweets: [tweetId, ...profile.homepageTweets]
+                   }
+               };
+
+                const expectedState = {
+                    ...initialState,
+                    profile
+                };
+
+                expect(profileReducer(currentState, action)).toEqual(expectedState);
+            });
+
+            test('removes tweet ID from profile tweets array)', () => {
+                // Case when profile follows the owner of that tweet, and has the reference in tweets array
+                const profile = dummyProfile;
+                const tweetId = action.payload;
+
+                const currentState = {
+                    ...initialState,
+                    profile: {
+                        ...profile,
+                        tweets: [tweetId, ...profile.tweets]
+                    }
+                };
+
+                const expectedState = {
+                    ...initialState,
+                    profile
+                };
+
+                expect(profileReducer(currentState, action)).toEqual(expectedState);
+            });
+        });
+
+        describe('LIKE_TWEET', () => {
+            const action = (tweetId, authUserId) => ({
+                type: LIKE_TWEET,
+                payload: {
+                    tweetId,
+                    authUserId
+                }
+            });
+
+            test('does not update the profile when profile is null', () => {
+                const tweetId = dummyTweet._id;
+                const authUserId = dummyProfile.user._id;
+                expect(profileReducer(undefined, action(tweetId, authUserId))).toEqual(initialState);
+            });
+
+            test('does not update the profile when current profile is not the auth user profile', () => {
+                const currentState = {
+                    ...initialState,
+                    profile: dummyProfiles[1]
+                };
+                const tweetId = dummyTweet._id;
+                const authUserId = dummyProfile.user._id;
+
+                expect(profileReducer(currentState, action(tweetId, authUserId))).toEqual(currentState);
+            });
+
+            test('adds ID of liked tweet to profile likes array', () => {
+                const currentState = {
+                    ...initialState,
+                    profile: dummyProfile
+                };
+
+                const expectedState = {
+                    ...currentState,
+                    profile: {
+                        ...currentState.profile,
+                        likes: [...currentState.profile.likes, dummyTweet._id]
+                    }
+                };
+
+                expect(profileReducer(currentState, action(dummyTweet._id, dummyProfile.user._id))).toEqual(expectedState);
+            });
+
+            test('removes ID of liked tweet from profile likes array', () => {
+                const currentState = {
+                    ...initialState,
+                    profile: {
+                        ...dummyProfile,
+                        likes: [...dummyProfile.likes, dummyTweet._id]
+                    }
+                };
+
+                const expectedState = {
+                    ...currentState,
+                    profile: {
+                        ...currentState.profile,
+                        likes: [...dummyProfile.likes]
+                    }
+                };
+
+                expect(profileReducer(currentState, action(dummyTweet._id, dummyProfile.user._id))).toEqual(expectedState);
             });
         });
     });

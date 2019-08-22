@@ -37,7 +37,7 @@ function TweetViewContainer({
     e.stopPropagation();
     if (auth.isAuthenticated) {
       if (action === 'like') {
-        likeTweet(tweet_id);
+        likeTweet(tweet_id, auth.user._id);
       } else if (action === 'remove') {
         removeTweet(tweet_id);
       }

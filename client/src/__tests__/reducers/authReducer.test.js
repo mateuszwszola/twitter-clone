@@ -5,7 +5,7 @@ import {
     LOGIN_SUCCESS,
     LOGOUT
 } from "actions/types";
-import dummyUser from '../dummyData/dummy_user';
+import dummyUser from '__tests__/dummyData/user';
 
 const initialState = {
     token: null,

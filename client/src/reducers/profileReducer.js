@@ -104,26 +104,18 @@ export default function(state = initialState, action) {
     case CREATE_TWEET:
       return {
         ...state,
-        profile:
-          state.profile !== null && state.profile.user._id === payload.user._id
-            ? {
-                ...state.profile,
-                tweets: [payload._id, ...state.profile.tweets]
-              }
-            : state.profile
+        profile: updateProfileTweet(state, type, payload)
       };
     case REMOVE_TWEET:
-      const newTweets = state.profile.tweets.filter(id => id !== payload);
-      const newHomepageTweets = state.profile.homepageTweets.filter(
-        id => id !== payload
-      );
       return {
         ...state,
-        profile: {
+        profile: state.profile !== null ? {
           ...state.profile,
-          tweets: newTweets,
-          homepageTweets: newHomepageTweets
-        }
+          tweets: state.profile.tweets.filter(id => id !== payload),
+          homepageTweets: state.profile.homepageTweets.filter(
+              id => id !== payload
+          )
+        } : null
       };
     case GET_ERRORS:
       return {
@@ -131,20 +123,46 @@ export default function(state = initialState, action) {
         loading: false
       };
     case LIKE_TWEET:
-      const index = state.profile.likes.findIndex(id => id === payload.tweetId);
+      // Only update the state when the profile is authenticated user profile
+      const alreadyLiked = state.profile && state.profile.likes.includes(payload.tweetId);
       return {
         ...state,
-        profile: {
+        profile: state.profile && state.profile.user._id === payload.authUserId ? {
           ...state.profile,
           likes:
-            index > -1
+            alreadyLiked
               ? state.profile.likes.filter(id => id !== payload.tweetId)
               : [...state.profile.likes, payload.tweetId]
-        }
+        } : state.profile
       };
     default:
       return state;
   }
+}
+
+function updateProfileTweet(state, type, payload) {
+  const { profile } = state;
+  const tweetOwnerId = payload.user._id;
+  const tweetId = payload._id;
+
+  if (profile !== null) {
+    if (profile.user._id === tweetOwnerId) {
+        return {
+          ...profile,
+          tweets: [tweetId, ...profile.tweets],
+          homepageTweets: [tweetId, ...profile.homepageTweets]
+        };
+    }
+
+    if (profile.following.includes(tweetOwnerId)) {
+      return {
+        ...profile,
+        tweets: [tweetId, ...profile.tweets]
+      };
+    }
+  }
+
+  return profile;
 }
 
 function updateProfileFollow(state, type, payload) {
