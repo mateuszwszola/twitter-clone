@@ -3,7 +3,6 @@ const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const createError = require('http-errors');
 require('./config');
 const connectDB = require('./config/db');
 // const rateLimit = require('express-rate-limit');
@@ -26,18 +25,14 @@ app.use(cookieParser());
 // Handle routes
 app.use('/api', require('./routes'));
 
-// Handle 404 errors
-app.use((req, res, next) => {
-  next(createError(404, 'Not Found'));
+// 404 handler
+app.use((req, res) => {
+  return res.status(404).json({ errors: [{ msg: `Route ${req.url} Not Found` }]})
 });
 
-// Error handler
+// 500 - Any server error handler
 app.use((err, req, res) => {
-  res.status(err.status || 500);
-  res.json({
-    message: err.message,
-    error: process.env.NODE_ENV === 'development' ? err : {}
-  });
+  return res.status(500).json({ errors: [{ msg: 'Internal Server Error' }]});
 });
 
 module.exports = app;

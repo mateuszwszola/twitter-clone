@@ -1,8 +1,8 @@
 const { body, validationResult } = require('express-validator');
 const charLengthForProps = require('../helpers/charLengthForProps');
 
-const Tweet = require('../../models/Tweet');
-const Profile = require('../../models/Profile');
+const Tweet = require('../models/Tweet');
+const Profile = require('../models/Profile');
 
 exports.getTweets = async (req, res, next) => {
     try {

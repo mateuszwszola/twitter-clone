@@ -17,49 +17,54 @@ exports.validate = method => {
     switch(method) {
         case 'registerUser': {
             return [
-                body('name')
-                    .exists()
-                    .trim()
-                    .isLength(charLengthForProps.name)
-                    .withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars`)
+                body('name', 'name is required')
+                    .exists().trim().not().isEmpty()
+                    .isLength(charLengthForProps.name).withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars`),
+                body('username', 'username is required')
+                    .exists().trim().not().isEmpty()
                     .custom(value => {
-                        if (!validator.isAlphanumeric(value.split(' ').join(''))) {
-                            return Promise.reject('Invalid name')
-                        }
-                    }),
-                body('username')
-                    .exists()
-                    .trim()
-                    .isLength(charLengthForProps.username)
-                    .withMessage(`The username must be between ${charLengthForProps.username.min} and ${charLengthForProps.username.max} chars`)
+                        const username = value.toString().split(' ').join('');
+                        return User.findOne({ username }).then(user => {
+                            if (user) {
+                                return Promise.reject('username already in use')
+                            }
+                        });
+                    })
+                    .isLength(charLengthForProps.username).withMessage(`The username must be between ${charLengthForProps.username.min} and ${charLengthForProps.username.max} chars`)
                     .customSanitizer(value => {
                         return value.split(' ').join('')
                     }),
-                body('email')
-                    .exists()
-                    .isEmail()
-                    .trim()
+                body('email', 'email is required')
+                    .exists().not().isEmpty()
+                    .isEmail().withMessage('invalid email')
+                    .custom(value => {
+                        return User.findOne({ email: value }).then(user => {
+                            if (user) {
+                                return Promise.reject('e-mail already in use');
+                            }
+                        })
+                    })
                     .normalizeEmail(),
-                body('password')
-                    .exists()
-                    .isLength(charLengthForProps.password)
-                    .withMessage(`The password must be between ${charLengthForProps.password.min} and ${charLengthForProps.password.max} chars`)
-                    .matches(/\d/).withMessage('The password must contain a number')
+                body('password', 'password is required')
+                    .exists().trim().not().isEmpty()
+                    .isLength(charLengthForProps.password).withMessage(`The password must be between ${charLengthForProps.password.min} and ${charLengthForProps.password.max} chars`),
+                body('password2', 'confirmation password is required')
+                    .exists().trim().not().isEmpty()
                     .custom((value, { req }) => {
-                        if (value !== req.body.password2) {
-                            throw new Error('Password confirmation is incorrect');
+                        if (value !== req.body.password) {
+                            throw new Error('password confirmation does not match password')
                         }
-                    }),
-                body('password2', 'Confirmation password is required')
-                    .exists()
+
+                        return true;
+                    })
             ];
         }
         case 'loginUser': {
             return [
-                body('username', 'Username field is required')
-                    .exists(),
-                body('password', 'Password is required')
-                    .exists()
+                body('username', 'username field is required')
+                    .exists().trim().not().isEmpty(),
+                body('password', 'password is required')
+                    .exists().trim().not().isEmpty()
             ]
         }
     }
@@ -88,27 +93,24 @@ exports.getAllUsers = async (req, res, next) => {
 exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({ errors: errors.array({ onlyFirstError: true }) });
     }
 
     const { name, email, password, username } = req.body;
 
     try {
-        // Check if user with that email/username already exists in db
-        let user = await User.findOne({ email });
-        if (user) {
-            errors.email = 'User with that email has already been created';
-            return res.status(400).json(errors);
-        }
-
-        user = await User.findOne({ username });
-        if (user) {
-            errors.username = 'User with that username has already been created';
-            return res.status(400).json(errors);
-        }
+        // let user = await User.findOne({ email });
+        // if (user) {
+        //     return res.status(400).json({ errors: [{ msg: 'User with that email has already been created' }]});
+        // }
+        //
+        // user = await User.findOne({ username });
+        // if (user) {
+        //     return res.status(400).json({ errors: [{ msg: 'User with that username has already been created' }]});
+        // }
 
         // There is no user with that email/username in db, create the user
-        user = new User({
+        const user = new User({
             name: startCase(name), // (start case, john doe -> John Doe)
             username,
             email,
@@ -147,7 +149,7 @@ exports.loginUser = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({ errors: errors.array({ onlyFirstError: true}) });
     }
 
     const { username, password } = req.body;
@@ -164,15 +166,13 @@ exports.loginUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ [login]: username });
         if (!user) {
-            errors.login = 'Incorrect username and password combination';
-            return res.status(400).json(errors);
+            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination' }] });
         }
 
         // Check passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            errors.login = 'Incorrect username and password combination';
-            return res.status(400).json(errors);
+            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination' }]});
         }
 
         // User matched
@@ -202,7 +202,7 @@ exports.getUserById = async (req, res, next) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'User not found' });
+            return res.status(404).json({ errors: [{ msg: 'User Not Found' }]});
         }
         next(err);
     }
