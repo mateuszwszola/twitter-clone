@@ -135,7 +135,6 @@ function TweetModalContainer(props) {
   const {
     auth,
     tweet: { tweet, loading },
-    errors,
     getTweetById,
     removeTweet,
     likeTweet,
@@ -158,10 +157,6 @@ function TweetModalContainer(props) {
     history.goBack();
   };
 
-  const pushToLogin = () => {
-    history.push('/signin');
-  };
-
   const handleActionClick = (e, action, tweet_id) => {
     e.stopPropagation();
     if (auth.isAuthenticated) {
@@ -171,7 +166,7 @@ function TweetModalContainer(props) {
         removeTweet(tweet_id);
       }
     } else {
-      pushToLogin();
+      history.push('/signin');
     }
   };
 

@@ -12,7 +12,6 @@ function EditProfile({
   birthday,
   avatar,
   backgroundPicture,
-  handleChange,
   handleSubmit,
   errors,
   history
@@ -28,7 +27,6 @@ function EditProfile({
         birthday={birthday}
         avatar={avatar}
         backgroundPicture={backgroundPicture}
-        handleChange={handleChange}
         handleSubmit={handleSubmit}
         errors={errors}
         history={history}
@@ -38,15 +36,14 @@ function EditProfile({
 }
 
 EditProfile.propTypes = {
-  name: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  bio: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
-  website: PropTypes.string.isRequired,
-  birthday: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
-  backgroundPicture: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
+  name: PropTypes.object.isRequired,
+  username: PropTypes.object.isRequired,
+  bio: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  website: PropTypes.object.isRequired,
+  birthday: PropTypes.object.isRequired,
+  avatar: PropTypes.object.isRequired,
+  backgroundPicture: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired

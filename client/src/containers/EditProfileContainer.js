@@ -1,12 +1,21 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUserProfile, updateProfile } from 'actions/profileActions';
 import Loading from 'components/Loading';
 import EditProfile from 'components/EditProfile';
 
-function reducer(state, newState) {
-  return { ...state, ...newState };
+function useFormInput(initialValue) {
+  const [value, setValue]= useState(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue]);
+
+  const handleChange = e => {
+    setValue(e.target.value);
+  };
+  return { value, onChange: handleChange };
 }
 
 function EditProfileContainer({
@@ -16,66 +25,31 @@ function EditProfileContainer({
   getUserProfile,
   updateProfile
 }) {
-  const [state, setState] = useReducer(reducer, {
-    name: '',
-    username: '',
-    bio: '',
-    location: '',
-    website: '',
-    birthday: '',
-    avatar: '',
-    backgroundPicture: ''
-  });
 
-  const {
-    name,
-    username,
-    bio,
-    location,
-    website,
-    birthday,
-    avatar,
-    backgroundPicture
-  } = state;
+  const name = useFormInput(profile && profile.user && profile.user.name || '');
+  const username = useFormInput(profile && profile.user && profile.user.username || '');
+  const bio = useFormInput(profile && profile.bio || '');
+  const location = useFormInput(profile && profile.location || '');
+  const website = useFormInput(profile && profile.website || '');
+  const birthday = useFormInput(profile && profile.birthday || '');
+  const avatar = useFormInput(profile && profile.user.avatar || '');
+  const backgroundPicture = useFormInput(profile && profile.backgroundPicture || '');
 
   useEffect(() => {
-    if (profile === null && loading === false) {
       getUserProfile();
-    }
-  }, [getUserProfile]);
-
-  useEffect(() => {
-    if (profile === null) {
-      return;
-    }
-    setState({
-      name: profile.user.name || '',
-      username: profile.user.username || '',
-      bio: profile.bio || '',
-      location: profile.location || '',
-      website: profile.website || '',
-      birthday: profile.birthday || '',
-      avatar: profile.user.avatar || '',
-      backgroundPicture: profile.backgroundPicture || ''
-    });
-  }, [profile]);
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setState({ [name]: value });
-  }
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
     const profileData = {
-      name,
-      username,
-      bio,
-      website,
-      location,
-      birthday,
-      avatar,
-      backgroundPicture
+      name: name.value || '',
+      username: username.value || '',
+      bio: bio.value || '',
+      website: website.value || '',
+      location: location.value || '',
+      birthday: birthday.value || '',
+      avatar: avatar.value || '',
+      backgroundPicture: backgroundPicture.value || ''
     };
 
     updateProfile(profileData, history);
@@ -95,7 +69,6 @@ function EditProfileContainer({
       birthday={birthday}
       avatar={avatar}
       backgroundPicture={backgroundPicture}
-      handleChange={handleChange}
       handleSubmit={handleSubmit}
       errors={errors}
       history={history}

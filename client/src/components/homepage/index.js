@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TweetsBoard from '../layout/TweetsBoard';
 import UserPreview from '../layout/UserPreview';
 import Loading from '../Loading';
-import { Container, LeftSidebar, Main, RightSidebar } from './style';
+import { Container, LeftSidebar, Main } from './style';
 
 function Homepage({ profile, tweet, ...rest }) {
   return (

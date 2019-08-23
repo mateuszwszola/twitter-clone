@@ -31,7 +31,6 @@ function Form({
   birthday,
   avatar,
   backgroundPicture,
-  handleChange,
   handleSubmit,
   errors,
   history
@@ -47,8 +46,7 @@ function Form({
         <Input
           type="text"
           name="name"
-          value={name}
-          onChange={handleChange}
+          {...name}
           error={!!errors.name}
         />
         {errors.name && <FeedbackMessage>{errors.name}</FeedbackMessage>}
@@ -59,8 +57,7 @@ function Form({
         <Input
           type="text"
           name="username"
-          value={username}
-          onChange={handleChange}
+          {...username}
           error={!!errors.username}
         />
         {errors.username && (
@@ -73,8 +70,7 @@ function Form({
         <Input
           type="text"
           name="bio"
-          value={bio}
-          onChange={handleChange}
+          {...bio}
           error={!!errors.bio}
         />
         {errors.bio && <FeedbackMessage>{errors.bio}</FeedbackMessage>}
@@ -85,8 +81,7 @@ function Form({
         <Input
           type="text"
           name="location"
-          value={location}
-          onChange={handleChange}
+          {...location}
           error={!!errors.location}
         />
         {errors.location && (
@@ -99,8 +94,7 @@ function Form({
         <Input
           type="text"
           name="website"
-          value={website}
-          onChange={handleChange}
+          {...website}
           error={!!errors.website}
         />
         {errors.website && <FeedbackMessage>{errors.website}</FeedbackMessage>}
@@ -111,8 +105,7 @@ function Form({
         <Input
           type="date"
           name="birthday"
-          value={getBirthdayDate(birthday)}
-          onChange={handleChange}
+          {...birthday}
           error={!!errors.birthday}
         />
         {errors.birthday && (
@@ -125,8 +118,7 @@ function Form({
         <Input
           type="text"
           name="avatar"
-          value={avatar}
-          onChange={handleChange}
+          {...avatar}
           error={!!errors.avatar}
         />
         {errors.avatar && <FeedbackMessage>{errors.avatar}</FeedbackMessage>}
@@ -137,8 +129,7 @@ function Form({
         <Input
           type="text"
           name="backgroundPicture"
-          value={backgroundPicture}
-          onChange={handleChange}
+          {...backgroundPicture}
           error={!!errors.backgroundPicture}
         />
         {errors.backgroundPicture && (
@@ -157,13 +148,12 @@ function Form({
 }
 
 Form.propTypes = {
-  name: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  bio: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
-  website: PropTypes.string.isRequired,
-  birthday: PropTypes.string.isRequired,
-  handleChange: PropTypes.func.isRequired,
+  name: PropTypes.object.isRequired,
+  username: PropTypes.object.isRequired,
+  bio: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  website: PropTypes.object.isRequired,
+  birthday: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired

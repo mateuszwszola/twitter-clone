@@ -35,5 +35,10 @@
   "devDependencies": {
     "babel-plugin-macros": "^2.6.1",
     "cypress": "^3.4.1"
+  },
+  "babelMacros": {
+    "styledComponents": {
+      "pure": true
+    }
   }
 }

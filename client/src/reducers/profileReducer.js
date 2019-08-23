@@ -96,6 +96,8 @@ export default function(state = initialState, action) {
                         id => id !== payload.userId
                     )
                   }
+                } else {
+                  return profile;
                 }
               })
             : null,
