@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const auth = require('../../../middleware/auth');
-const profileController = require('../../../controllers/profileController');
+const auth = require('../../middleware/auth');
+const profileController = require('../../controllers/profileController');
 
 router.use('/', require('./follow'));
 

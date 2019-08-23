@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Handle routes
-app.use('/api', require('./routes/api'));
+app.use('/api', require('./routes'));
 
 // Handle 404 errors
 app.use((req, res, next) => {

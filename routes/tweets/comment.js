@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const auth = require('../../../middleware/auth');
-const Tweet = require('../../../models/Tweet');
+const auth = require('../../middleware/auth');
+const Tweet = require('../../models/Tweet');
 
 // Load validation functions
-const validateTweet = require('../../../validation/createTweet');
+const validateTweet = require('../../validation/createTweet');
 
 // @route   POST api/tweets/comment/:tweet_id
 // @desc    Comment another tweet (create new tweet and add it's ID to tweet that is commented)

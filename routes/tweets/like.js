@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const auth = require('../../../middleware/auth');
+const auth = require('../../middleware/auth');
 
-const Profile = require('../../../models/Profile');
-const Tweet = require('../../../models/Tweet');
+const Profile = require('../../models/Profile');
+const Tweet = require('../../models/Tweet');
 
 // @route   GET api/tweets/like/:user_id
 // @desc    Get list of profile's likes (tweets)

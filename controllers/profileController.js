@@ -4,6 +4,7 @@ const Profile = require('../models/Profile');
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
 const startCase = require("lodash");
+const charLengthForProps = require('../helpers/charLengthForProps');
 
 exports.getLoggedInUserProfile = async (req, res, next) => {
     try {
@@ -241,30 +242,22 @@ exports.getHomepageTweets = async (req, res, next) => {
     }
 };
 
-const lengthForProps = {
-    bio: { min: 2, max: 70 },
-    location: { min: 2, max: 30 },
-    website: { min: 3, max: 30 },
-    name: { min: 2, max: 30 },
-    username: { min: 6, max: 15 }
-};
-
 exports.validate = method => {
     switch(method) {
         case 'updateProfile': {
             return [
-                body('bio', `The bio must be between ${lengthForProps.bio.min} and ${lengthForProps.bio.max} chars long`)
+                body('bio', `The bio must be between ${charLengthForProps.bio.min} and ${charLengthForProps.bio.max} chars long`)
                     .optional()
                     .trim()
-                    .isLength(lengthForProps.bio)
+                    .isLength(charLengthForProps.bio)
                     .escape(),
-                body('location', `The location must be between ${lengthForProps.location.min} and ${lengthForProps.location.max} chars long`)
+                body('location', `The location must be between ${charLengthForProps.location.min} and ${charLengthForProps.location.max} chars long`)
                     .optional()
                     .trim()
-                    .isLength(lengthForProps.location),
-                body('website', `The website must be between ${lengthForProps.website.min} and ${lengthForProps.website.max} chars long`)
+                    .isLength(charLengthForProps.location),
+                body('website', `The website must be between ${charLengthForProps.website.min} and ${charLengthForProps.website.max} chars long`)
                     .optional()
-                    .isLength(lengthForProps.website)
+                    .isLength(charLengthForProps.website)
                     .isURL()
                     .withMessage('Website must be a valid URL'),
                 body('birthday', 'Birthday must be a valid date')
@@ -276,19 +269,17 @@ exports.validate = method => {
                 body('backgroundPicture', 'Background picture must be a URL')
                     .optional()
                     .isURL(),
-                body('name', `The name must be between ${lengthForProps.name.min} and ${lengthForProps.name.max} chars long`)
+                body('name', `The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars long`)
                     .optional()
-                    .isLength(lengthForProps.name)
+                    .isLength(charLengthForProps.name)
                     .isAlpha()
                     .withMessage('The name must be a valid name'),
-                body('username', `The username must be between ${lengthForProps.username.min} and ${lengthForProps.username.max} chars long`)
+                body('username', `The username must be between ${charLengthForProps.username.min} and ${charLengthForProps.username.max} chars long`)
                     .optional()
-                    .isLength(lengthForProps.username)
+                    .isLength(charLengthForProps.username)
                     .isAlpha()
                     .withMessage('The username must be a valid username')
             ]
         }
-        default:
-            return null;
     }
 };

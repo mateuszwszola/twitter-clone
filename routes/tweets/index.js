@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const auth = require('../../../middleware/auth');
+const auth = require('../../middleware/auth');
 
-const Tweet = require('../../../models/Tweet');
-const Profile = require('../../../models/Profile');
+const Tweet = require('../../models/Tweet');
+const Profile = require('../../models/Profile');
 
-const validateTweet = require('../../../validation/createTweet');
+const validateTweet = require('../../validation/createTweet');
 
 router.use('/like', require('./like'));
 router.use('/comment', require('./comment'));
