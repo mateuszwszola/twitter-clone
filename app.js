@@ -32,7 +32,8 @@ app.use((req, res) => {
 
 // 500 - Any server error handler
 app.use((err, req, res) => {
-  return res.status(500).json({ errors: [{ msg: 'Internal Server Error' }]});
+  console.log({ err });
+  return res.status(500).json({ errors: [{ msg: err.message || 'Internal Server Error' }]});
 });
 
 module.exports = app;

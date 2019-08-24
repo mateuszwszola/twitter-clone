@@ -1,15 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
+const validator = require('validator');
 
 const startCase = require('../helpers/startCase');
 const charLengthForProps = require('../helpers/charLengthForProps');
 const { JWT_SECRET } = require('../config/keys');
+
 // Load Models
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-
-const { body, validationResult } = require('express-validator');
-const validator = require('validator');
 
 const SALT_ROUNDS = 10;
 
@@ -35,7 +35,7 @@ exports.validate = method => {
                         return value.split(' ').join('')
                     }),
                 body('email', 'email is required')
-                    .exists().not().isEmpty()
+                    .exists().trim().not().isEmpty()
                     .isEmail().withMessage('invalid email')
                     .custom(value => {
                         return User.findOne({ email: value }).then(user => {
@@ -56,7 +56,11 @@ exports.validate = method => {
                         }
 
                         return true;
-                    })
+                    }),
+                body('avatar')
+                    .optional({ checkFalsy: true })
+                    .isURL()
+                    .withMessage('avatar must be a valid URL')
             ];
         }
         case 'loginUser': {
@@ -90,6 +94,21 @@ exports.getAllUsers = async (req, res, next) => {
     }
 };
 
+exports.getUserById = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+        const user = await User.findById(user_id).select('-password');
+
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === 'ObjectId') {
+            return res.status(404).json({ errors: [{ msg: 'User Not Found' }]});
+        }
+        next(err);
+    }
+};
+
 exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -99,19 +118,8 @@ exports.registerUser = async (req, res, next) => {
     const { name, email, password, username } = req.body;
 
     try {
-        // let user = await User.findOne({ email });
-        // if (user) {
-        //     return res.status(400).json({ errors: [{ msg: 'User with that email has already been created' }]});
-        // }
-        //
-        // user = await User.findOne({ username });
-        // if (user) {
-        //     return res.status(400).json({ errors: [{ msg: 'User with that username has already been created' }]});
-        // }
-
-        // There is no user with that email/username in db, create the user
         const user = new User({
-            name: startCase(name), // (start case, john doe -> John Doe)
+            name: startCase(name), // (startCase: john doe -> John Doe)
             username,
             email,
             password
@@ -189,21 +197,6 @@ exports.loginUser = async (req, res, next) => {
         });
     } catch (err) {
         console.error(err.message);
-        next(err);
-    }
-};
-
-exports.getUserById = async (req, res, next) => {
-    try {
-        const { user_id } = req.params;
-        const user = await User.findById(user_id).select('-password');
-
-        res.json(user);
-    } catch (err) {
-        console.error(err.message);
-        if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'User Not Found' }]});
-        }
         next(err);
     }
 };

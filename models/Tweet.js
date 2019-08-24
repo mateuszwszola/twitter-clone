@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const validator = require('validator');
 
 const TweetSchema = new Schema({
   // 1. Owner of that tweet (user_id)
@@ -24,14 +25,18 @@ const TweetSchema = new Schema({
     required: true
   },
   media: {
-    type: String // url to the photo/video
+    type: String, // url to the photo/video,
+    validate: value => {
+      return validator.isURL(value)
+    }
   },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   // retweets are ids of people who retweeted
   retweets: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   editted: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   comment: {
     type: Boolean,

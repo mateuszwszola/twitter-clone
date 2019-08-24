@@ -35,7 +35,7 @@ router.get('/:tweet_id', tweetController.getTweetById);
 
 /*
   @route   POST api/tweets
-   @desc    Create tweet
+  @desc    Create tweet
   @access  Private
  */
 router.post('/', auth, tweetController.validate('createTweet'), tweetController.createTweet);

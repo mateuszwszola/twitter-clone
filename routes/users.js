@@ -17,6 +17,13 @@ router.get('/current', auth, userController.getCurrentUser);
 router.get('/all', userController.getAllUsers);
 
 /*
+  @route   GET api/users/:user_id
+  @desc    Get user by ID
+  @access  Public
+ */
+router.get('/:user_id', userController.getUserById);
+
+/*
   @route   POST api/users/register
   @desc    Register new user
   @access  Public
@@ -29,12 +36,5 @@ router.post('/register', userController.validate('registerUser'), userController
   @access  Public
  */
 router.post('/login', userController.validate('loginUser'), userController.loginUser);
-
-/*
-  @route   GET api/users/:user_id
-  @desc    Get user by ID
-  @access  Public
- */
-router.get('/:user_id', userController.getUserById);
 
 module.exports = router;
