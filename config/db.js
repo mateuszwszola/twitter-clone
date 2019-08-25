@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const { MONGO_URI } = require('./keys');
+const { MONGO_URI, MONGO_TEST_URI } = require('./keys');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
+    await mongoose.connect(process.env.NODE_ENV === 'test' ? MONGO_TEST_URI : MONGO_URI, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false

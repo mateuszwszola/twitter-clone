@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -15,7 +16,9 @@ connectDB();
 
 // Handle static assets placed in public directory
 app.use(express.static(path.join(__dirname, './public')));
-app.use(logger('dev'));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(logger('dev'));
+}
 // body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

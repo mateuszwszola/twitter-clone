@@ -65,7 +65,7 @@ exports.validate = method => {
         }
         case 'loginUser': {
             return [
-                body('username', 'username field is required')
+                body('username', 'username is required')
                     .exists().trim().not().isEmpty(),
                 body('password', 'password is required')
                     .exists().trim().not().isEmpty()
