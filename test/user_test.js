@@ -19,6 +19,7 @@ let JWT_TOKEN = null;
 
 const generateJwtToken = require('../helpers/generateJwtToken');
 const generateHashPassword = require('../helpers/generateHashPassword');
+const { testNoTokenError } = require('./helpers');
 
 const { dummyUser } = require('./dummy_data');
 
@@ -294,6 +295,17 @@ describe('Users', () => {
     });
 
     describe('/GET /users/current', () => {
+        it('it should not GET current user and return error for lack of jwt token', async () => {
+            return new Promise(resolve => {
+                chai.request(server)
+                    .get(`${BASIC_URL}/current`)
+                    .end((err, res) => {
+                        testNoTokenError(res);
+                        resolve();
+                    });
+            });
+        });
+
        it('it should GET current user with the given jwt token', async () => {
            let user = new User(dummyUser);
            user = await user.save();
