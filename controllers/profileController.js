@@ -35,7 +35,7 @@ exports.getLoggedInUserProfileWithHomepageTweets = async (req, res, next) => {
             });
 
         if (!profile) {
-            return res.status(404).json({ errors: [{ msg: 'Profile Not Found' }]});
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
         }
         res.json(profile);
     } catch (err) {
@@ -54,7 +54,7 @@ exports.getLoggedInUserProfileWithTweets = async (req, res, next) => {
             });
 
         if (!profile) {
-            return res.status(404).json({ errors: [{ msg: 'Profile Not Found' }]});
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
         }
         res.json(profile);
     } catch (err) {
@@ -87,14 +87,14 @@ exports.getProfileByUserId = async (req, res, next) => {
         ]);
 
         if (!profile) {
-            return res.status(404).json({ errors: [{ msg: 'Profile not found' }]});
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
         }
 
         res.json(profile);
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'Profile not found' }]});
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
         }
         next(err);
     }
@@ -118,7 +118,7 @@ exports.getProfileByUsername = async (req, res, next) => {
         if (!profile) {
             return res
                 .status(404)
-                .json({ errors: [{ msg: `Profile for ${username} does not exists` }]});
+                .json({ errors: [{ msg: 'Profile does not exists' }]});
         }
 
         res.json(profile);
@@ -148,7 +148,7 @@ exports.getProfileByUsernameWithTweets = async (req, res, next) => {
         if (!profile) {
             return res
                 .status(404)
-                .json({ errors: [{ msg: 'Profile with that username does not exists' }] });
+                .json({ errors: [{ msg: 'Profile does not exists' }] });
         }
         res.json(profile);
     } catch (err) {

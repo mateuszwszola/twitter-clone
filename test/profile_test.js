@@ -3,13 +3,14 @@
 // During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 // Require the dev-dependencies
-const mongoose = require('mongoose');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const should = chai.should();
+const mongoose = require('mongoose');
 
 const server = require('../app');
+// Configure chai
 chai.use(chaiHttp);
+chai.should();
 // Require models
 const User = require('../models/User');
 const Profile = require('../models/Profile');
@@ -30,7 +31,7 @@ describe('Profiles', () => {
            }) ;
        });
    });
-
+    // GET current user profile
    describe('/GET /api/profiles', () => {
        it('it should not GET logged in user and return error for lack of jwt token', async () => {
            return new Promise(resolve => {
@@ -61,7 +62,7 @@ describe('Profiles', () => {
            });
        });
    });
-
+    // GET all profiles
    describe('/GET /api/profiles/all', () => {
       it('it should GET all the profiles', async () => {
           return new Promise(resolve => {
@@ -76,7 +77,7 @@ describe('Profiles', () => {
           });
       });
    });
-
+    // GET profile by user ID
    describe('/GET /api/profiles/:user_id', () => {
        it('it should not GET and return error when profile does not exists', async () => {
            let user = new User(dummyUser);
@@ -117,7 +118,7 @@ describe('Profiles', () => {
             });
        });
    });
-
+    // GET profile by username
    describe('/GET /api/profiles/username/:username', () => {
         it('it should not GET a profile when user with that username does not exists', async () => {
            return new Promise(resolve => {
@@ -148,7 +149,7 @@ describe('Profiles', () => {
             });
         });
    });
-
+    // Update the profile
    describe('/POST /api/profiles', () => {
         it('it should POST and update the profile', async () => {
             const user = await new User(dummyUser).save();
@@ -252,7 +253,7 @@ describe('Profiles', () => {
             });
         });
    });
-
+    // Delete the profile
    describe('/DELETE /api/profiles', () => {
        it('it should not DELETE account when no token provided', async () => {
            return new Promise(resolve => {
@@ -284,12 +285,254 @@ describe('Profiles', () => {
        });
    });
 
+    // GET profile list of followers profiles
+    describe('/GET /api/profiles/follow/:user_id/followers', () => {
+        it('it should not GET list of followers when profile does not exists', async () => {
+           return new Promise(resolve => {
+             chai.request(server)
+                 .get(`${BASIC_URL}/follow/123/followers`)
+                 .end((err, res) => {
+                    testNotFoundProfile(res);
+                    resolve();
+                 });
+           });
+        });
+
+        it('it should GET list of followers', async () => {
+            // Create a user and its profile
+            const user = await new User(dummyUser).save();
+            await new Profile({ user: user.id }).save();
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .get(`${BASIC_URL}/follow/${user.id}/followers`)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('array');
+                        res.body.length.should.be.eql(0);
+                        resolve();
+                    });
+            });
+        });
+    });
+
+   // GET profile list of following profiles
+    describe('/GET /api/profiles/follow/:user_id/following', () => {
+        it('it should not GET list of following when profile does not exists', async () => {
+            return new Promise(resolve => {
+                chai.request(server)
+                    .get(`${BASIC_URL}/follow/123/following`)
+                    .end((err, res) => {
+                        testNotFoundProfile(res);
+                        resolve();
+                    });
+            });
+        });
+
+        it('it should GET list of following profiles', async () => {
+            // Create a user and its profile
+            const user = await new User(dummyUser).save();
+            await new Profile({ user: user.id }).save();
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .get(`${BASIC_URL}/follow/${user.id}/following`)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('array');
+                        res.body.length.should.be.eql(0);
+                        resolve();
+                    });
+            });
+
+        });
+    });
+
+    // Follow a user
+    describe('/POST /api/profiles/follow/:user_id', () => {
+        it('it should not POST when token not provided', async () => {
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/follow/123`)
+                    .end((err, res) => {
+                       testNoTokenError(res);
+                       resolve();
+                    });
+            });
+        });
+        it('it should not POST when profile not found', async () => {
+            const user = await new User(dummyUser).save();
+            JWT_TOKEN = await generateJwtToken(user.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/follow/123`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        testNotFoundProfile(res);
+                        resolve();
+                    });
+            });
+        });
+        it('it should not POST when trying to follow own profile', async () => {
+            const user = await new User(dummyUser).save();
+            JWT_TOKEN = await generateJwtToken(user.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/follow/${user.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(400);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('errors');
+                        res.body.errors[0].should.have.property('msg', 'You cannot follow your own profile');
+                        resolve();
+                    });
+            });
+        });
+        it('it should not POST when already followed that profile', async () => {
+            const userA = await new User(dummyUsers[0]).save();
+            await new Profile({ user: userA.id }).save();
+            const userB = await new User(dummyUsers[1]).save();
+            await new Profile({ user: userB.id, following: [userA.id] }).save();
+
+            JWT_TOKEN = await generateJwtToken(userB.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/follow/${userA.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(400);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('errors');
+                        res.body.errors[0].should.have.property('msg', 'You have already followed that profile');
+                        resolve();
+                    });
+            });
+        });
+        it('it should POST and update both profiles', async () => {
+            const userA = await new User(dummyUsers[0]).save();
+            await new Profile({ user: userA.id }).save();
+            const userB = await new User(dummyUsers[1]).save();
+            await new Profile({ user: userB.id }).save();
+
+            JWT_TOKEN = await generateJwtToken(userB.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/follow/${userA.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('following');
+                        res.body.following.should.be.a('array');
+                        res.body.following.length.should.be.eql(1);
+                        res.body.following[0].should.be.eql(userA.id);
+                        resolve();
+                    });
+            });
+
+        });
+    });
+
+    // Unfollow user
+    describe('/POST /api/profiles/unfollow/:user_id', () => {
+        it('it should not POST when token not provided', async () => {
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/unfollow/123`)
+                    .end((err, res) => {
+                        testNoTokenError(res);
+                        resolve();
+                    });
+            });
+        });
+        it('it should not POST when profile not found', async () => {
+            const user = await new User(dummyUser).save();
+            JWT_TOKEN = await generateJwtToken(user.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/unfollow/123`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        testNotFoundProfile(res);
+                        resolve();
+                    });
+            });
+        });
+        it('it should not POST when trying to unfollow own profile', async () => {
+            const user = await new User(dummyUser).save();
+            JWT_TOKEN = await generateJwtToken(user.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/unfollow/${user.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(400);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('errors');
+                        res.body.errors[0].should.have.property('msg', 'You cannot unfollow your own profile');
+                        resolve();
+                    });
+            });
+        });
+        it('it should not POST when not followed that profile', async () => {
+            const userA = await new User(dummyUsers[0]).save();
+            await new Profile({ user: userA.id }).save();
+            const userB = await new User(dummyUsers[1]).save();
+            await new Profile({ user: userB.id }).save();
+
+            JWT_TOKEN = await generateJwtToken(userB.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/unfollow/${userA.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(400);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('errors');
+                        res.body.errors[0].should.have.property('msg', 'You cannot unfollow that profile');
+                        resolve();
+                    });
+            });
+        });
+        it('it should POST and update both profiles', async () => {
+            const userA = await new User(dummyUsers[0]).save();
+            await new Profile({ user: userA.id }).save();
+            const userB = await new User(dummyUsers[1]).save();
+            await new Profile({ user: userB.id, following: [userA.id] }).save();
+
+            JWT_TOKEN = await generateJwtToken(userB.id);
+
+            return new Promise(resolve => {
+                chai.request(server)
+                    .post(`${BASIC_URL}/unfollow/${userA.id}`)
+                    .set('x-auth-token', JWT_TOKEN)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('following');
+                        res.body.following.should.be.a('array');
+                        res.body.following.length.should.be.eql(0);
+                        resolve();
+                    });
+            });
+
+        });
+    });
+
     function testNotFoundProfile(res) {
         res.should.have.status(404);
         res.body.should.be.a('object');
         res.body.should.have.property('errors');
         res.body.errors.should.be.a('array');
-        res.body.errors[0].should.have.property('msg', 'Profile not found');
+        res.body.errors[0].should.have.property('msg', 'Profile does not exists');
     }
 
    function testBasicProfile(res, profileId, user) {

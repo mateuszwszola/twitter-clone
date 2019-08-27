@@ -75,7 +75,7 @@ exports.followUser = async (req, res, next) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'Profile to follow does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
         next(err);
     }
@@ -119,7 +119,7 @@ exports.unfollowUser = async (req, res, next) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'Profile to follow does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
         next(err);
     }
