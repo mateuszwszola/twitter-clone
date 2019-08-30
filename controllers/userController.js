@@ -19,7 +19,9 @@ exports.validate = method => {
             return [
                 body('name', 'name is required')
                     .exists().trim().not().isEmpty()
-                    .isLength(charLengthForProps.name).withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars`),
+                    .isLength(charLengthForProps.name).withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars`)
+                    .customSanitizer(startCase)
+                ,
                 body('username', 'username is required')
                     .exists().trim().not().isEmpty()
                     .custom(value => {
@@ -98,6 +100,9 @@ exports.getUserById = async (req, res, next) => {
     try {
         const { user_id } = req.params;
         const user = await User.findById(user_id).select('-password');
+        if (!user) {
+            return res.status(404).json({ errors: [{ msg: 'User Not Found' }]});
+        }
 
         res.json(user);
     } catch (err) {
@@ -119,7 +124,7 @@ exports.registerUser = async (req, res, next) => {
 
     try {
         const user = new User({
-            name: startCase(name), // (startCase: john doe -> John Doe)
+            name,
             username,
             email,
             password
