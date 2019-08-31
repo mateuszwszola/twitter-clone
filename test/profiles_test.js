@@ -29,6 +29,8 @@ describe('Profiles', function() {
         await Profile.deleteMany({});
     });
 
+    const mongoObjectId = generateMongoObjectId();
+
     // GET current user profile
    describe('GET /api/profiles', function() {
        it('should not GET logged in user and return error for lack of jwt token', async function() {
@@ -43,6 +45,7 @@ describe('Profiles', function() {
            const profile = await new Profile({ user: user.id }).save();
 
            JWT_TOKEN = await generateJwtToken(user.id);
+
            const res = await chai.request(server)
                .get(API_URL)
                .set('x-auth-token', JWT_TOKEN);
@@ -64,9 +67,8 @@ describe('Profiles', function() {
     // GET profile by user ID
    describe('GET /api/profiles/:user_id', function() {
        it('should not GET profile and return error when profile does not exists', async function() {
-           const objectId = await generateMongoObjectId();
            const res = await chai.request(server)
-               .get(`${API_URL}/${objectId}`);
+               .get(`${API_URL}/${mongoObjectId}`);
 
            testNotFoundProfile(res);
        });
@@ -134,14 +136,15 @@ describe('Profiles', function() {
 
         it('should POST and update the profile by resetting some fields', async function() {
             const user = await new User(dummyUser).save();
+
+            JWT_TOKEN = await generateJwtToken(user.id);
+
             const profileData = {
                 bio: `My name is ${dummyUser.name}`,
                 location: 'New York City',
                 website: `${dummyUser.username}.com`
             };
             const profile = await new Profile({ user: user.id, ...profileData }).save();
-
-            JWT_TOKEN = await generateJwtToken(user.id);
 
             const body = {
                 bio: '',
@@ -164,16 +167,17 @@ describe('Profiles', function() {
         });
 
         it('should not POST when given username is already in use', async function() {
-            await new User(dummyUsers[0]).save();
-            const user = await new User(dummyUsers[1]);
+            const user = await new User(dummyUser).save();
             await new Profile({ user: user.id }).save();
+            const secondUser = await new User(dummyUsers[1]).save();
+            await new Profile({ user: secondUser.id }).save();
 
             JWT_TOKEN = await generateJwtToken(user.id);
 
             const res = await chai.request(server)
                 .post(`${API_URL}`)
                 .set('x-auth-token', JWT_TOKEN)
-                .send({ username: dummyUsers[0].username });
+                .send({ username: dummyUsers[1].username });
 
             res.should.have.status(422);
             res.body.should.be.a('object');
@@ -234,10 +238,8 @@ describe('Profiles', function() {
     // GET profile list of followers profiles
     describe('GET /api/profiles/follow/:user_id/followers', function() {
         it('should not GET list of followers when user does not exists', async function() {
-            const objectId = await generateMongoObjectId();
-
             const res = await chai.request(server)
-                .get(`${API_URL}/follow/${objectId}/followers`);
+                .get(`${API_URL}/follow/${mongoObjectId}/followers`);
 
             res.should.have.status(404);
             res.body.should.be.a('object');
@@ -261,9 +263,8 @@ describe('Profiles', function() {
    // GET profile list of following profiles
     describe('GET /api/profiles/follow/:user_id/following', function() {
         it('should not GET list of following when profile does not exists', async function() {
-            const objectId = await generateMongoObjectId();
             const res = await chai.request(server)
-                .get(`${API_URL}/follow/${objectId}/following`);
+                .get(`${API_URL}/follow/${mongoObjectId}/following`);
 
             res.should.have.status(404);
             res.body.should.be.a('object');
@@ -286,10 +287,9 @@ describe('Profiles', function() {
 
     // Follow a user
     describe('POST /api/profiles/follow/:user_id', function() {
-        const objectId = generateMongoObjectId();
         it('should not POST when token not provided', async function() {
             const res = await chai.request(server)
-                .post(`${API_URL}/follow/${objectId}`);
+                .post(`${API_URL}/follow/${mongoObjectId}`);
 
             testNoTokenError(res);
         });
@@ -359,11 +359,9 @@ describe('Profiles', function() {
 
     // Unfollow user
     describe('POST /api/profiles/unfollow/:user_id', function() {
-        const objectId = generateMongoObjectId();
-
         it('should not POST when token not provided', async function() {
             const res = await chai.request(server)
-                .post(`${API_URL}/unfollow/${objectId}`);
+                .post(`${API_URL}/unfollow/${mongoObjectId}`);
 
             testNoTokenError(res);
         });

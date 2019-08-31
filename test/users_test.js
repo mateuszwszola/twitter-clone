@@ -23,75 +23,48 @@ const { testNoTokenError } = require('./helpers');
 const { dummyUser } = require('./dummy_data');
 
 describe('Users', function() {
-    beforeEach(function() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await User.deleteMany({});
-                await Profile.deleteMany({});
-                resolve();
-            } catch(err) {
-                reject(err);
-            }
+    beforeEach(async function() {
+        await User.deleteMany({});
+        await Profile.deleteMany({});
+    });
+
+    describe('GET /users', function() {
+        it('should GET all the users', async function() {
+            const res = await chai.request(server)
+                .get(API_URL);
+
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(0);
         });
     });
 
-    describe('/GET /users', function() {
-        it('should GET all the users', function(done) {
-            chai.request(server)
-                .get(API_URL)
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    } else {
-                        res.should.have.status(200);
-                        res.body.should.be.a('array');
-                        res.body.length.should.be.eql(0);
-                        done();
-                    }
-                });
+    describe('GET /users/:user_id', function() {
+        it('should GET a user by the given user_id', async function() {
+            const user = await new User(dummyUser).save();
+
+            const res = await chai.request(server)
+                .get(`${API_URL}/${user.id}`);
+
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('name', user.name);
+            res.body.should.have.property('username', user.username);
+            res.body.should.have.property('email', user.email);
+            res.body.should.have.property('_id', user.id);
         });
     });
 
-    describe('/GET /users/:user_id', function() {
-        it('should GET a user by the given user_id', function() {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const user = await new User(dummyUser).save();
+    describe('POST /users/register', function() {
+        it('should not POST a register and return errors when not sending any data', async function() {
+            const res = await chai.request(server)
+                .post(`${API_URL}/register`);
 
-                    chai.request(server)
-                        .get(`${API_URL}/${user.id}`)
-                        .end((err, res) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                res.should.have.status(200);
-                                res.body.should.be.a('object');
-                                res.body.should.have.property('name', user.name);
-                                res.body.should.have.property('username', user.username);
-                                res.body.should.have.property('email', user.email);
-                                res.body.should.have.property('_id', user.id);
-                                resolve();
-                            }
-                    });
-                } catch(err) {
-                    reject(err);
-                }
-            });
-        });
-    });
-
-    describe('/POST /users/register', function() {
-        it('should not POST a register and return errors when not sending any data', function(done) {
-            chai.request(server)
-                .post(`${API_URL}/register`)
-                .end((err, res) => {
-                    testRegisterErrorRes(res);
-                    testRegisterRequiredErrors(res.body.errors);
-                    done();
-                });
+            testRegisterErrorRes(res);
+            testRegisterRequiredErrors(res.body.errors);
         });
 
-        it('should not POST a register and return errors when given empty fields', function(done) {
+        it('should not POST a register and return errors when given empty fields', async function() {
             const body = {
                 username: "",
                 name: "",
@@ -99,148 +72,96 @@ describe('Users', function() {
                 password: "",
                 password2: ""
             };
-            registerRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    testRegisterErrorRes(res);
-                    testRegisterRequiredErrors(res.body.errors);
-                    done();
-                }
-            });
+
+            const res = await registerRequestWithContent(body);
+            testRegisterErrorRes(res);
+            testRegisterRequiredErrors(res.body.errors);
         });
 
-        it('should not POST a register and return error for invalid name length', function(done) {
+        it('should not POST a register and return error for invalid name length', async function() {
             const body = {
-                "name": "m"
+                name: "m"
             };
 
-            registerRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    testRegisterErrorRes(res);
-                    const errors = res.body.errors;
-                    errors[0].should.have.property('msg', 'The name must be between 2 and 30 chars');
-                    done();
-                }
-            })
+            const res = await registerRequestWithContent(body);
+
+            testRegisterErrorRes(res);
+            res.body.errors[0].should.have.property('msg', 'The name must be between 2 and 30 chars');
         });
 
-        it('should not POST a register and return error for invalid email', function(done) {
+        it('should not POST a register and return error for invalid email', async function() {
             const body = {
                 ...dummyUser,
                 email: "johndoe"
             };
 
-            registerRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    testRegisterErrorRes(res);
-                    const errors = res.body.errors;
-                    errors[0].should.have.property('msg', 'invalid email');
-                    done();
-                }
-            })
+            const res = await registerRequestWithContent(body);
+
+            testRegisterErrorRes(res);
+            res.body.errors[0].should.have.property('msg', 'invalid email');
         });
 
-        it('should not POST a register and return error for invalid password length', function(done) {
+        it('should not POST a register and return error for invalid password length', async function() {
             const body = {
                 ...dummyUser,
                 password: "123"
             };
 
-            registerRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    testRegisterErrorRes(res);
-                    const errors = res.body.errors;
-                    errors[0].should.have.property('msg', 'The password must be between 6 and 30 chars');
-                    done();
-                }
-            });
+            const res = await registerRequestWithContent(body);
+
+            testRegisterErrorRes(res);
+            res.body.errors[0].should.have.property('msg', 'The password must be between 6 and 30 chars');
         });
 
-        it('should not POST and return error for password not match', function(done) {
+        it('should not POST and return error for password not match', async function() {
            const body = {
                ...dummyUser,
                password: "123456",
                password2: "1234567"
            };
 
-           registerRequestWithContent(body, (err, res) => {
-               if (err) {
-                   done(err);
-               } else {
-                   testRegisterErrorRes(res);
-                   const errors = res.body.errors;
-                   errors[0].should.have.property('msg', 'password confirmation does not match password');
-                   done();
-               }
-           });
+           const res = await registerRequestWithContent(body);
+
+            testRegisterErrorRes(res);
+            res.body.errors[0].should.have.property('msg', 'password confirmation does not match password');
         });
 
-        it('should POST a register and return the token', function(done) {
-            registerRequestWithContent(dummyUser, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('token');
-                    done();
-                }
-            });
+        it('should POST a register and return the token', async function() {
+            const res = await registerRequestWithContent(dummyUser);
+
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.should.have.property('token');
         });
 
-        it('should not POST and return errors for username and email already in use',function() {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const user = await new User(dummyUser).save();
+        it('should not POST and return errors for username and email already in use',async function() {
+            await new User(dummyUser).save();
 
-                    registerRequestWithContent(user, (err, res) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            testRegisterErrorRes(res);
-                            const errors = res.body.errors;
-                            errors[0].should.have.property('msg', 'username already in use');
-                            errors[1].should.have.property('msg', 'e-mail already in use');
-                            resolve();
-                        }
-                    });
-                } catch(err) {
-                    reject(err);
-                }
-            });
+            const res = await registerRequestWithContent(dummyUser);
+
+            testRegisterErrorRes(res);
+            const errors = res.body.errors;
+            errors[0].should.have.property('msg', 'username already in use');
+            errors[1].should.have.property('msg', 'e-mail already in use');
         });
 
-        it('should not POST and return error for invalid avatar', function(done) {
+        it('should not POST and return error for invalid avatar', async function() {
             const body = {
                 ...dummyUser,
                 avatar: 'johndoe'
             };
 
-            registerRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                    testRegisterErrorRes(res);
-                    const errors = res.body.errors;
-                    errors[0].should.have.property('msg', 'avatar must be a valid URL');
-                    done();
-                }
-            });
+            const res = await registerRequestWithContent(body);
+
+            testRegisterErrorRes(res);
+            res.body.errors[0].should.have.property('msg', 'avatar must be a valid URL');
         });
 
-        function registerRequestWithContent(body, cb) {
-            chai.request(server)
+        function registerRequestWithContent(body) {
+            return chai.request(server)
                 .post(`${API_URL}/register`)
                 .set('content-type', 'application/json')
-                .send(JSON.stringify(body))
-                .end(cb);
+                .send(body);
         }
 
         function testRegisterErrorRes(res) {
@@ -259,111 +180,71 @@ describe('Users', function() {
         }
     });
 
-    describe('/POST /users/login', function() {
-        it('should not POST a login without username and password fields', function(done) {
-            chai.request(server)
+    describe('POST /users/login', function() {
+        it('should not POST a login without username and password fields', async function() {
+            const res  = await chai.request(server)
                 .post(`${API_URL}/login`)
-                .set('content-type', 'application/json')
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    } else {
-                        testLoginErrorRes(res, 422);
-                        res.body.errors[0].should.have.property('msg', 'username is required');
-                        res.body.errors[1].should.have.property('msg', 'password is required');
-                        done();
-                    }
-                });
+                .set('content-type', 'application/json');
+
+            testLoginErrorRes(res, 422);
+            res.body.errors[0].should.have.property('msg', 'username is required');
+            res.body.errors[1].should.have.property('msg', 'password is required');
         });
 
-       it('should not POST a login with empty username and password', function(done) {
+       it('should not POST a login with empty username and password', async function() {
            const body = {
                username: "",
                password: ""
            };
 
-           loginRequestWithContent(body, (err, res) => {
-               if (err) {
-                   done(err);
-               } else {
-                   testLoginErrorRes(res, 422);
-                   res.body.errors[0].should.have.property('msg', 'username is required');
-                   res.body.errors[1].should.have.property('msg', 'password is required');
-                   done();
-               }
-           });
+           const res = await loginRequestWithContent(body);
+
+           testLoginErrorRes(res, 422);
+           res.body.errors[0].should.have.property('msg', 'username is required');
+           res.body.errors[1].should.have.property('msg', 'password is required');
        });
 
-       it('should not POST a login with credentials for user which does not exists', function(done) {
+       it('should not POST a login with credentials for user which does not exists', async function() {
             const body = {
                 username: dummyUser.username,
                 password: dummyUser.password
             };
 
-            loginRequestWithContent(body, (err, res) => {
-                if (err) {
-                    done(err);
-                } else {
-                   testLoginErrorRes(res, 400);
-                   res.body.errors[0].should.have.property('msg', 'Incorrect username and password combination');
-                   done();
-                }
-            });
+            const res = await loginRequestWithContent(body);
+
+           testLoginErrorRes(res, 400);
+           res.body.errors[0].should.have.property('msg', 'Incorrect username and password combination');
        });
 
-       it('should not POST a login with invalid credentials', function() {
-           return new Promise(async (resolve, reject) => {
-               try {
-                   const user = await new User(dummyUser).save();
+       it('should not POST a login with invalid credentials', async function() {
+           const user = await new User(dummyUser).save();
 
-                   loginRequestWithContent({ username: user.username, password: "123" }, (err, res) => {
-                       if (err) {
-                           reject(err);
-                       } else {
-                           testLoginErrorRes(res, 400);
-                           res.body.errors[0].should.have.property('msg', 'Incorrect username and password combination');
-                           resolve();
-                       }
-                   });
-               } catch(err) {
-                   reject(err);
-               }
-           });
+           const res = await loginRequestWithContent({ username: user.username, password: "123" });
+
+           testLoginErrorRes(res, 400);
+           res.body.errors[0].should.have.property('msg', 'Incorrect username and password combination');
        });
 
-       it('should POST a login and return token', function() {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    let user = await new User(dummyUser);
-                    user.password = await generateHashPassword(user.password);
-                    await user.save();
+       it('should POST a login and return token', async function() {
+           let user = await new User(dummyUser);
+           user.password = await generateHashPassword(user.password);
+           await user.save();
 
-                    chai.request(server)
-                        .post(`${API_URL}/login`)
-                        .set('content-type', 'application/json')
-                        .send(JSON.stringify({ username: user.username, password: dummyUser.password }))
-                        .end((err, res) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                               res.should.have.status(200);
-                               res.body.should.be.a('object');
-                               res.body.should.have.property('token');
-                               resolve();
-                            }
-                        });
-                } catch(err) {
-                    reject(err);
-                }
-            });
-       });
-
-       function loginRequestWithContent(body, cb) {
-           chai.request(server)
+           const res = await chai.request(server)
                .post(`${API_URL}/login`)
                .set('content-type', 'application/json')
-               .send(JSON.stringify(body))
-               .end(cb);
+               .send({ username: user.username, password: dummyUser.password });
+
+           res.should.have.status(200);
+           res.body.should.be.a('object');
+           res.body.should.have.property('token');
+       });
+
+       function loginRequestWithContent(body) {
+           return chai.request(server)
+               .post(`${API_URL}/login`)
+               .set('content-type', 'application/json')
+               .send(body);
        }
 
        function testLoginErrorRes(res, statusCode) {
@@ -374,47 +255,28 @@ describe('Users', function() {
        }
     });
 
-    describe('/GET /users/current', function() {
-        it('should not GET current user and return error for lack of jwt token', function(done) {
-            chai.request(server)
-                .get(`${API_URL}/current`)
-                .end((err, res) => {
-                    if (err) {
-                        done(err);
-                    } else {
-                        testNoTokenError(res);
-                        done();
-                    }
-                });
+    describe('GET /users/current', function() {
+        it('should not GET current user and return error for lack of jwt token', async function() {
+            const res = await chai.request(server)
+                .get(`${API_URL}/current`);
+
+            testNoTokenError(res);
         });
 
-       it('should GET current user with the given jwt token', function() {
-           return new Promise(async (resolve, reject) => {
-              try {
-               const user = await new User(dummyUser).save();
+       it('should GET current user with the given jwt token', async function() {
+           const user = await new User(dummyUser).save();
 
-               JWT_TOKEN = await generateJwtToken(user.id);
+           JWT_TOKEN = await generateJwtToken(user.id);
 
-               chai.request(server)
-                   .get(`${API_URL}/current`)
-                   .set('x-auth-token', JWT_TOKEN)
-                   .end((err, res) => {
-                       if (err) {
-                           reject(err);
-                       } else {
-                           res.should.have.status(200);
-                           res.body.should.be.a('object');
-                           res.body.should.have.property('username', dummyUser.username);
-                           res.body.should.have.property('email', dummyUser.email);
-                           res.body.should.have.property('name', dummyUser.name);
-                           resolve();
-                       }
-                   });
+           const res = await chai.request(server)
+               .get(`${API_URL}/current`)
+               .set('x-auth-token', JWT_TOKEN);
 
-              } catch(err) {
-                  reject(err);
-              }
-           });
+           res.should.have.status(200);
+           res.body.should.be.a('object');
+           res.body.should.have.property('username', dummyUser.username);
+           res.body.should.have.property('email', dummyUser.email);
+           res.body.should.have.property('name', dummyUser.name);
        });
     });
 });

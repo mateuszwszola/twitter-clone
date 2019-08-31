@@ -1,14 +1,24 @@
 const { check, validationResult } = require('express-validator');
 
+const User = require('../models/User');
 const Profile = require('../models/Profile');
 
 exports.getProfileFollowersList = async (req, res, next) => {
     const { user_id } = req.params;
 
     try {
-        const { followers } = await Profile.findOne({ user: user_id }).select('followers');
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
+        }
+
+        const profile = await Profile.findOne({ user: user_id });
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+
         const profiles = await Profile.find({
-            user: { $in: followers }
+            user: { $in: profile.followers }
         }).populate('user', ['name', 'username', 'avatar']);
 
         res.json(profiles);
@@ -25,9 +35,18 @@ exports.getProfileFollowingList = async (req, res, next) => {
     const { user_id } = req.params;
 
     try {
-        const { following } = await Profile.findOne({ user: user_id }).select('following');
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
+        }
+
+        const profile = await Profile.findOne({ user: user_id });
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+
         const profiles = await Profile.find({
-            user: { $in: following }
+            user: { $in: profile.following }
         }).populate('user', ['name', 'username', 'avatar']);
 
         res.json(profiles);
@@ -53,8 +72,12 @@ exports.followUser = async (req, res, next) => {
         const userProfile = await Profile.findOne({ user: req.user.id });
         const profileToFollow = await Profile.findOne({ user: user_id });
 
+        if (!userProfile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+
         if (!profileToFollow) {
-            return res.status(400).json({ errors: [{ msg: 'Profile does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
 
         const index = userProfile.following.findIndex(
@@ -95,7 +118,7 @@ exports.unfollowUser = async (req, res, next) => {
         const profileToFollow = await Profile.findOne({ user: user_id });
 
         if (!profileToFollow) {
-            return res.status(404).json({ errors: [{ msg: 'Following profile does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
 
         const index = userProfile.following.findIndex(

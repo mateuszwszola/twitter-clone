@@ -2,6 +2,7 @@ const { check, body, validationResult } = require('express-validator');
 const charLengthForProps = require('../helpers/charLengthForProps');
 
 const Tweet = require('../models/Tweet');
+const User = require('../models/User');
 const Profile = require('../models/Profile');
 
 exports.getTweets = async (req, res, next) => {
@@ -21,6 +22,11 @@ exports.getUserTweets = async (req, res, next) => {
     const { user_id } = req.params;
 
     try {
+        const user = await User.findOne({ _id: user_id });
+        if (!user) {
+            return res.status(404).json({ errors: [{ msg: 'User does not exists' }]  });
+        }
+
         const tweets = await Tweet.find({ user: user_id })
             .sort({ created: -1 })
             .populate('user', ['name', 'username', 'avatar']);
@@ -149,7 +155,7 @@ exports.updateTweet = async (req, res, next) => {
             tweet_id,
             { $set: newTweet },
             { new: true }
-        );
+        ).populate('user', ['name', 'username', 'avatar']);
 
         res.json(savedTweet);
     } catch (err) {
@@ -204,6 +210,10 @@ exports.getProfileLikes = async (req, res, next) => {
     const { user_id } = req.params;
 
     try {
+        const user = await User.findById(user_id);
+        if (!user) {
+            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
+        }
         const { likes } = await Profile.findOne({ user: user_id }).select('likes');
         const tweets = await Tweet.find({
             user: { $in: likes }
@@ -213,7 +223,7 @@ exports.getProfileLikes = async (req, res, next) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
         }
         next(err);
     }

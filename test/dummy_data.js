@@ -6,7 +6,14 @@ const dummyUser = {
     password2: "123456"
 };
 
+const dummyTweet = {
+    text: 'Dummy tweet text',
+    media: 'dummytweet.jpg'
+};
+
 exports.dummyUser = dummyUser;
+exports.dummyTweet = dummyTweet;
+
 
 exports.dummyUsers = [
     dummyUser,

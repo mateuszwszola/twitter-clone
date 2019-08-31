@@ -19,3 +19,11 @@ exports.createTwoUsersWithProfile = async function() {
 
     return { userA, profileA, userB, profileB };
 };
+
+exports.testPopulatedUserObject = function(body, user) {
+    body.should.have.property('user');
+    body.user.should.be.a('object');
+    body.user.should.have.property('_id', user.id);
+    body.user.should.have.property('name', user.name);
+    body.user.should.have.property('username', user.username);
+};
