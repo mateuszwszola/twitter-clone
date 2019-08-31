@@ -26,17 +26,18 @@ const { testNoTokenError, testPopulatedUserObject } = require('./helpers');
 
 describe('Tweets', function() {
     const mongoObjectId = generateMongoObjectId();
+
+    beforeEach(async function() {
+        await User.deleteMany({});
+        await Profile.deleteMany({});
+        await Tweet.deleteMany({});
+    });
+
     /*
         GET all tweets
         Public
      */
     describe('GET /api/tweets/all', function() {
-        beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
-        });
-
         it('should get all tweets', async function() {
             const res = await chai.request(server)
                 .get(`${API_URL}/all`);
@@ -51,12 +52,6 @@ describe('Tweets', function() {
         Public
      */
     describe('GET /api/tweets/all/:user_id', function() {
-        beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
-        });
-
         it('should not GET when user does not exists', async function() {
             const res = await chai.request(server)
                 .get(`${API_URL}/all/${mongoObjectId}`);
@@ -83,12 +78,6 @@ describe('Tweets', function() {
         Private
      */
     describe('GET /api/tweets/homepageTweets', function() {
-        beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
-        });
-
         it('should not GET when no token provided', async function() {
             const res = await chai.request(server)
                 .get(`${API_URL}/homepageTweets`);
@@ -116,12 +105,6 @@ describe('Tweets', function() {
         Public
      */
     describe('GET /api/tweets/:tweet_id', function() {
-        beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
-        });
-
         it('should not GET when tweet does not exists', async function() {
            const res = await chai.request(server)
                .get(`${API_URL}/${mongoObjectId}`);
@@ -149,9 +132,6 @@ describe('Tweets', function() {
     describe('POST /api/tweets', function() {
         let user;
         beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
             user = await new User(dummyUser).save();
             await new Profile({ user: user.id }).save();
             JWT_TOKEN = await generateJwtToken(user.id);
@@ -211,9 +191,6 @@ describe('Tweets', function() {
         let tweet;
 
         beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
             user = await new User(dummyUser).save();
             await new Profile({ user: user.id }).save();
             JWT_TOKEN = await generateJwtToken(user.id);
@@ -273,9 +250,6 @@ describe('Tweets', function() {
         let tweet;
 
         beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
             user = await new User(dummyUser).save();
             await new Profile({ user: user.id }).save();
             JWT_TOKEN = await generateJwtToken(user.id);
@@ -317,12 +291,6 @@ describe('Tweets', function() {
         Public
      */
     describe('GET /like/:user_id', function() {
-        beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
-        });
-
         it('should not GET if user does not exists', async function() {
             const res = await chai.request(server)
                 .get(`${API_URL}/like/${mongoObjectId}`);
@@ -356,9 +324,6 @@ describe('Tweets', function() {
         let tweet;
 
         beforeEach(async function() {
-            await User.deleteMany({});
-            await Profile.deleteMany({});
-            await Tweet.deleteMany({});
             user = await new User(dummyUser).save();
             await new Profile({ user: user.id }).save();
             JWT_TOKEN = await generateJwtToken(user.id);
@@ -409,6 +374,51 @@ describe('Tweets', function() {
             updatedTweet.likes.should.be.a('array');
             updatedTweet.likes.length.should.be.eql(0);
         });
+    });
+
+    /*
+       Add a comment
+       Private
+    */
+    describe('POST /comment/:tweet_id', function() {
+        let user;
+        let tweet;
+
+        beforeEach(async function() {
+            user = await new User(dummyUser).save();
+            await new Profile({ user: user.id }).save();
+            JWT_TOKEN = await generateJwtToken(user.id);
+            tweet = await new Tweet({ user: user.id, ...dummyTweet }).save();
+        });
+
+       it('should not POST if token not provided', async function() {
+            const res = await chai.request(server)
+                .post(`${API_URL}/comment/${tweet.id}`);
+
+            testNoTokenError(res);
+       });
+
+       it('should not POST if tweet does not exists', async function() {
+           const res = await chai.request(server)
+               .post(`${API_URL}/comment/${mongoObjectId}`)
+               .set('x-auth-token', JWT_TOKEN)
+               .send(dummyTweet);
+
+           testNotExistsTweet(res);
+       });
+
+       it('should POST - add a comment', async function() {
+           const res = await chai.request(server)
+               .post(`${API_URL}/comment/${tweet.id}`)
+               .set('x-auth-token', JWT_TOKEN)
+               .send(dummyTweet);
+
+           res.should.have.status(200);
+           res.body.should.be.a('object');
+           res.body.should.have.property('text', dummyTweet.text);
+           res.body.should.have.property('media', dummyTweet.media);
+           testPopulatedUserObject(res.body, user);
+       });
     });
 
     function testErrorRes(res) {

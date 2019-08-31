@@ -14,27 +14,30 @@ exports.createComment = async (req, res) => {
         const tweet = await Tweet.findById(tweet_id);
 
         if (!tweet) {
-            return res.status(404).json({ errors: [{ msg: 'Tweet not found' }]  });
+            return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }]  });
         }
 
-        const tweetContent = {
+        const commentBody = {
             text: req.body.text
         };
         // Add optional media property if exists
         if (req.body.media) {
-            tweetContent.media = req.body.media;
+            commentBody.media = req.body.media;
         }
-        const newTweet = new Tweet(tweetContent);
-        newTweet.user = req.user.id;
-        const savedTweet = await newTweet.save();
+        const comment = new Tweet(commentBody);
+        comment.user = req.user.id;
+        let savedComment = await comment.save();
 
-        tweet.comments = [savedTweet._id, ...tweet.comments];
+        tweet.comments = [savedComment._id, ...tweet.comments];
         await tweet.save();
-        res.json(tweet);
+
+        savedComment = await Tweet.populate(savedComment, { path: 'user', select: ['name', 'username', 'avatar'] });
+
+        res.json(savedComment);
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'Tweet not found' }] });
+            return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
         }
     }
 };
