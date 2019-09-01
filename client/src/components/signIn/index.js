@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import InputGroup from 'components/InputGroup';
-import { Button, FeedbackMessage } from 'shared/components';
+import { Button } from 'shared/components';
 import { Container } from 'shared/layout';
 import { SignInContainer, Title, Form, Helper } from './style';
 
-const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
+const SignIn = ({ username, password, onSubmit, errors }) => (
   <Container>
     <SignInContainer>
       <Title>Sign in to Twitter</Title>
@@ -15,27 +15,22 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
           data-cy="signin-username-input"
           type="text"
           name="username"
-          value={username}
-          onChange={onChange}
+          {...username}
           placeholder="Email or username"
           autocomplete="username"
-          error={!!(errors.login || errors.username)}
-          errorMsg={errors.username || errors.login || null}
+          error={errors.length > 0}
+          errorMsg={errors[0] && errors[0].msg || null}
         />
         <InputGroup
           data-cy="signin-password-input"
           type="password"
           name="password"
-          value={password}
-          onChange={onChange}
+          {...password}
           placeholder="Password"
           autocomplete="current-password"
-          error={!!(errors.login || errors.password)}
-          errorMsg={errors.password || null}
+          error={errors.length > 0}
+          errorMsg={errors[0] && errors[0].msg || null}
         />
-        {errors.login ? (
-          <FeedbackMessage>{errors.login}</FeedbackMessage>
-        ) : null}
         <Button type="submit" primary>
           Log In
         </Button>
@@ -51,11 +46,10 @@ const SignIn = ({ username, password, onChange, onSubmit, errors }) => (
 );
 
 SignIn.propTypes = {
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  username: PropTypes.object.isRequired,
+  password: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.array.isRequired
 };
 
 export default SignIn;

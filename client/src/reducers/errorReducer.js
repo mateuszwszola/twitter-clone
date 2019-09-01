@@ -1,6 +1,6 @@
 import { GET_ERRORS, CLEAR_ERRORS } from 'actions/types';
 
-const initialState = {};
+const initialState = [];
 
 export default function(state = initialState, action) {
   const { type, payload } = action;
@@ -9,7 +9,7 @@ export default function(state = initialState, action) {
     case GET_ERRORS:
       return payload;
     case CLEAR_ERRORS:
-      return {};
+      return [];
     default:
       return state;
   }

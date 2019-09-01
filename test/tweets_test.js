@@ -17,7 +17,7 @@ const Tweet = require('../models/Tweet');
 const API_URL = '/api/tweets';
 let JWT_TOKEN = null;
 
-const { dummyUser, dummyUsers, dummyTweet } = require('./dummy_data');
+const { dummyUser, dummyUsers, dummyTweet } = require('./fixtures/dummy_data');
 
 const charLengthForProps = require('../helpers/charLengthForProps');
 const generateJwtToken = require('../helpers/generateJwtToken');

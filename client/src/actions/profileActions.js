@@ -25,7 +25,7 @@ export const getUserProfile = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -43,7 +43,7 @@ export const getProfiles = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -71,7 +71,7 @@ export const updateProfile = data => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
 
     dispatch(setAlert('Cannot update the profile', 'danger'));
@@ -89,7 +89,7 @@ export const followProfile = (authUserId, userId) => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -105,7 +105,7 @@ export const unfollowProfile = (authUserId, userId) => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -123,7 +123,7 @@ export const getProfileFollowers = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -141,7 +141,7 @@ export const getProfileFollowing = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -167,7 +167,7 @@ export const getUserProfileWithHomepageTweets = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -193,7 +193,7 @@ export const getUserProfileWithTweets = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -212,7 +212,7 @@ export const getProfileByUsername = username => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -238,7 +238,7 @@ export const getProfileWithTweetsByUsername = username => async dispatch => {
   } catch (error) {
     dispatch({
       type: GET_ERRORS,
-      payload: error.response.data
+      payload: error.response.data.errors
     });
   }
 };

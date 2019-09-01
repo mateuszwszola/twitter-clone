@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-const { dummyUsers } = require('./dummy_data');
+const { dummyUsers } = require('./fixtures/dummy_data');
 
 exports.testNoTokenError = function(res) {
     res.should.have.status(401);

@@ -11,10 +11,19 @@ function SignUp({
   email,
   password,
   password2,
-  onChange,
   onSubmit,
   errors
 }) {
+
+  const findIfErrExists = (param) => {
+    const error = errors.find(err => err.param === param);
+    if (error) {
+      return error.msg;
+    } else {
+      return error;
+    }
+  };
+
   return (
     <Container>
       <SignUpContainer>
@@ -23,50 +32,45 @@ function SignUp({
           <InputGroup
             type="text"
             name="name"
-            value={name}
-            onChange={onChange}
+            {...name}
             placeholder="Name"
             autocomplete="name"
-            error={!!errors.name}
-            errorMsg={errors.name ? errors.name : null}
+            error={!!(findIfErrExists('name'))}
+            errorMsg={findIfErrExists('name')}
           />
           <InputGroup
             type="text"
             name="username"
-            value={username}
-            onChange={onChange}
+            {...username}
             placeholder="Username"
             autocomplete="username"
-            error={!!errors.username}
-            errorMsg={errors.username ? errors.username : null}
+            error={!!(findIfErrExists('username'))}
+            errorMsg={findIfErrExists('username')}
           />
           <InputGroup
             type="email"
             name="email"
-            value={email}
-            onChange={onChange}
+            {...email}
             placeholder="Email"
             autocomplete="new-password"
-            error={!!errors.email}
-            errorMsg={errors.email ? errors.email : null}
+            error={!!(findIfErrExists('email'))}
+            errorMsg={findIfErrExists('email')}
           />
           <InputGroup
             type="password"
             name="password"
-            value={password}
-            onChange={onChange}
+            {...password}
             placeholder="Password"
-            error={!!errors.password}
-            errorMsg={errors.password ? errors.password : null}
+            error={!!(findIfErrExists('password'))}
+            errorMsg={findIfErrExists('password')}
           />
           <InputGroup
             type="password"
             name="password2"
-            value={password2}
-            onChange={onChange}
+            {...password2}
             placeholder="Repeat password"
-            error={!!errors.password2}
-            errorMsg={errors.password2 ? errors.password2 : null}
+            error={!!(findIfErrExists('password2'))}
+            errorMsg={findIfErrExists('password2')}
           />
           <Button primary type="submit">
             Sign Up
@@ -84,14 +88,13 @@ function SignUp({
 }
 
 SignUp.propTypes = {
-  name: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  password2: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  name: PropTypes.object.isRequired,
+  username: PropTypes.object.isRequired,
+  email: PropTypes.object.isRequired,
+  password: PropTypes.object.isRequired,
+  password2: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.array.isRequired
 };
 
 export default SignUp;

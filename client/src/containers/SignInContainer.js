@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,92 +7,62 @@ import { clearErrors } from 'actions/errorActions';
 import SignIn from 'components/SignIn';
 import validateForm from 'utils/validateForm';
 import isEmpty from 'utils/isEmpty';
+import useFormInput from 'hooks/useFormInput';
 
-class SignInContainer extends Component {
-  state = {
-    username: '',
-    password: '',
-    errors: {},
-    redirect: false
-  };
+function SignInContainer(props) {
+    const username = useFormInput('');
+    const password = useFormInput('');
+    const [errors, setErrors] = useState([]);
+    const [redirect, setRedirect] = useState(false);
 
-  componentWillUnmount() {
-    this.props.clearErrors();
-  }
+    useEffect(() => {
+        if (props.auth.isAuthenticated || !isEmpty(props.errors)) {
+            setRedirect(props.auth.isAuthenticated);
+            setErrors(!isEmpty(props.errors) && props.errors);
+        }
+    }, [props.auth.isAuthenticated, props.errors]);
 
-  static getDerivedStateFromProps(props, state) {
-    const { auth, errors } = props;
-    if (auth.isAuthenticated || !isEmpty(errors)) {
-      return {
-        ...state,
-        redirect: auth.isAuthenticated,
-        errors: !isEmpty(props.errors) && props.errors
-      };
-    }
+    useEffect(() => props.clearErrors(), []);
 
-    return null;
-  }
-
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState(() => ({
-      [name]: value
-    }));
-  };
-
-  handleErrors = errors => {
-    this.setState(() => ({ errors }));
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { username, password } = this.state;
-    const userData = {
-      username,
-      password
+    const handleSubmit = e => {
+        e.preventDefault();
+        const userData = { username: username.value, password: password.value };
+        const errors = validateForm(userData);
+        if (errors) {
+            setErrors(errors);
+        } else {
+            props.loginUser(userData);
+        }
     };
 
-    const errors = validateForm(userData);
-    if (errors) {
-      return this.handleErrors(errors);
-    }
-
-    this.props.loginUser(userData);
-  };
-
-  render() {
-    const { username, password, errors, redirect } = this.state;
-    const { from } = this.props.location.state || { from: { pathname: '/' } };
-
     if (redirect) {
-      return <Redirect to={from} />;
+        const { from } = props.location.state || { from: { pathname: '/' } };
+        return <Redirect to={from} />;
     }
 
     return (
-      <SignIn
-        username={username}
-        password={password}
-        onChange={this.handleChange}
-        onSubmit={this.handleSubmit}
-        errors={errors}
-      />
+        <SignIn
+            username={username}
+            password={password}
+            onSubmit={handleSubmit}
+            errors={errors}
+        />
     );
-  }
 }
 
 SignInContainer.propTypes = {
-  loginUser: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+    loginUser: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({ auth, errors }) => ({
-  auth,
-  errors
+    auth,
+    errors
 });
 
 export default connect(
-  mapStateToProps,
-  { loginUser, clearErrors }
+    mapStateToProps,
+    { loginUser, clearErrors }
 )(SignInContainer);

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -7,7 +7,81 @@ import { clearErrors } from 'actions/errorActions';
 import SignUp from 'components/SignUp';
 import validateForm from 'utils/validateForm';
 import isEmpty from 'utils/isEmpty';
+import useFormInput from 'hooks/useFormInput';
 
+function SignUpContainer(props) {
+    const name = useFormInput('');
+    const email = useFormInput('');
+    const username = useFormInput('');
+    const password = useFormInput('');
+    const password2 = useFormInput('');
+
+    const [errors, setErrors] = useState([]);
+    const [redirect, setRedirect] = useState(false);
+
+    useEffect(() => {
+        if (props.auth.isAuthenticated || !isEmpty(props.errors)) {
+            setRedirect(props.auth.isAuthenticated);
+            setErrors(!isEmpty(props.errors) && props.errors);
+        }
+    }, [props.auth.isAuthenticated, props.errors]);
+
+    useEffect(() => props.clearErrors(), []);
+
+    const handleSubmit = e => {
+        e.preventDefault();
+
+        const newUser = {
+            name: name.value,
+            email: email.value,
+            username: username.value,
+            password: password.value,
+            password2: password2.value
+        };
+
+        const errors = validateForm(newUser);
+        if (errors) {
+            setErrors(errors);
+        } else {
+            props.registerUser(newUser);
+        }
+    };
+
+    if (redirect) {
+        return <Redirect to="/" />;
+    }
+
+    return (
+        <SignUp
+            name={name}
+            email={email}
+            username={username}
+            password={password}
+            password2={password2}
+            onSubmit={handleSubmit}
+            errors={errors}
+        />
+    );
+}
+
+SignUpContainer.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.array.isRequired
+};
+
+const mapStateToProps = ({ auth, errors }) => ({
+    auth,
+    errors
+});
+
+export default connect(
+    mapStateToProps,
+    { registerUser, clearErrors }
+)(SignUpContainer);
+
+/*
 class SignUpContainer extends Component {
   state = {
     name: '',
@@ -96,20 +170,4 @@ class SignUpContainer extends Component {
     );
   }
 }
-
-SignUpContainer.propTypes = {
-  registerUser: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
-};
-
-const mapStateToProps = ({ auth, errors }) => ({
-  auth,
-  errors
-});
-
-export default connect(
-  mapStateToProps,
-  { registerUser, clearErrors }
-)(SignUpContainer);
+*/

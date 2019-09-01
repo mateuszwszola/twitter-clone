@@ -17,7 +17,7 @@ const Profile = require('../models/Profile');
 const API_URL = '/api/profiles';
 let JWT_TOKEN = null;
 
-const { dummyUser, dummyUsers } = require('./dummy_data');
+const { dummyUser, dummyUsers } = require('./fixtures/dummy_data');
 
 const generateJwtToken = require('../helpers/generateJwtToken');
 const generateMongoObjectId = require('../helpers/generateMongoObjectId');

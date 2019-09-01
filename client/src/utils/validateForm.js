@@ -3,13 +3,19 @@ import isEmpty from './isEmpty';
 // Validate form, check if the fields are not empty
 function validateForm(data) {
   const fields = Object.keys(data);
-  const errors = {};
+  const errors = [];
   for (const field of fields) {
     if (!data[field].trim()) {
       if (field === 'password2') {
-        errors[field] = `repeat password is required`;
+        errors.push({
+          msg: `repeat password is required`,
+          param: 'password2'
+        });
       } else {
-        errors[field] = `${field} is required`;
+        errors.push({
+          msg: `${field} is required`,
+          param: field
+        });
       }
     }
   }

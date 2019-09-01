@@ -22,7 +22,7 @@ export const loadUser = () => async dispatch => {
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data.errors
     });
   } catch (error) {
     dispatch({
@@ -53,7 +53,7 @@ export const registerUser = userData => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
 
     dispatch({
@@ -83,7 +83,7 @@ export const loginUser = userData => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
     dispatch({
       type: LOGIN_FAIL

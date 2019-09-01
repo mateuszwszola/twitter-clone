@@ -4,19 +4,7 @@ import { connect } from 'react-redux';
 import { getUserProfile, updateProfile } from 'actions/profileActions';
 import Loading from 'components/Loading';
 import EditProfile from 'components/EditProfile';
-
-function useFormInput(initialValue) {
-  const [value, setValue]= useState(initialValue);
-
-  useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue]);
-
-  const handleChange = e => {
-    setValue(e.target.value);
-  };
-  return { value, onChange: handleChange };
-}
+import useDynamicFormInput from 'hooks/useDynamicFormInput';
 
 function EditProfileContainer({
   history,
@@ -26,14 +14,14 @@ function EditProfileContainer({
   updateProfile
 }) {
 
-  const name = useFormInput(profile && profile.user && profile.user.name || '');
-  const username = useFormInput(profile && profile.user && profile.user.username || '');
-  const bio = useFormInput(profile && profile.bio || '');
-  const location = useFormInput(profile && profile.location || '');
-  const website = useFormInput(profile && profile.website || '');
-  const birthday = useFormInput(profile && profile.birthday || '');
-  const avatar = useFormInput(profile && profile.user.avatar || '');
-  const backgroundPicture = useFormInput(profile && profile.backgroundPicture || '');
+  const name = useDynamicFormInput((profile && profile.user && profile.user.name) || '');
+  const username = useDynamicFormInput((profile && profile.user && profile.user.username) || '');
+  const bio = useDynamicFormInput((profile && profile.bio) || '');
+  const location = useDynamicFormInput((profile && profile.location) || '');
+  const website = useDynamicFormInput((profile && profile.website) || '');
+  const birthday = useDynamicFormInput((profile && profile.birthday) || '');
+  const avatar = useDynamicFormInput((profile && profile.user.avatar) || '');
+  const backgroundPicture = useDynamicFormInput((profile && profile.backgroundPicture) || '');
 
   useEffect(() => {
       getUserProfile();
@@ -78,7 +66,7 @@ function EditProfileContainer({
 
 EditProfileContainer.propTypes = {
   profile: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   getUserProfile: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired
 };

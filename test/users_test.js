@@ -20,7 +20,7 @@ const generateJwtToken = require('../helpers/generateJwtToken');
 const generateHashPassword = require('../helpers/generateHashPassword');
 const { testNoTokenError } = require('./helpers');
 
-const { dummyUser } = require('./dummy_data');
+const { dummyUser } = require('./fixtures/dummy_data');
 
 describe('Users', function() {
     beforeEach(async function() {

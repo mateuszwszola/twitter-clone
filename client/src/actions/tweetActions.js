@@ -33,7 +33,7 @@ export const getTweetById = tweet_id => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -61,7 +61,7 @@ export const createTweet = tweet => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -79,7 +79,7 @@ export const getUserTweets = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -97,7 +97,7 @@ export const getUserHomepageTweets = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -115,7 +115,7 @@ export const getUserLikeTweets = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -134,7 +134,7 @@ export const likeTweet = (tweetId, authUserId) => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };
@@ -153,7 +153,7 @@ export const removeTweet = tweetId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data
+      payload: err.response.data.errors
     });
   }
 };

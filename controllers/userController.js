@@ -179,13 +179,13 @@ exports.loginUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ [login]: username });
         if (!user) {
-            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination' }] });
+            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination', param: 'login' }] });
         }
 
         // Check passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination' }]});
+            return res.status(400).json({ errors: [{ msg: 'Incorrect username and password combination', param: 'login' }]});
         }
 
         // User matched
