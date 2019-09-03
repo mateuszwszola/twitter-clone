@@ -1,8 +1,8 @@
-const { toDate, isAfter } = require('validator');
-const { isDate } = require('lodash');
+const { isAfter } = require('validator');
 
 module.exports = function(value) {
-    if (!isDate(value)) {
+    const birthday = new Date(value);
+    if (!birthday) {
         throw new Error('Birthday must be a valid date');
     }
 

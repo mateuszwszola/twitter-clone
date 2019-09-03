@@ -263,9 +263,9 @@ exports.validate = method => {
                     .withMessage(`The website must be between ${charLengthForProps.website.min} and ${charLengthForProps.website.max} chars long`)
                     .isURL()
                     .withMessage('Website must be a valid URL'),
-                // body('birthday', 'Birthday must be a valid date')
-                //     .optional({ checkFalsy: true })
-                //     .custom(validateBirthday),
+                body('birthday', 'Birthday must be a valid date')
+                    .optional({ checkFalsy: true })
+                    .custom(validateBirthday),
                 body('avatar', 'Avatar must be a URL')
                     .optional({ checkFalsy: true })
                     .isURL(),

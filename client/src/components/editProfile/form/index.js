@@ -9,18 +9,7 @@ import {
   SaveButton,
   CancelButton
 } from './style';
-
-// function getBirthdayDate(birthday) {
-// //   if (!birthday) {
-// //     return '';
-// //   }
-// //   const prependWithZero = number => (number < 10 ? '0' + number : number);
-// //   const date = new Date(birthday);
-// //   const year = date.getFullYear();
-// //   const month = prependWithZero(date.getMonth() + 1);
-// //   const day = prependWithZero(date.getDate());
-// //   return `${year}-${month}-${day}`;
-// // }
+import moment from 'moment';
 
 function Form({
   name,
@@ -113,7 +102,8 @@ function Form({
         <Input
           type="date"
           name="birthday"
-          {...birthday}
+          onChange={birthday.onChange}
+          value={moment(birthday.value).format('YYYY-MM-DD')}
           error={!!(findIfErrExists('birthday'))}
         />
         {findIfErrExists('birthday') && (
