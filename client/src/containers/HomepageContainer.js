@@ -11,7 +11,6 @@ function HomepageContainer({
   getUserHomepageTweets,
   profile,
   tweet
-  // errors
 }) {
   useEffect(() => {
     getUserProfile();
@@ -30,7 +29,7 @@ HomepageContainer.propTypes = {
   getUserHomepageTweets: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({ profile, tweet, errors }) => ({

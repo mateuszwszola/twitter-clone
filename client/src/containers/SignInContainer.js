@@ -18,7 +18,9 @@ function SignInContainer(props) {
     useEffect(() => {
         if (props.auth.isAuthenticated || !isEmpty(props.errors)) {
             setRedirect(props.auth.isAuthenticated);
-            setErrors(!isEmpty(props.errors) && props.errors);
+            if (!isEmpty(props.errors)) {
+                setErrors(props.errors);
+            }
         }
     }, [props.auth.isAuthenticated, props.errors]);
 

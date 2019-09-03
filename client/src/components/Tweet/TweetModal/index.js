@@ -145,7 +145,7 @@ function TweetModalContainer(props) {
     if (!tweet) {
       getTweetById(status_id);
     }
-  }, [status_id]);
+  }, [status_id, tweet]);
 
   const back = e => {
     if (
@@ -193,7 +193,7 @@ function TweetModalContainer(props) {
 TweetModalContainer.propTypes = {
   auth: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   getTweetById: PropTypes.func.isRequired,
   removeTweet: PropTypes.func.isRequired,
   likeTweet: PropTypes.func.isRequired

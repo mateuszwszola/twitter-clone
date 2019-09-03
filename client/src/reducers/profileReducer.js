@@ -106,7 +106,7 @@ export default function(state = initialState, action) {
     case CREATE_TWEET:
       return {
         ...state,
-        profile: updateProfileTweet(state, type, payload)
+        profile: updateProfileTweet(state, type, payload.data)
       };
     case REMOVE_TWEET:
       return {

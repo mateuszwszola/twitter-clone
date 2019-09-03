@@ -77,7 +77,7 @@ function CreateTweetModal({
 
 CreateTweetModal.propTypes = {
   text: PropTypes.string.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   handleEnterPress: PropTypes.func.isRequired,

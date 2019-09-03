@@ -10,9 +10,7 @@ import {
     REMOVE_TWEET,
     GET_ERRORS
 } from "actions/types";
-import dummyTweet from '../dummyData/tweet';
-import dummyTweets from '../dummyData/tweets';
-import dummyProfile from '../dummyData/profile';
+import { dummyTweet, dummyTweets, dummyProfile } from '__fixtures__';
 
 const initialState = {
     tweet: null,

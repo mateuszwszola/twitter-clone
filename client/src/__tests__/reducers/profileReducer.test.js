@@ -8,9 +8,7 @@ import {
     FOLLOW,
     UNFOLLOW, CREATE_TWEET, REMOVE_TWEET, LIKE_TWEET
 } from "actions/types";
-import dummyProfile from '__tests__/dummyData/profile';
-import dummyProfiles from '__tests__/dummyData/profiles';
-import dummyTweet from '__tests__/dummyData/tweet';
+import { dummyProfile, dummyProfiles, dummyTweet } from '__fixtures__';
 
 const initialState = {
     profile: null,

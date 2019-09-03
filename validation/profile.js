@@ -24,7 +24,7 @@ module.exports = data => {
     website: { min: 3, max: 30 },
     name: { min: 2, max: 30 },
     username: { min: 6, max: 15 }
-    // TODO: Include min/max for the rest of profile information
+    // TODO.md: Include min/max for the rest of profile information
     // Figure out how to handle this, because right now I get an error when I send these properties, because below I am checking if profileInformation includes property sent to the server, if yes I am accesing min/max here which does not exists yet
   };
 

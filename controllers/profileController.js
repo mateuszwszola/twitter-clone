@@ -164,17 +164,14 @@ exports.updateProfile =  async (req, res, next) => {
     }
 
     try {
-        if (req.body['name']) {
+        if (req.body.name || req.body.avatar) {
+            const newUserData = {};
+            if (req.body.name) newUserData.name = req.body.name;
+            if (req.body.avatar) newUserData.avatar = req.body.avatar;
+
             await User.findOneAndUpdate(
                 { _id: req.user.id },
-                { $set: { name: startCase(req.body['name']) } },
-                { new: true }
-            );
-        }
-        if (req.body['avatar']) {
-            await User.findOneAndUpdate(
-                { _id: req.user.id },
-                { $set: { avatar: req.body['avatar'] } },
+                { $set: newUserData },
                 { new: true }
             );
         }
@@ -266,9 +263,9 @@ exports.validate = method => {
                     .withMessage(`The website must be between ${charLengthForProps.website.min} and ${charLengthForProps.website.max} chars long`)
                     .isURL()
                     .withMessage('Website must be a valid URL'),
-                body('birthday', 'Birthday must be a valid date')
-                    .optional({ checkFalsy: true })
-                    .custom(validateBirthday),
+                // body('birthday', 'Birthday must be a valid date')
+                //     .optional({ checkFalsy: true })
+                //     .custom(validateBirthday),
                 body('avatar', 'Avatar must be a URL')
                     .optional({ checkFalsy: true })
                     .isURL(),
@@ -278,7 +275,11 @@ exports.validate = method => {
                 body('name', 'The name must be a valid name')
                     .optional()
                     .isLength(charLengthForProps.name)
-                    .withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars long`),
+                    .withMessage(`The name must be between ${charLengthForProps.name.min} and ${charLengthForProps.name.max} chars long`)
+                    .customSanitizer(value => {
+                        return startCase(value);
+                    })
+                ,
                 body('username', 'The username must be a valid username')
                     .optional()
                     .isLength(charLengthForProps.username)

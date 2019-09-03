@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUserProfile, updateProfile } from 'actions/profileActions';
 import Loading from 'components/Loading';
 import EditProfile from 'components/EditProfile';
 import useDynamicFormInput from 'hooks/useDynamicFormInput';
+import isEmpty from "utils/isEmpty";
 
 function EditProfileContainer({
   history,
@@ -23,24 +24,30 @@ function EditProfileContainer({
   const avatar = useDynamicFormInput((profile && profile.user.avatar) || '');
   const backgroundPicture = useDynamicFormInput((profile && profile.backgroundPicture) || '');
 
+  const state = { name, username, bio, location, website, birthday, avatar, backgroundPicture };
+
   useEffect(() => {
       getUserProfile();
   }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
-    const profileData = {
-      name: name.value || '',
-      username: username.value || '',
-      bio: bio.value || '',
-      website: website.value || '',
-      location: location.value || '',
-      birthday: birthday.value || '',
-      avatar: avatar.value || '',
-      backgroundPicture: backgroundPicture.value || ''
-    };
-
-    updateProfile(profileData, history);
+    const profileData = {};
+    const userFields = ['name', 'username', 'avatar'];
+    const profileFields = ['bio', 'website', 'location', 'birthday', 'backgroundPicture'];
+    userFields.forEach(field => {
+      if (profile.user && profile.user[field] && state[field].value !== profile.user[field]) {
+        profileData[field] = state[field].value;
+      }
+    });
+    profileFields.forEach(field => {
+      if (state[field].value !== profile[field]) {
+        profileData[field] = state[field].value;
+      }
+    });
+    if (!isEmpty(profileData)) {
+      updateProfile(profileData, history);
+    }
   }
 
   if (loading || profile === null) {

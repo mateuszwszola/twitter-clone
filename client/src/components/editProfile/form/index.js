@@ -10,17 +10,17 @@ import {
   CancelButton
 } from './style';
 
-function getBirthdayDate(birthday) {
-  if (!birthday) {
-    return '';
-  }
-  const prependWithZero = number => (number < 10 ? '0' + number : number);
-  const date = new Date(birthday);
-  const year = date.getFullYear();
-  const month = prependWithZero(date.getMonth() + 1);
-  const day = prependWithZero(date.getDate());
-  return `${year}-${month}-${day}`;
-}
+// function getBirthdayDate(birthday) {
+// //   if (!birthday) {
+// //     return '';
+// //   }
+// //   const prependWithZero = number => (number < 10 ? '0' + number : number);
+// //   const date = new Date(birthday);
+// //   const year = date.getFullYear();
+// //   const month = prependWithZero(date.getMonth() + 1);
+// //   const day = prependWithZero(date.getDate());
+// //   return `${year}-${month}-${day}`;
+// // }
 
 function Form({
   name,
@@ -39,6 +39,14 @@ function Form({
     e.stopPropagation();
     history.goBack();
   };
+    const findIfErrExists = (param) => {
+        const error = errors.find(err => err.param === param);
+        if (error) {
+            return error.msg;
+        } else {
+            return error;
+        }
+    };
   return (
     <StyledForm onSubmit={handleSubmit}>
       <InputGroup>
@@ -47,9 +55,9 @@ function Form({
           type="text"
           name="name"
           {...name}
-          error={!!errors.name}
+          error={!!(findIfErrExists('name'))}
         />
-        {errors.name && <FeedbackMessage>{errors.name}</FeedbackMessage>}
+        {findIfErrExists('name') && <FeedbackMessage>{findIfErrExists('name')}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -58,10 +66,10 @@ function Form({
           type="text"
           name="username"
           {...username}
-          error={!!errors.username}
+          error={!!(findIfErrExists('username'))}
         />
-        {errors.username && (
-          <FeedbackMessage>{errors.username}</FeedbackMessage>
+        {findIfErrExists('username') && (
+          <FeedbackMessage>{findIfErrExists('username')}</FeedbackMessage>
         )}
       </InputGroup>
 
@@ -71,9 +79,9 @@ function Form({
           type="text"
           name="bio"
           {...bio}
-          error={!!errors.bio}
+          error={!!(findIfErrExists('bio'))}
         />
-        {errors.bio && <FeedbackMessage>{errors.bio}</FeedbackMessage>}
+        {findIfErrExists('bio') && <FeedbackMessage>{findIfErrExists('bio')}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -82,10 +90,10 @@ function Form({
           type="text"
           name="location"
           {...location}
-          error={!!errors.location}
+          error={!!(findIfErrExists('location'))}
         />
-        {errors.location && (
-          <FeedbackMessage>{errors.location}</FeedbackMessage>
+        {findIfErrExists('location') && (
+          <FeedbackMessage>{findIfErrExists('location')}</FeedbackMessage>
         )}
       </InputGroup>
 
@@ -95,9 +103,9 @@ function Form({
           type="text"
           name="website"
           {...website}
-          error={!!errors.website}
+          error={!!(findIfErrExists('website'))}
         />
-        {errors.website && <FeedbackMessage>{errors.website}</FeedbackMessage>}
+        {findIfErrExists('website') && <FeedbackMessage>{findIfErrExists('website')}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -106,10 +114,10 @@ function Form({
           type="date"
           name="birthday"
           {...birthday}
-          error={!!errors.birthday}
+          error={!!(findIfErrExists('birthday'))}
         />
-        {errors.birthday && (
-          <FeedbackMessage>{errors.birthday}</FeedbackMessage>
+        {findIfErrExists('birthday') && (
+          <FeedbackMessage>{findIfErrExists('birthday')}</FeedbackMessage>
         )}
       </InputGroup>
 
@@ -119,9 +127,9 @@ function Form({
           type="text"
           name="avatar"
           {...avatar}
-          error={!!errors.avatar}
+          error={!!(findIfErrExists('avatar'))}
         />
-        {errors.avatar && <FeedbackMessage>{errors.avatar}</FeedbackMessage>}
+        {findIfErrExists('avatar') && <FeedbackMessage>{findIfErrExists('avatar')}</FeedbackMessage>}
       </InputGroup>
 
       <InputGroup>
@@ -130,10 +138,10 @@ function Form({
           type="text"
           name="backgroundPicture"
           {...backgroundPicture}
-          error={!!errors.backgroundPicture}
+          error={!!(findIfErrExists('backgroundPicture'))}
         />
-        {errors.backgroundPicture && (
-          <FeedbackMessage>{errors.backgroundPicture}</FeedbackMessage>
+        {findIfErrExists('backgroundPicture') && (
+          <FeedbackMessage>{findIfErrExists('backgroundPicture')}</FeedbackMessage>
         )}
       </InputGroup>
 
@@ -155,7 +163,7 @@ Form.propTypes = {
   website: PropTypes.object.isRequired,
   birthday: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired
 };
 

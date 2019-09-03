@@ -10,7 +10,7 @@ import { Route } from 'react-router-dom';
 import isEmpty from 'utils/isEmpty';
 
 function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
-  // TODO: Check if user is the owner
+  // TODO.md: Check if user is the owner
   // 1. User is the owner
   // 2. User is not the owner but they are logged in so they can follow/unfollow etc.
   // 3. There is anonymous user who can only view it
@@ -35,7 +35,7 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
 
 ProfileContainer.propTypes = {
   profile: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   getProfileByUsername: PropTypes.func.isRequired
 };
 

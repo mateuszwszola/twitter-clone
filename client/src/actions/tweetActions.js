@@ -38,8 +38,10 @@ export const getTweetById = tweet_id => async dispatch => {
   }
 };
 
-export const createTweet = tweet => async dispatch => {
-  dispatch(setTweetLoading());
+export const createTweet = (tweet, addNewTweetToState = true) => async dispatch => {
+  if (addNewTweetToState) {
+    dispatch(setTweetLoading());
+  }
 
   const config = {
     headers: {
@@ -54,7 +56,10 @@ export const createTweet = tweet => async dispatch => {
 
     dispatch({
       type: CREATE_TWEET,
-      payload: res.data
+      payload: {
+        data: res.data,
+        addNewTweetToState
+      }
     });
 
     dispatch(closeCreateTweetModal());
@@ -115,7 +120,7 @@ export const getUserLikeTweets = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -134,7 +139,7 @@ export const likeTweet = (tweetId, authUserId) => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -153,7 +158,7 @@ export const removeTweet = tweetId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };

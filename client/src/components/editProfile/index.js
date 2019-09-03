@@ -45,7 +45,7 @@ EditProfile.propTypes = {
   avatar: PropTypes.object.isRequired,
   backgroundPicture: PropTypes.object.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired
 };
 

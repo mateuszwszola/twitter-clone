@@ -5,15 +5,17 @@ import { Wrapper, Message } from './style';
 export default function DisplayErrors({ errors }) {
   return (
     <Wrapper>
-      <Message>{errors.message ? errors.message : errors}</Message>
+      {errors.map(error => (
+        <Message key={error.msg}>{error.msg}</Message>
+      ))}
     </Wrapper>
   );
 }
 
 DisplayErrors.propTypes = {
-  error: PropTypes.string
+  errors: PropTypes.array
 };
 
 DisplayErrors.defaultProps = {
-  error: 'Something went wrong...'
+  errors: [{ msg: 'Something went wrong...' }]
 };
