@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
+import SettingsPage from 'components/SettingsPage';
 
-export default class SettingsContainer extends Component {
-  render() {
-    return <div>Settings</div>;
-  }
+function SettingsContainer() {
+  return <SettingsPage />
 }
+
+export default SettingsContainer;

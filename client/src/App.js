@@ -47,10 +47,13 @@ function App() {
                     path="/edit-profile"
                     component={EditProfileContainer}
                   />
+                  <PrivateRoute
+                    path="/settings"
+                    component={SettingsContainer}
+                  />
                   <Route exact path="/" component={PrivateHomepage} />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />
-                  <Route exact path="/settings" component={SettingsContainer} />
                   <Route path="/:username" component={ProfileContainer} />
                   <Route render={() => <div>404 Not Found</div>} />
                 </ModalSwitch>
