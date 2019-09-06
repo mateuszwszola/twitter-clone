@@ -213,6 +213,13 @@ exports.deleteAccount = async (req, res, next) => {
             return res.status(404).json({ errors: [{ msg: 'User Not Found' }]})
         }
 
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        await Profile.updateMany(
+            { user: { $in: profile.followers } },
+            { $pull: { following: req.user.id } }
+        );
+
         await User.findByIdAndRemove(req.user.id);
         await Profile.findOneAndRemove({ user: req.user.id });
 

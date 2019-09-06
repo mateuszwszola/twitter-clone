@@ -10,11 +10,6 @@ import { Route } from 'react-router-dom';
 import isEmpty from 'utils/isEmpty';
 
 function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
-  // TODO.md: Check if user is the owner
-  // 1. User is the owner
-  // 2. User is not the owner but they are logged in so they can follow/unfollow etc.
-  // 3. There is anonymous user who can only view it
-  // 4. UI for 2 and 3 is almost the same. But for 3. when user clicks follow it will popup that you need to be authenticated to follow that user
   const { username } = match.params;
 
   useEffect(() => {

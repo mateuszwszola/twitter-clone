@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import { Container, ActionsContainer, Form, ChangePasswordButton, EditProfileButton, DeleteAccountButton  } from "./style";
 import InputGroup from "components/InputGroup";
 
-function SettingsPage({ password, password2 }) {
+function SettingsPage({ password, password2, deleteAccount, handlePasswordFormSubmit }) {
     return (
         <Container>
             <h1>Settings</h1>
-            <Form>
+            <Form onSubmit={handlePasswordFormSubmit}>
                 <label>
                     Current password:
                     <InputGroup
@@ -31,14 +31,21 @@ function SettingsPage({ password, password2 }) {
                         errorMsg={''}
                     />
                 </label>
-                <ChangePasswordButton primary>Change password</ChangePasswordButton>
+                <ChangePasswordButton primary type="submit">Change password</ChangePasswordButton>
             </Form>
             <ActionsContainer>
                 <EditProfileButton as={Link} to="/edit-profile">Edit profile</EditProfileButton>
-                <DeleteAccountButton>Delete Account</DeleteAccountButton>
+                <DeleteAccountButton onClick={deleteAccount}>Delete Account</DeleteAccountButton>
             </ActionsContainer>
         </Container>
     )
 }
+
+SettingsPage.propTypes = {
+    password: PropTypes.object.isRequired,
+    password2: PropTypes.object.isRequired,
+    deleteAccount: PropTypes.func.isRequired,
+    handlePasswordFormSubmit: PropTypes.func.isRequired,
+};
 
 export default SettingsPage;

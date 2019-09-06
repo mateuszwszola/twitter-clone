@@ -155,6 +155,7 @@ TweetsBoard.propTypes = {
   tweets: PropTypes.array.isRequired,
   setCurrentTweet: PropTypes.func.isRequired,
   likeTweet: PropTypes.func.isRequired,
+  removeTweet: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 

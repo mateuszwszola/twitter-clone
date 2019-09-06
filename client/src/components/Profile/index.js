@@ -13,7 +13,7 @@ import UserStatsHeader from 'components/layout/user/UserStatsHeader';
 import { Container, BackgroundContainer, Background, Sidebar } from './style';
 
 function Profile({
-  profile: { profile, loading },
+  profile: { profile },
   auth,
   followProfile,
   unfollowProfile,
@@ -23,6 +23,7 @@ function Profile({
     auth.user && profile.followers.find(user => user === auth.user._id)
   );
   const owner = !!(auth.user && auth.user._id === profile.user._id);
+
   function handleFollowButtonClick() {
     if (followed) {
       unfollowProfile(auth.user._id, profile.user._id);
@@ -58,7 +59,7 @@ function Profile({
           <Route path={`${match.path}/followers`} component={Followers} />
           <Route path={`${match.path}/likes`} component={Likes} />
         </Switch>
-         <Sidebar>Right sidebar</Sidebar>
+         {/*<Sidebar>Right sidebar</Sidebar>*/}
       </div>
     </Container>
   );

@@ -193,7 +193,7 @@ exports.deleteTweet = async (req, res, next) => {
         const { followers } = await Profile.findOne({ user: req.user.id }).select('followers');
         await Profile.updateMany(
             { user: { $in: followers } },
-            { $pull: { homepageTweets: tweet_id } }
+            { $pull: { homepageTweets: tweet_id, likes: tweet_id } }
         );
 
         res.json(tweet);

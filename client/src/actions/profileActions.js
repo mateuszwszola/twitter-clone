@@ -6,7 +6,9 @@ import {
   FOLLOW,
   UNFOLLOW,
   GET_ERRORS,
-  GET_TWEETS
+  GET_TWEETS,
+  LOGOUT,
+  CLEAR_PROFILE
 } from './types';
 import { setTweetLoading } from './tweetActions';
 import { clearErrors } from './errorActions';
@@ -240,6 +242,22 @@ export const getProfileWithTweetsByUsername = username => async dispatch => {
       type: GET_ERRORS,
       payload: error.response.data.errors || []
     });
+  }
+};
+
+export const deleteAccount = () => async dispatch => {
+  try {
+    if (window.confirm('Are you sure? This action cannot be undone!')) {
+      await axios.delete('/api/profiles');
+
+      dispatch({ type: LOGOUT });
+      dispatch({ type: CLEAR_PROFILE });
+    }
+  } catch(err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data.errors || []
+    })
   }
 };
 
