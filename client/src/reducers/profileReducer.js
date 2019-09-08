@@ -116,7 +116,8 @@ export default function(state = initialState, action) {
           tweets: state.profile.tweets.filter(id => id !== payload),
           homepageTweets: state.profile.homepageTweets.filter(
               id => id !== payload
-          )
+          ),
+          likes: state.profile.likes.filter(id => id !== payload)
         } : null
       };
     case GET_ERRORS:

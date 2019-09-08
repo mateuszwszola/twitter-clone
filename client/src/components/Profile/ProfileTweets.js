@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { ProfileTweetsBoard } from './style';
 import TweetsBoard from 'components/layout/TweetsBoard';
 import Loading from '../Loading';
 import { getUserTweets } from 'actions/tweetActions';
+import { ProfileTweetsBoard } from './style';
 
 function ProfileTweets({
   profile: { profile },

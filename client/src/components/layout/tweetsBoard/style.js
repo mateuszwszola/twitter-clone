@@ -4,14 +4,11 @@ import { Button } from 'shared/components';
 export const Container = styled.div`
   height: 100%;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 15px auto;
 `;
 
 export const Board = styled.div`
   background-color: #fff;
-  min-height: 200px;
-  -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
 `;
 

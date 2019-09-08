@@ -4,28 +4,27 @@ import { connect } from 'react-redux';
 import { getUserLikeTweets } from 'actions/tweetActions';
 import Loading from '../Loading';
 import TweetsBoard from 'components/layout/TweetsBoard';
+import { ProfileTweetsBoard } from "./style";
 
 function Likes(
     {
       tweet: { tweets, loading },
       profile: { profile },
-      errors,
       getUserLikeTweets
     }) {
+
   useEffect(() => {
     getUserLikeTweets(profile.user._id);
   }, [profile.user._id]);
 
-  if (tweets === null || loading) {
-    return <Loading />;
-  }
-
   return (
-      <>
-        <TweetsBoard
-          tweets={tweets}
-        />
-      </>
+      <ProfileTweetsBoard>
+          {loading || tweets === null ? (
+              <Loading />
+          ) : (
+            <TweetsBoard tweets={tweets} />
+          )}
+      </ProfileTweetsBoard>
   )
 }
 

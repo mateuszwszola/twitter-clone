@@ -9,7 +9,6 @@ import {
   SaveButton,
   CancelButton
 } from './style';
-import moment from 'moment';
 
 function Form({
   name,
@@ -103,7 +102,7 @@ function Form({
           type="date"
           name="birthday"
           onChange={birthday.onChange}
-          value={moment(birthday.value).format('YYYY-MM-DD')}
+          value={birthday.value}
           error={!!(findIfErrExists('birthday'))}
         />
         {findIfErrExists('birthday') && (

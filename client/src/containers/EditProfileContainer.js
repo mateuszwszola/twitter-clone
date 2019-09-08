@@ -6,6 +6,7 @@ import Loading from 'components/Loading';
 import EditProfile from 'components/EditProfile';
 import useDynamicFormInput from 'hooks/useDynamicFormInput';
 import isEmpty from "utils/isEmpty";
+import moment from 'moment';
 
 function EditProfileContainer({
   history,
@@ -36,13 +37,19 @@ function EditProfileContainer({
     const userFields = ['name', 'username', 'avatar'];
     const profileFields = ['bio', 'website', 'location', 'birthday', 'backgroundPicture'];
     userFields.forEach(field => {
-      if (profile.user && profile.user[field] && state[field].value !== profile.user[field]) {
+      if (profile.user && (!profile.user[field] || profile.user[field] && state[field].value !== profile.user[field])) {
         profileData[field] = state[field].value;
       }
     });
     profileFields.forEach(field => {
       if (state[field].value !== profile[field]) {
-        profileData[field] = state[field].value;
+        if (field === 'birthday') {
+          if (birthday.value) {
+            profileData.birthday = moment(birthday.value).format('YYYY-MM-DD')
+          }
+        } else {
+          profileData[field] = state[field].value;
+        }
       }
     });
     if (!isEmpty(profileData)) {

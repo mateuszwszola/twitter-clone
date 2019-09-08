@@ -11,4 +11,5 @@ export const StyledFooter = styled.footer`
 
 export const Text = styled.p`
   margin: 0;
+  font-weight: bold;
 `;

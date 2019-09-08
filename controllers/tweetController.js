@@ -1,4 +1,4 @@
-const { check, body, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const charLengthForProps = require('../helpers/charLengthForProps');
 
 const Tweet = require('../models/Tweet');
@@ -214,9 +214,13 @@ exports.getProfileLikes = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
         }
-        const { likes } = await Profile.findOne({ user: user_id }).select('likes');
+        const profile = await Profile.findOne({ user: user_id });
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+
         const tweets = await Tweet.find({
-            user: { $in: likes }
+            _id: { $in: profile.likes }
         }).populate('user', ['name', 'username', 'avatar']);
 
         res.json(tweets);

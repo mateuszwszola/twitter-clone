@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter, Route, Switch } from 'react-router-dom';
+import { withRouter, Route, Switch, Link } from 'react-router-dom';
 import { followProfile, unfollowProfile } from 'actions/profileActions';
 
 import ProfileTweets from './ProfileTweets';
@@ -10,7 +10,7 @@ import Followers from './Followers';
 import Likes from './Likes';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
-import { Container, BackgroundContainer, Background, Sidebar } from './style';
+import { Container, BackgroundContainer, Background, PagesContainer, AddBackground, AddBackgroundButton } from './style';
 
 function Profile({
   profile: { profile },
@@ -22,6 +22,7 @@ function Profile({
   const followed = !!(
     auth.user && profile.followers.find(user => user === auth.user._id)
   );
+
   const owner = !!(auth.user && auth.user._id === profile.user._id);
 
   function handleFollowButtonClick() {
@@ -35,13 +36,21 @@ function Profile({
   return (
     <Container>
       <BackgroundContainer>
-        {profile.user.backgroundPicture ? (
+        {profile.backgroundPicture ? (
           <Background
             alt={`${profile.user.name} background`}
-            src={profile.user.background}
+            src={profile.backgroundPicture}
           />
         ) : (
-          ''
+          <AddBackground>
+            <span>Add background picture</span>
+            {' '}
+            <AddBackgroundButton
+                className="fas fa-plus-circle"
+                as={Link}
+                to="/edit-profile"
+            />
+          </AddBackground>
         )}
       </BackgroundContainer>
       <UserStatsHeader
@@ -53,12 +62,14 @@ function Profile({
       />
       <div>
         <ProfileUserGroup profile={profile} />
-        <Switch>
-          <Route exact path={`${match.path}`} component={ProfileTweets} />
-          <Route path={`${match.path}/following`} component={Following} />
-          <Route path={`${match.path}/followers`} component={Followers} />
-          <Route path={`${match.path}/likes`} component={Likes} />
-        </Switch>
+        <PagesContainer>
+          <Switch>
+            <Route exact path={`${match.path}`} component={ProfileTweets} />
+            <Route path={`${match.path}/following`} component={Following} />
+            <Route path={`${match.path}/followers`} component={Followers} />
+            <Route path={`${match.path}/likes`} component={Likes} />
+          </Switch>
+        </PagesContainer>
          {/*<Sidebar>Right sidebar</Sidebar>*/}
       </div>
     </Container>

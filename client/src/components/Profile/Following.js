@@ -6,13 +6,14 @@ import Loading from '../Loading';
 import { ProfileList } from './style';
 import ProfilePreview from './ProfilePreview';
 
-const Following = ({
+function Following({
   profile: { profile, profiles, loading },
   getProfileFollowing
-}) => {
+}) {
   useEffect(() => {
     getProfileFollowing(profile.user._id);
-  }, [getProfileFollowing, profile.user._id]);
+  }, [profile.user._id]);
+
   return (
     <>
       {loading || profiles === null ? (

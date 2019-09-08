@@ -110,8 +110,8 @@ const UserAvatar = styled.img`
   ${props =>
     props.tiny &&
     css`
-      width: 30px;
-      height: 30px;
+      width: 50px;
+      height: 50px;
     `}
   ${props =>
     props.big &&
