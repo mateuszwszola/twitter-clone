@@ -7,6 +7,7 @@ import {
   CREATE_TWEET,
   REMOVE_TWEET,
   LIKE_TWEET,
+  RETWEET_TWEET,
   GET_ERRORS
 } from 'actions/types';
 
@@ -18,6 +19,7 @@ const initialState = {
 
 export default function(state = initialState, action) {
   const { type, payload } = action;
+  const { tweet, tweets } = state;
 
   switch (type) {
     case TWEET_LOADING:
@@ -54,26 +56,47 @@ export default function(state = initialState, action) {
         loading: false
       };
     case LIKE_TWEET:
-      const { tweetId, authUserId } = payload;
-      const tweetIndex = state.tweets && state.tweets.findIndex(tweet => tweet._id === tweetId);
-      const { tweet, tweets } = state;
+      const likeIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);
+
       return {
         ...state,
-        tweets: tweets && tweetIndex > -1 ? [
-          ...tweets.slice(0, tweetIndex),
+        tweets: tweets && likeIndex > -1 ? [
+          ...tweets.slice(0, likeIndex),
           {
-            ...tweets[tweetIndex],
-            likes: tweets[tweetIndex].likes.includes(authUserId)
-                ? tweets[tweetIndex].likes.filter(id => id !== authUserId)
-                : [...tweets[tweetIndex].likes, authUserId]
+            ...tweets[likeIndex],
+            likes: tweets[likeIndex].likes.includes(payload.authUserId)
+                ? tweets[likeIndex].likes.filter(id => id !== payload.authUserId)
+                : [...tweets[likeIndex].likes, payload.authUserId]
           },
-          ...tweets.slice(tweetIndex + 1)
+          ...tweets.slice(likeIndex + 1)
         ] : tweets,
-        tweet: tweet !== null && tweet._id === tweetId ? {
+        tweet: tweet !== null && tweet._id === payload.tweetId ? {
           ...tweet,
-          likes: tweet.likes.includes(authUserId)
-            ? tweet.likes.filter(id => id !== authUserId)
-              : [...tweet.likes, authUserId]
+          likes: tweet.likes.includes(payload.authUserId)
+            ? tweet.likes.filter(id => id !== payload.authUserId)
+              : [...tweet.likes, payload.authUserId]
+        } : tweet
+      };
+    case RETWEET_TWEET:
+      const retweetIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);
+
+      return {
+        ...state,
+        tweets: tweets && retweetIndex > -1 ? [
+          ...tweets.slice(0, retweetIndex),
+          {
+            ...tweets[retweetIndex],
+            retweets: tweets[retweetIndex].retweets.includes(payload.authUserId)
+                ? tweets[retweetIndex].retweets.filter(id => id !== payload.authUserId)
+                : [...tweets[retweetIndex].retweets, payload.authUserId]
+          },
+          ...tweets.slice(retweetIndex + 1)
+        ] : tweets,
+        tweet: tweet !== null && tweet._id === payload.tweetId ? {
+          ...tweet,
+          retweets: tweet.retweets.includes(payload.authUserId)
+              ? tweet.retweets.filter(id => id !== payload.authUserId)
+              : [...tweet.retweets, payload.authUserId]
         } : tweet
       };
     case REMOVE_TWEET:

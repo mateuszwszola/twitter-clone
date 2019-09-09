@@ -271,6 +271,46 @@ exports.toggleTweetLike = async (req, res, next) => {
     }
 };
 
+exports.toggleTweetRetweet = async (req, res, next) => {
+    const { tweet_id } = req.params;
+
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+        const tweet = await Tweet.findById(tweet_id).populate('user', [
+            'name',
+            'username',
+            'avatar'
+        ]);
+
+        if (!tweet) {
+            return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
+        }
+        const index = tweet.retweets.findIndex(user => user.equals(req.user.id));
+        if (index > -1) {
+            tweet.retweets = tweet.retweets.filter(user => !user.equals(req.user.id));
+            profile.homepageTweets = profile.homepageTweets.filter(tweet => !tweet.equals(tweet_id));
+        } else {
+            tweet.retweets = [req.user.id, ...tweet.retweets];
+            profile.homepageTweets = [tweet_id, ...profile.homepageTweets];
+        }
+
+        await tweet.save();
+        await profile.save();
+
+        res.json(tweet);
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === 'ObjectId') {
+            return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
+        }
+        next(err);
+    }
+};
+
 exports.validate = method => {
     switch(method) {
         case 'createTweet':

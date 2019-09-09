@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { getTweetById, removeTweet, likeTweet } from 'actions/tweetActions';
 import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
+import Moment from 'react-moment';
+import { getTweetById, removeTweet, likeTweet, retweetTweet } from 'actions/tweetActions';
 import Loading from 'components/Loading';
 import TweetsBoard from 'components/layout/TweetsBoard';
 import portretPlaceholder from 'img/portret-placeholder.png';
-import Moment from 'react-moment';
 import {
   Container,
   StyledTweet,
@@ -29,7 +29,6 @@ import {
   LikeTweetAction
 } from './style';
 import { UserAvatar, CloseButton } from 'shared/components';
-import { Link } from 'react-router-dom';
 import AddComment from '../AddComment';
 
 function TweetModal({
@@ -51,7 +50,7 @@ function TweetModal({
                 <UserAvatar
                   small
                   src={tweet.user.avatar || portretPlaceholder}
-                  alt="User Avatar"
+                  alt={`${tweet.user.name} avatar`}
                 />
               </Link>
               <UserInfo>
@@ -80,7 +79,7 @@ function TweetModal({
 
             <SocialGroup>
               <ItemGroup>
-                <strong>{tweet.retweets.length} </strong> Retweet
+                <strong>{tweet.retweets.length} </strong> Retweets
               </ItemGroup>
               <ItemGroup>
                 <strong>{tweet.likes.length}</strong> Likes
@@ -98,7 +97,7 @@ function TweetModal({
               <TweetAction>
                 <Icon
                   className="fas fa-retweet"
-                  onClick={() => alert('Retweet')}
+                  onClick={(e) => handleActionClick(e, 'retweet', tweet._id)}
                 />{' '}
                 <strong>{tweet.retweets.length}</strong>
               </TweetAction>
@@ -138,6 +137,7 @@ function TweetModalContainer(props) {
     getTweetById,
     removeTweet,
     likeTweet,
+      retweetTweet,
     history
   } = props;
 
@@ -164,6 +164,8 @@ function TweetModalContainer(props) {
         likeTweet(tweet_id, auth.user._id);
       } else if (action === 'remove') {
         removeTweet(tweet_id);
+      } else if (action === 'retweet') {
+        retweetTweet(tweet_id, auth.user._id);
       }
     } else {
       history.push('/signin');
@@ -196,7 +198,8 @@ TweetModalContainer.propTypes = {
   errors: PropTypes.array.isRequired,
   getTweetById: PropTypes.func.isRequired,
   removeTweet: PropTypes.func.isRequired,
-  likeTweet: PropTypes.func.isRequired
+  likeTweet: PropTypes.func.isRequired,
+  retweetTweet: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -207,5 +210,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getTweetById, removeTweet, likeTweet }
+  { getTweetById, removeTweet, likeTweet, retweetTweet }
 )(withRouter(TweetModalContainer));

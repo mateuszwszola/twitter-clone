@@ -4,7 +4,8 @@ import { Input } from 'shared/components';
 export const CommentContainer = styled.div`
   background-color: #f6f8fa;
   width: 100%;
-  height: 50px;
+  min-height: 50px;
+  max-height: 70px;
   display: flex;
   flex-direction: row;
   justify-content: stretch;

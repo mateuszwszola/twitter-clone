@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loading from 'components/Loading';
 import { getTweetById, removeTweet, likeTweet } from 'actions/tweetActions';
+import { TweetContainer } from './style';
 
 function TweetView({ handleActionClick, tweet, liked }) {
-  return <div className="tweet-container" />;
+  return <TweetContainer/>
 }
 
 TweetView.propTypes = {
@@ -30,7 +31,7 @@ function TweetViewContainer({
     if (!tweet && !loading) {
       getTweetById(status_id);
     }
-  }, [getTweetById, status_id]);
+  }, [status_id]);
 
   const pushToLogin = () => history.push('/signin');
   const handleActionClick = (e, action, tweet_id) => {
