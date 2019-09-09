@@ -1,7 +1,7 @@
 {
   "name": "twitter-clone",
   "version": "1.0.0",
-  "description": "Twitter clone. The goal is to create similar functionality as it does on Twitter.",
+  "description": "Twitter clone built with the MERN stack",
   "main": "server.js",
   "scripts": {
     "start": "node ./server/index.js",
@@ -14,7 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "bad-words": "^3.0.3",
-    "bcrypt": "^3.0.6",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "concurrently": "^4.1.1",

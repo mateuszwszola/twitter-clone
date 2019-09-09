@@ -5,7 +5,7 @@ import ThemeProvider from 'shared/theme-provider';
 import GlobalStyle from 'shared/global-style';
 import { Wrapper, Content } from 'shared/layout';
 
-import { Header, Footer } from './components/layout';
+import { Header } from './components/layout';
 import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
 import PrivateHomepage from './components/route/PrivateHomepage';
@@ -58,7 +58,6 @@ function App() {
                   <Route render={() => <div>404 Not Found</div>} />
                 </ModalSwitch>
               </Content>
-              <Footer />
             </Wrapper>
           </Router>
         </ErrorBoundary>
