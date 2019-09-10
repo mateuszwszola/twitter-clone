@@ -271,7 +271,8 @@ exports.toggleTweetLike = async (req, res, next) => {
     }
 };
 
-exports.toggleTweetRetweet = async (req, res, next) => {
+/*
+exports.retweetTweet = async (req, res, next) => {
     const { tweet_id } = req.params;
 
     try {
@@ -280,28 +281,40 @@ exports.toggleTweetRetweet = async (req, res, next) => {
         if (!profile) {
             return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
-        const tweet = await Tweet.findById(tweet_id).populate('user', [
-            'name',
-            'username',
-            'avatar'
-        ]);
+
+        const tweet = await Tweet.findById(tweet_id);
 
         if (!tweet) {
             return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
         }
+
         const index = tweet.retweets.findIndex(user => user.equals(req.user.id));
         if (index > -1) {
-            tweet.retweets = tweet.retweets.filter(user => !user.equals(req.user.id));
-            profile.homepageTweets = profile.homepageTweets.filter(tweet => !tweet.equals(tweet_id));
+            return res.status(400).json({ errors: [{ msg: 'You have already retweeted that tweet' }] });
         } else {
-            tweet.retweets = [req.user.id, ...tweet.retweets];
-            profile.homepageTweets = [tweet_id, ...profile.homepageTweets];
+            tweet.retweets = [...tweet.retweets, req.user.id];
         }
 
-        await tweet.save();
+
+        const savedTweet = await new Tweet(newTweetContent).save();
+        const retweetedTweet = await Tweet.populate(savedTweet, {
+            path: 'user',
+            select: ['name', 'username', 'avatar']
+        });
+
+        await Profile.updateOne(
+            { user: req.user.id },
+            { $push: { tweets: retweetedTweet.id, homepageTweets: retweetedTweet.id } }
+        );
+
+        await Profile.updateMany(
+            { user: { $in: profile.followers } },
+            { $push: { homepageTweets: retweetedTweet.id } }
+        );
+
         await profile.save();
 
-        res.json(tweet);
+        res.json(retweetedTweet);
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
@@ -310,6 +323,7 @@ exports.toggleTweetRetweet = async (req, res, next) => {
         next(err);
     }
 };
+*/
 
 exports.validate = method => {
     switch(method) {

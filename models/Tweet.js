@@ -30,6 +30,10 @@ const TweetSchema = new Schema({
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   // retweets are ids of people who retweeted
   retweets: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  retweeted: {
+    type: Boolean,
+    default: false
+  },
   editted: {
     type: Boolean,
     default: false

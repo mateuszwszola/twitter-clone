@@ -59,6 +59,6 @@ router.delete('/:tweet_id', auth, tweetController.deleteTweet);
     @desc Toggle tweet retweet (add / remove user Id of tweet retweets)
     @access Private
  */
-router.post('/retweet/:tweet_id', auth, tweetController.toggleTweetRetweet);
+// router.post('/retweet/:tweet_id', auth, tweetController.retweetTweet);
 
 module.exports = router;

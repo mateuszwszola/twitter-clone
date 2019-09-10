@@ -6,13 +6,18 @@ import LinkedUserUsername from './user/LinkedUserUsername';
 import ProfileStatGroup from './user/ProfileStatGroup';
 import portretPlaceholder from 'img/portret-placeholder.png';
 import { Link } from 'react-router-dom';
+import { ProfileBackground } from 'shared/components';
 
 import UserPreviewCard from './UserPreviewCard';
 
 function UserPreview({ profile }) {
   return (
     <UserPreviewCard>
-      <UserPreviewCard.Background />
+      <UserPreviewCard.Background>
+        {profile.backgroundPicture ? (
+            <ProfileBackground src={profile.backgroundPicture} alt={`${profile.user.name || 'User'} background`} />
+        ) : ''}
+      </UserPreviewCard.Background>
       <UserPreviewCard.MidFlex>
         <UserAvatar
           className="user-preview-avatar"

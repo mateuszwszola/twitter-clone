@@ -121,6 +121,13 @@ const UserAvatar = styled.img`
     `}
 `;
 
+const ProfileBackground = styled.img`
+  object-fit: cover;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+`;
+
 const CloseButton = styled.a`
   cursor: pointer;
   position: absolute;
@@ -160,6 +167,7 @@ export {
   DropdownLink,
   FeedbackMessage,
   UserAvatar,
+  ProfileBackground,
   Input,
   CloseButton
 };

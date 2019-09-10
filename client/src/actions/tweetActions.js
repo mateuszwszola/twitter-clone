@@ -6,7 +6,7 @@ import {
   CREATE_TWEET,
   REMOVE_TWEET,
   LIKE_TWEET,
-  GET_ERRORS, RETWEET_TWEET
+  GET_ERRORS
 } from './types';
 import { closeCreateTweetModal } from './uiActions';
 import { setAlert } from './alertActions';
@@ -33,7 +33,7 @@ export const getTweetById = tweet_id => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -66,7 +66,7 @@ export const createTweet = (tweet, addNewTweetToState = true) => async dispatch 
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -84,7 +84,7 @@ export const getUserTweets = userId => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -102,7 +102,7 @@ export const getUserHomepageTweets = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };
@@ -163,22 +163,23 @@ export const removeTweet = tweetId => async dispatch => {
   }
 };
 
-export const retweetTweet = (tweetId, authUserId) => async dispatch => {
-  try {
-    await axios.post(`/api/tweets/retweet/${tweetId}`);
-
-    dispatch({
-      type: RETWEET_TWEET,
-      payload: {
-        tweetId,
-        authUserId
-      }
-    });
-
-  } catch(err) {
-    dispatch({
-      type: GET_ERRORS,
-      payload: err.response.data.errors || []
-    })
-  }
-};
+// export const retweetTweet = (tweetId, authUserId) => async dispatch => {
+//   try {
+//     const res = await axios.post(`/api/tweets/retweet/${tweetId}`);
+//
+//     dispatch({
+//       type: RETWEET_TWEET,
+//       payload: {
+//         tweetId,
+//         authUserId,
+//         tweet: res.data
+//       }
+//     });
+//
+//   } catch(err) {
+//     dispatch({
+//       type: GET_ERRORS,
+//       payload: err.response.data.errors || []
+//     })
+//   }
+// };

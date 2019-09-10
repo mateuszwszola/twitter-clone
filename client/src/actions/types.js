@@ -27,6 +27,11 @@ export const CREATE_TWEET = 'CREATE_TWEET';
 export const REMOVE_TWEET = 'REMOVE_TWEET';
 export const LIKE_TWEET = 'LIKE_TWEET';
 export const RETWEET_TWEET = 'RETWEET_TWEET';
+// comment types
+export const COMMENT_LOADING = 'COMMENT_LOADING';
+export const ADD_COMMENT = 'ADD_COMMENT';
+export const GET_COMMENTS = 'GET_COMMENTS';
+export const CLEAR_COMMENTS = 'CLEAR_COMMENTS';
 // UI types
 export const OPEN_CREATE_TWEET_MODAL = 'OPEN_CREATE_TWEET_MODAL';
 export const CLOSE_CREATE_TWEET_MODAL = 'CLOSE_CREATE_TWEET_MODAL';

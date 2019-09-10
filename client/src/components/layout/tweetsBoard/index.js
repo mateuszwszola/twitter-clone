@@ -36,7 +36,7 @@ function TweetsBoard(props) {
     comments,
     auth
   } = props;
-  if (tweets.length === 0) {
+  if (!tweets || tweets.length === 0) {
     return (
       <Container>
         {comments ? (
@@ -121,10 +121,10 @@ function TweetsBoard(props) {
                           <Icon className="far fa-comment" />{' '}
                           {tweet.comments.length}
                         </ItemGroup>
-                        <ItemGroup>
-                          <Icon className="fas fa-retweet" />{' '}
-                          {tweet.retweets.length}
-                        </ItemGroup>
+                        {/*<ItemGroup>*/}
+                        {/*  <Icon className="fas fa-retweet" />{' '}*/}
+                        {/*  {tweet.retweets.length}*/}
+                        {/*</ItemGroup>*/}
                         <LikeItemGroup
                           onClick={e => handleActionClick(e, 'like', tweet._id)}
                         >

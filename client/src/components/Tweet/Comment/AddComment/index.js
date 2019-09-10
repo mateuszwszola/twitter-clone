@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CommentContainer, CommentForm, CommentInput } from './style';
+import { CommentContainer, CommentForm, CommentInput } from 'components/Tweet/Comment/AddComment/style';
 import { UserAvatar } from 'shared/components';
 import portretPlaceholder from 'img/portret-placeholder.png';
 
@@ -21,6 +21,7 @@ function AddComment({ handleSubmit, handleChange, comment }) {
         />
       </CommentForm>
     </CommentContainer>
+
   );
 }
 
