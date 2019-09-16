@@ -37,14 +37,14 @@ export function TweetModalContainer(
 
     function handleActionClick(e, action, tweet_id) {
         e.stopPropagation();
-        if (auth.isAuthenticated) {
+        if (!auth.isAuthenticated) {
+            history.push('/signin');
+        } else {
             if (action === 'like') {
                 likeTweet(tweet_id, auth.user._id);
             } else if (action === 'remove') {
                 removeTweet(tweet_id);
             }
-        } else {
-            history.push('/signin');
         }
     }
 

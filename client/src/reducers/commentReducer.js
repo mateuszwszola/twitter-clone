@@ -25,6 +25,7 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 comments: comments !== null ? [payload, ...comments] : null,
+                loading: false
             };
         case GET_COMMENTS:
             return {

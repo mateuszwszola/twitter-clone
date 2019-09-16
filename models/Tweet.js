@@ -7,17 +7,12 @@ const TweetSchema = new Schema({
   // 3. Tweet content:
   // a) text - required
   // b) media - optional, (image, video)
-  // 4. Comments - comments are just another tweet, (array of tweet_ids)
+  // 4. CommentsList - comments are just another tweet, (array of tweet_ids)
   // So based on the length of the array I can tell how much comments that tweet have
   // 5. Likes -> array of user_ids who liked
-  // 6. Retweets -> array of tweets_ids
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
-  },
-  created: {
-    type: Date,
-    default: Date.now
   },
   text: {
     type: String,
@@ -25,6 +20,10 @@ const TweetSchema = new Schema({
   },
   media: {
     type: String, // url to the photo/video
+  },
+  created: {
+    type: Date,
+    default: Date.now
   },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],

@@ -45,7 +45,7 @@ function TweetModal({
                             <Link to={`/${tweet.user.username}`}>
                                 <UserAvatar
                                     small
-                                    src={tweet.user.avatar || portretPlaceholder}
+                                    src={tweet.user && tweet.user.avatar || portretPlaceholder}
                                     alt={`${tweet.user.name} avatar`}
                                 />
                             </Link>
@@ -83,7 +83,6 @@ function TweetModal({
                             <TweetAction>
                                 <Icon
                                     className="far fa-comment"
-                                    onClick={() => alert('Comment')}
                                 />{' '}
                                 <strong>{tweet.comments.length}</strong>
                             </TweetAction>

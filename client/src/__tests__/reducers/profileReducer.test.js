@@ -235,7 +235,7 @@ describe('profileReducer', () => {
 
     describe('Creating and removing tweet', () => {
         describe('CREATE_TWEET', () => {
-            const action = { type: CREATE_TWEET, payload: dummyTweet };
+            const action = { type: CREATE_TWEET, payload: { data: dummyTweet } };
 
             test('does not update the state when profile is null', () => {
                 expect(profileReducer(undefined, action)).toEqual(initialState);
@@ -243,7 +243,7 @@ describe('profileReducer', () => {
 
             test('adds tweet ID to profile tweets and homepageTweets array which user is the owner of that tweet', () => {
                 const profile = dummyProfiles[1];
-                const tweetId = action.payload._id;
+                const tweetId = action.payload.data._id;
 
                 const currentState = {
                     ...initialState,
@@ -267,7 +267,7 @@ describe('profileReducer', () => {
                     ...dummyProfile,
                     following: [...dummyProfile.following, dummyProfiles[1].user._id]
                 };
-                const tweetId = action.payload._id;
+                const tweetId = action.payload.data._id;
 
                 const currentState = {
                     ...initialState,

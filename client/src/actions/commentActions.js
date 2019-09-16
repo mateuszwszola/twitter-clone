@@ -28,9 +28,19 @@ export const getComments = tweetId => async dispatch => {
     }
 };
 
-export const addComment = tweetId => async dispatch => {
+export const addComment = (tweetId, comment) => async dispatch => {
+    dispatch(setCommentLoading());
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    const body = JSON.stringify(comment);
+
     try {
-        const res = await axios.post(`/api/tweets/comment/${tweetId}`);
+        const res = await axios.post(`/api/tweets/comment/${tweetId}`, body, config);
 
         dispatch({
             type: ADD_COMMENT,

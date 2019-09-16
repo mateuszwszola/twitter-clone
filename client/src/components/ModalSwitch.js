@@ -8,15 +8,15 @@ function ModalSwitch(props) {
   const { location } = props;
   let previousLocation = usePrevious(location);
 
-  useEffect(() => {
-    // set previousLocation if props.location is not modal
-    if (
-        props.history.action !== 'POP' &&
-        (!location.state || !location.state.modal)
-    ) {
-      previousLocation = location;
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   // set previousLocation if props.location is not modal
+  //   if (
+  //       props.history.action !== 'POP' &&
+  //       (!location.state || !location.state.modal)
+  //   ) {
+  //     previousLocation = usePrevious(location);
+  //   }
+  // }, [location]);
 
   let isModal = !!(
       location.state &&

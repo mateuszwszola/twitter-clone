@@ -2,23 +2,31 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getComments, addComment } from "actions/commentActions";
-import AddComment from './AddComment';
-import TweetsBoard from "components/layout/TweetsBoard";
+import AddCommentForm from './AddCommentForm';
+import CommentsList from './CommentsList';
 import Loading from 'components/Loading';
 
-function Comment({ tweetId, comment: { comments, loading }, getComments, addComment }) {
+function Comment({ tweetId, comment: { comments, loading }, getComments, addComment, auth, errors }) {
     useEffect(() => {
         getComments(tweetId);
     }, [tweetId]);
 
-    if (comments === null || loading) {
-        return <Loading />;
+    function handleAddComment(comment) {
+        addComment(tweetId, comment);
     }
 
     return (
         <>
-            <AddComment />
-            <TweetsBoard comments={true} tweets={comments} />
+            <AddCommentForm
+                handleAddComment={handleAddComment}
+                errors={errors}
+                userAvatar={auth.user && auth.user.avatar}
+            />
+            {!comments || loading ? (
+                <Loading />
+            ) : (
+                <CommentsList comments={comments} auth={auth} />
+            )}
         </>
     )
 }
@@ -28,10 +36,14 @@ Comment.propTypes = {
     getComments: PropTypes.func.isRequired,
     addComment: PropTypes.func.isRequired,
     comment: PropTypes.object.isRequired,
+    errors: PropTypes.array.isRequired,
+    auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
     comment: state.comment,
+    errors: state.errors,
+    auth: state.auth
 });
 
 export default connect(mapStateToProps, { getComments, addComment })(Comment);

@@ -33,17 +33,12 @@ function TweetsBoard(props) {
     setCurrentTweet,
     likeTweet,
     removeTweet,
-    comments,
     auth
   } = props;
   if (!tweets || tweets.length === 0) {
     return (
       <Container>
-        {comments ? (
-          <InfoText>Tweet does not have any comments</InfoText>
-        ) : (
           <InfoText>You don't have any tweets</InfoText>
-        )}
       </Container>
     );
   }

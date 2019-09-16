@@ -52,7 +52,7 @@ export default function(state = initialState, action) {
     case CREATE_TWEET:
       return {
         ...state,
-        tweets: payload.addNewTweetToState ? [payload.data, ...state.tweets] : [...state.tweets],
+        tweets: state.tweets !== null ? payload.addNewTweetToState ? [payload.data, ...state.tweets] : [...state.tweets] : null,
         loading: false
       };
     case LIKE_TWEET:

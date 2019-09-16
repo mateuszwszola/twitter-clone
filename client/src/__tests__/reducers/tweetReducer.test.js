@@ -7,8 +7,7 @@ import {
     CLEAR_TWEETS,
     CREATE_TWEET,
     LIKE_TWEET,
-    REMOVE_TWEET,
-    GET_ERRORS
+    REMOVE_TWEET
 } from "actions/types";
 import { dummyTweet, dummyTweets, dummyProfile } from '__fixtures__';
 
@@ -81,12 +80,29 @@ describe('tweetReducer', () => {
     });
 
     describe('CREATE_TWEET', () => {
+        const action = {
+            type: CREATE_TWEET,
+            payload: {
+                addNewTweetToState: false,
+                data: dummyTweet
+            }
+        };
        test('does not add new tweet to tweets array', () => {
-
+            expect(tweetReducer(undefined, action)).toEqual(initialState);
        });
 
        test('adds new tweet to tweets array', () => {
+            const currentState = {
+                ...initialState,
+                tweets: dummyTweets
+            };
 
+            const expectedState = {
+                ...currentState,
+                tweets: [action.payload.data, ...currentState.tweets]
+            };
+
+            expect(tweetReducer(currentState, { ...action, payload: { ...action.payload, addNewTweetToState: true} })).toEqual(expectedState);
        });
     });
 

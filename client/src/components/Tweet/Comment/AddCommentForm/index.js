@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CommentContainer, CommentForm, CommentInput } from 'components/Tweet/Comment/AddComment/style';
+import { CommentContainer, CommentForm, CommentInput } from 'components/Tweet/Comment/AddCommentForm/style';
 import { UserAvatar } from 'shared/components';
 import portretPlaceholder from 'img/portret-placeholder.png';
 
-function AddComment({ handleSubmit, handleChange, comment }) {
+function AddCommentForm({ handleSubmit, handleChange, userAvatar, commentText }) {
   return (
     <CommentContainer>
       <UserAvatar
         tiny
-        src={portretPlaceholder} // user avatar
+        src={userAvatar || portretPlaceholder}
         alt="User Avatar"
       />
       <CommentForm onSubmit={handleSubmit}>
         <CommentInput
           placeholder="Tweet your reply"
           type="text"
-          value={comment}
+          value={commentText}
           onChange={handleChange}
         />
       </CommentForm>
@@ -25,13 +25,14 @@ function AddComment({ handleSubmit, handleChange, comment }) {
   );
 }
 
-AddComment.propTypes = {
+AddCommentForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
-  comment: PropTypes.string.isRequired
+  commentText: PropTypes.string.isRequired,
+  userAvatar: PropTypes.string,
 };
 
-function AddCommentContainer(props) {
+function AddCommentFormContainer({ handleAddComment, userAvatar, errors }) {
   const [comment, setComment] = useState('');
 
   function handleChange(e) {
@@ -41,16 +42,24 @@ function AddCommentContainer(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log({ comment });
+    handleAddComment({ text: comment });
   }
 
   return (
-    <AddComment
+    <AddCommentForm
       handleSubmit={handleSubmit}
       handleChange={handleChange}
-      comment={comment}
+      commentText={comment}
+      userAvatar={userAvatar}
+      errors={errors}
     />
   );
 }
 
-export default AddCommentContainer;
+AddCommentFormContainer.propTypes = {
+  handleAddComment: PropTypes.func.isRequired,
+  errors: PropTypes.array.isRequired,
+  userAvatar: PropTypes.string,
+};
+
+export default AddCommentFormContainer;

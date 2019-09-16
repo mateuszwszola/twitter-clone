@@ -421,6 +421,20 @@ describe('Tweets', function() {
        });
     });
 
+    describe('GET /comment/:tweet_id/all', function() {
+        it('should get array of tweet comments', async function() {
+            const user = await new User(dummyUser).save();
+            const tweet = await new Tweet({ user: user.id, ...dummyTweet }).save();
+
+            const res = await chai.request(server)
+                .get(`${API_URL}/comment/${tweet.id}/all`);
+
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.should.have.length(0);
+        });
+    });
+
     function testErrorRes(res) {
         res.should.have.status(422);
         res.body.should.be.a('object');
