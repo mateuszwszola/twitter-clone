@@ -9,6 +9,7 @@ import Loading from 'components/Loading';
 function Comment({ tweetId, comment: { comments, loading }, getComments, addComment, auth, errors }) {
     useEffect(() => {
         getComments(tweetId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tweetId]);
 
     function handleAddComment(comment) {

@@ -15,16 +15,21 @@ function SignInContainer(props) {
     const [errors, setErrors] = useState([]);
     const [redirect, setRedirect] = useState(false);
 
+    const isAuthenticated = props.auth.isAuthenticated;
+    const reduxErrors = props.errors;
+    const { clearErrors } = props;
+
     useEffect(() => {
-        if (props.auth.isAuthenticated || !isEmpty(props.errors)) {
-            setRedirect(props.auth.isAuthenticated);
-            if (!isEmpty(props.errors)) {
-                setErrors(props.errors);
+        if (isAuthenticated || !isEmpty(reduxErrors)) {
+            setRedirect(isAuthenticated);
+            if (!isEmpty(reduxErrors)) {
+                setErrors(reduxErrors);
             }
         }
-    }, [props.auth.isAuthenticated, props.errors]);
+    }, [isAuthenticated, reduxErrors]);
 
-    useEffect(() => props.clearErrors(), []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => clearErrors(), []);
 
     const handleSubmit = e => {
         e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { TweetModal } from './Tweet';
 import usePrevious from 'hooks/usePrevious';
@@ -7,16 +7,6 @@ import usePrevious from 'hooks/usePrevious';
 function ModalSwitch(props) {
   const { location } = props;
   let previousLocation = usePrevious(location);
-
-  // useEffect(() => {
-  //   // set previousLocation if props.location is not modal
-  //   if (
-  //       props.history.action !== 'POP' &&
-  //       (!location.state || !location.state.modal)
-  //   ) {
-  //     previousLocation = usePrevious(location);
-  //   }
-  // }, [location]);
 
   let isModal = !!(
       location.state &&

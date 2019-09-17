@@ -2,15 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
-import Loading from "components/Loading";
 import { getTweetById, likeTweet, removeTweet } from "actions/tweetActions";
+import Loading from "components/Loading";
 import TweetModal from './TweetModal';
 
 export function TweetModalContainer(
     {
         match,
         auth,
-        tweet: { tweet, loading},
+        tweet: { tweet, loading },
         getTweetById,
         likeTweet,
         removeTweet,
@@ -24,6 +24,7 @@ export function TweetModalContainer(
         if (!tweet) {
             getTweetById(status_id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status_id, tweet]);
 
     function back(e) {

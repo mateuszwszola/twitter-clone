@@ -35,6 +35,12 @@ function TweetModal({
                         liked,
                         handleActionClick
                     }) {
+    const user = {
+        username: (tweet.user && tweet.user.username) || 'Unknown',
+        name: (tweet.user && tweet.user.name) || 'Unknown',
+        avatar: (tweet.user && tweet.user.avatar) || portretPlaceholder
+    };
+
     return createPortal(
         <Container onClick={back} ref={containerRef}>
             <CloseButton ref={closeButtonRef} />
@@ -42,23 +48,23 @@ function TweetModal({
                 <Main>
                     <TopFlex>
                         <UserGroup>
-                            <Link to={`/${tweet.user.username}`}>
+                            <Link to={`/${user.username}`}>
                                 <UserAvatar
                                     small
-                                    src={tweet.user && tweet.user.avatar || portretPlaceholder}
-                                    alt={`${tweet.user.name} avatar`}
+                                    src={user.avatar}
+                                    alt={`${user.name} avatar`}
                                 />
                             </Link>
                             <UserInfo>
                                 <ItemGroup>
-                                    <TweetUserName as={Link} to={`/${tweet.user.username}`}>
-                                        {tweet.user.name}
+                                    <TweetUserName as={Link} to={`/${user.username}`}>
+                                        {user.name}
                                     </TweetUserName>
                                 </ItemGroup>
                                 <ItemGroup>
                                     @
-                                    <TweetUserUsername as={Link} to={`/${tweet.user.username}`}>
-                                        {tweet.user.username}
+                                    <TweetUserUsername as={Link} to={`/${user.username}`}>
+                                        {user.username}
                                     </TweetUserUsername>
                                 </ItemGroup>
                             </UserInfo>

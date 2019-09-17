@@ -13,15 +13,15 @@ function CreateTweetContainer(props) {
     const wrapperRef = useRef(null);
 
     useEffect(() => {
+        function closeModal(e) {
+            if (wrapperRef !== null && e.target === wrapperRef.current) {
+                closeCreateTweetModal();
+            }
+        }
         document.addEventListener('click', closeModal);
         return () => document.removeEventListener('click', closeModal);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    function closeModal(e) {
-        if (wrapperRef !== null && e.target === wrapperRef.current) {
-            closeCreateTweetModal();
-        }
-    }
 
     function handleChange(e) {
         setText(e.target.value);

@@ -6,20 +6,25 @@ import portretPlaceholder from "img/portret-placeholder.png";
 import { Container, Header, Heading, List, ListItem, ListItemContent, UserInfoGroup, ItemGroup } from './style';
 
 function SingleComment({ comment }) {
+    const user = {
+        username: (comment.user && comment.user.name) || 'Unknown',
+        name: (comment.user && comment.user.name) || 'Unknown',
+        avatar: (comment.user && comment.user.avatar) || portretPlaceholder
+    };
     return (
         <ListItem>
             <UserAvatar
                 small
-                src={comment.user && comment.user.avatar || portretPlaceholder}
-                alt="User Avatar"
+                src={user.avatar}
+                alt={`${user.name} avatar`}
             />
             <ListItemContent>
                 <UserInfoGroup>
                     <ItemGroup>
-                        <span>{comment.user && comment.user.name || 'Unknown'}</span>
+                        <span>{user.name}</span>
                     </ItemGroup>
                     <ItemGroup>
-                        <span>{comment.user && comment.user.username || 'Unknown'}</span>
+                        <span>{user.username}</span>
                     </ItemGroup>
                     <ItemGroup>
                         <Moment format="DD/MM/YYYY" withTitle>
@@ -28,7 +33,6 @@ function SingleComment({ comment }) {
                     </ItemGroup>
                 </UserInfoGroup>
             </ListItemContent>
-
             Comment
         </ListItem>
     );

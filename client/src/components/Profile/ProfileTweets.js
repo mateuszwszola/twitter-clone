@@ -13,6 +13,7 @@ function ProfileTweets({
 }) {
   useEffect(() => {
     getUserTweets(profile.user._id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile.user._id]);
   return (
     <ProfileTweetsBoard>

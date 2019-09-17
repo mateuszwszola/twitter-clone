@@ -29,6 +29,7 @@ function EditProfileContainer({
 
   useEffect(() => {
       getUserProfile();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleSubmit(e) {
@@ -37,7 +38,7 @@ function EditProfileContainer({
     const userFields = ['name', 'username', 'avatar'];
     const profileFields = ['bio', 'website', 'location', 'birthday', 'backgroundPicture'];
     userFields.forEach(field => {
-      if (profile.user && (!profile.user[field] || profile.user[field] && state[field].value !== profile.user[field])) {
+      if (profile.user && (!profile.user[field] || (profile.user[field] && state[field].value) !== profile.user[field])) {
         profileData[field] = state[field].value;
       }
     });

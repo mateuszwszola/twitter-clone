@@ -14,6 +14,7 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
 
   useEffect(() => {
     getProfileByUsername(username);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
   if (!isEmpty(errors)) {
