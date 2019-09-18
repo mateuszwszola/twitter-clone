@@ -16,20 +16,20 @@
     "bad-words": "^3.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
-    "concurrently": "^4.1.1",
+    "concurrently": "^4.1.2",
     "cookie-parser": "^1.4.4",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.0.0",
-    "express-validator": "^6.1.1",
+    "express-validator": "^6.2.0",
     "http-errors": "^1.7.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
-    "mongoose": "^5.6.7",
+    "mongoose": "^5.7.1",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "uuid": "^3.3.2",
+    "uuid": "^3.3.3",
     "validator": "^11.1.0"
   },
   "devDependencies": {
@@ -37,7 +37,7 @@
     "chai-http": "^4.3.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^6.2.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.2",
     "supertest": "^4.0.2"
   }
 }

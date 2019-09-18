@@ -44,7 +44,10 @@ export const addComment = (tweetId, comment) => async dispatch => {
 
         dispatch({
             type: ADD_COMMENT,
-            payload: res.data
+            payload: {
+                data: res.data,
+                tweetId
+            }
         });
     } catch(err) {
         dispatch({

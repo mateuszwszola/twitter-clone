@@ -27,7 +27,7 @@ exports.getUserTweets = async (req, res, next) => {
             return res.status(404).json({ errors: [{ msg: 'User does not exists' }]  });
         }
 
-        const tweets = await Tweet.find({ user: user_id })
+        const tweets = await Tweet.find({ user: user_id, comment: false })
             .sort({ created: -1 })
             .populate('user', ['name', 'username', 'avatar']);
 
@@ -185,6 +185,10 @@ exports.deleteTweet = async (req, res, next) => {
 
         // Delete tweet
         await tweet.remove();
+        await Tweet.updateMany(
+            { _id: tweet_id },
+            { $pull: { comments: tweet_id}}
+        );
         await Profile.updateOne(
             { user: req.user.id },
             { $pull: { tweets: tweet_id, homepageTweets: tweet_id, likes: tweet_id } }

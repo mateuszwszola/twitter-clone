@@ -11,6 +11,9 @@ export const Container = styled.div`
 `;
 
 export const StyledTweet = styled.div`
+  z-index: 10;
+  max-height: 80vh;
+  overflow: auto;
   position: absolute;
   top: 50%;
   left: 50%;

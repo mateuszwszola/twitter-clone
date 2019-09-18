@@ -3,12 +3,29 @@ import PropTypes from 'prop-types';
 import Moment from "react-moment";
 import { UserAvatar } from "shared/components";
 import portretPlaceholder from "img/portret-placeholder.png";
-import { Container, Header, Heading, List, ListItem, ListItemContent, UserInfoGroup, ItemGroup } from './style';
+import {
+    Container,
+    Header,
+    Heading,
+    List,
+    ListItem,
+    ListItemContent,
+    UserInfoGroup,
+    ItemGroup,
+    InfoText,
+    CommentUserName,
+    CommentUserUsername,
+    CommentText,
+    CommentBottomGroup,
+    LikeItemGroup,
+    LikeIcon
+} from './style';
+import { CloseButton } from "shared/components";
 
 function SingleComment({ comment }) {
     const user = {
-        username: (comment.user && comment.user.name) || 'Unknown',
         name: (comment.user && comment.user.name) || 'Unknown',
+        username: (comment.user && comment.user.username) || 'Unknown',
         avatar: (comment.user && comment.user.avatar) || portretPlaceholder
     };
     return (
@@ -21,10 +38,10 @@ function SingleComment({ comment }) {
             <ListItemContent>
                 <UserInfoGroup>
                     <ItemGroup>
-                        <span>{user.name}</span>
+                        <CommentUserName>{user.name}</CommentUserName>
                     </ItemGroup>
                     <ItemGroup>
-                        <span>{user.username}</span>
+                        <CommentUserUsername>{user.username}</CommentUserUsername>
                     </ItemGroup>
                     <ItemGroup>
                         <Moment format="DD/MM/YYYY" withTitle>
@@ -32,8 +49,18 @@ function SingleComment({ comment }) {
                         </Moment>
                     </ItemGroup>
                 </UserInfoGroup>
+                <div>
+                    <CommentText>{comment.text}</CommentText>
+                </div>
+                <CommentBottomGroup>
+                    <LikeItemGroup
+                        onClick={e => console.log('Like')}
+                    >
+                        <LikeIcon className="far fa-heart" liked={false} />{' '}
+                        {comment.likes.length}
+                    </LikeItemGroup>
+                </CommentBottomGroup>
             </ListItemContent>
-            Comment
         </ListItem>
     );
 }
@@ -46,7 +73,7 @@ function CommentsList({ comments, auth }) {
     if (!comments || comments.length === 0) {
         return (
             <div>
-                <p>Tweet does not have any comments</p>
+                <InfoText>Tweet does not have any comments</InfoText>
             </div>
         );
     }

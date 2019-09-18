@@ -12,8 +12,9 @@ function Comment({ tweetId, comment: { comments, loading }, getComments, addComm
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tweetId]);
 
-    function handleAddComment(comment) {
+    function handleAddComment(comment, clearInput) {
         addComment(tweetId, comment);
+        clearInput();
     }
 
     return (

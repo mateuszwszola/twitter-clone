@@ -10,7 +10,7 @@ export const CommentContainer = styled.div`
   flex-direction: row;
   justify-content: stretch;
   align-items: center;
-  padding: 10px 40px;
+  padding: 40px;
   border-top: 1px solid #cadae4;
   border-bottom: 1px solid #cadae4;
 `;

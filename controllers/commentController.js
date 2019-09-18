@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const Tweet = require('../models/Tweet');
 
-exports.getComments = async (req, res) => {
+exports.getComments = async (req, res, next) => {
     const { tweet_id } = req.params;
 
     try {
@@ -10,7 +10,7 @@ exports.getComments = async (req, res) => {
             return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }]  });
         }
 
-        const comments = await Tweet.find({ _id: { "$in": [tweet.comments] }})
+        const comments = await Tweet.find({ _id: { $in: tweet.comments }})
             .sort({ created: -1 })
             .populate('user', ['name', 'username', 'avatar']);
 
@@ -38,7 +38,8 @@ exports.createComment = async (req, res) => {
         }
 
         const commentBody = {
-            text: req.body.text
+            text: req.body.text,
+            comment: true
         };
         // Add optional media property if exists
         if (req.body.media) {
@@ -59,5 +60,6 @@ exports.createComment = async (req, res) => {
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }] });
         }
+        next(err);
     }
 };

@@ -8,7 +8,8 @@ import {
   REMOVE_TWEET,
   LIKE_TWEET,
   RETWEET_TWEET,
-  GET_ERRORS
+  GET_ERRORS,
+  ADD_COMMENT
 } from 'actions/types';
 
 const initialState = {
@@ -54,6 +55,14 @@ export default function(state = initialState, action) {
         ...state,
         tweets: state.tweets !== null ? payload.addNewTweetToState ? [payload.data, ...state.tweets] : [...state.tweets] : null,
         loading: false
+      };
+    case ADD_COMMENT:
+      return {
+        ...state,
+        tweet: (state.tweet !== null && state.tweet._id === payload.tweetId) ? {
+          ...state.tweet,
+          comments: [payload.data._id, ...state.tweet.comments]
+        } : state.tweet
       };
     case LIKE_TWEET:
       const likeIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);

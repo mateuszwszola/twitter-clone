@@ -24,7 +24,7 @@ export default function(state = initialState, action) {
         case ADD_COMMENT:
             return {
                 ...state,
-                comments: comments !== null ? [payload, ...comments] : null,
+                comments: comments !== null ? [payload.data, ...comments] : null,
                 loading: false
             };
         case GET_COMMENTS:

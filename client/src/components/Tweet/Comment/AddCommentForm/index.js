@@ -42,7 +42,7 @@ function AddCommentFormContainer({ handleAddComment, userAvatar, errors }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleAddComment({ text: comment });
+    handleAddComment({ text: comment }, () => setComment(''));
   }
 
   return (
