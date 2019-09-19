@@ -13,7 +13,7 @@ export const StyledUserUsername = styled.p`
 
 export const UserInfoLink = styled(Link)`
   :hover {
-    border-bottom: 2px solid;
+    color: ${props => props.theme.colors.darkerBlue};
   }
   font-size: 0.9em;
 `;

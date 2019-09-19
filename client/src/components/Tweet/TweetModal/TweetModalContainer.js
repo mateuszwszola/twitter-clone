@@ -54,7 +54,7 @@ export function TweetModalContainer(
     }
 
     const liked = !!(
-        auth.user && tweet.likes.find(like => like.user === auth.user._id)
+        auth.user && tweet.likes.find(userId => userId === auth.user._id)
     );
 
     return (

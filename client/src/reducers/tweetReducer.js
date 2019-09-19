@@ -65,7 +65,7 @@ export default function(state = initialState, action) {
         } : state.tweet
       };
     case LIKE_TWEET:
-      const likeIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);
+      const likeIndex = tweets && tweets.findIndex(tweet => tweet._id === payload.tweetId);
 
       return {
         ...state,

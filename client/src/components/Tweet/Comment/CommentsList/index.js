@@ -20,14 +20,18 @@ import {
     LikeItemGroup,
     LikeIcon
 } from './style';
-import { CloseButton } from "shared/components";
+import {DeleteButton} from "./style";
 
-function SingleComment({ comment }) {
+function SingleComment({ comment, handleActionClick, auth }) {
     const user = {
         name: (comment.user && comment.user.name) || 'Unknown',
         username: (comment.user && comment.user.username) || 'Unknown',
         avatar: (comment.user && comment.user.avatar) || portretPlaceholder
     };
+
+    const liked = !!(auth.user && comment.likes.find(userId => userId === auth.user._id));
+    const owner = auth.user && auth.user._id === comment.user._id;
+
     return (
         <ListItem>
             <UserAvatar
@@ -35,6 +39,7 @@ function SingleComment({ comment }) {
                 src={user.avatar}
                 alt={`${user.name} avatar`}
             />
+
             <ListItemContent>
                 <UserInfoGroup>
                     <ItemGroup>
@@ -54,22 +59,31 @@ function SingleComment({ comment }) {
                 </div>
                 <CommentBottomGroup>
                     <LikeItemGroup
-                        onClick={e => console.log('Like')}
+                        onClick={e => handleActionClick(e, 'like', comment._id)}
                     >
-                        <LikeIcon className="far fa-heart" liked={false} />{' '}
+                        <LikeIcon className="far fa-heart" liked={liked} />{' '}
                         {comment.likes.length}
                     </LikeItemGroup>
                 </CommentBottomGroup>
             </ListItemContent>
+            {owner ? (
+                <DeleteButton
+                    onClick={e => handleActionClick(e, 'remove', comment._id)}
+                >
+                    Delete
+                </DeleteButton>
+            ) : null}
         </ListItem>
     );
 }
 
 SingleComment.propTypes = {
     comment: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    handleActionClick: PropTypes.func.isRequired,
 };
 
-function CommentsList({ comments, auth }) {
+function CommentsList({ comments, auth, handleActionClick }) {
     if (!comments || comments.length === 0) {
         return (
             <div>
@@ -88,6 +102,8 @@ function CommentsList({ comments, auth }) {
                     <SingleComment
                         key={comment._id}
                         comment={comment}
+                        auth={auth}
+                        handleActionClick={handleActionClick}
                     />
                 ))}
             </List>
@@ -98,6 +114,7 @@ function CommentsList({ comments, auth }) {
 CommentsList.propTypes = {
     comments: PropTypes.array.isRequired,
     auth: PropTypes.object.isRequired,
+    handleActionClick: PropTypes.func.isRequired,
 };
 
 export default CommentsList;

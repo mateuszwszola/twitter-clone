@@ -56,7 +56,7 @@ describe('commentReducer', () => {
 
     describe('ADD_COMMENT', () => {
         test('add a comment', () => {
-           const action = { type: ADD_COMMENT, payload: dummyTweet };
+           const action = { type: ADD_COMMENT, payload: { data: dummyTweet } };
 
            const currentState = {
                ...initialState,
@@ -65,7 +65,7 @@ describe('commentReducer', () => {
 
            const expectedState = {
                ...currentState,
-               comments: [action.payload, ...currentState.comments]
+               comments: [action.payload.data, ...currentState.comments]
            };
 
            expect(commentReducer(currentState, action)).toEqual(expectedState);
