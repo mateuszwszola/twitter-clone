@@ -45,7 +45,7 @@ export const getProfiles = () => async dispatch => {
   } catch (err) {
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors
+      payload: err.response.data.errors || []
     });
   }
 };

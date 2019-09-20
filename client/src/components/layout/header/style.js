@@ -23,6 +23,13 @@ export const Container = styled.div`
   }
 `;
 
+export const LeftFlex = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+`;
+
 export const Logo = styled.i`
   font-size: 1.5rem;
   color: ${props => props.theme.colors.blue};

@@ -6,6 +6,7 @@ export const Container = styled.div`
   border-radius: 5px;
   box-shadow: 1px 1px 5px 0px ${props => props.theme.colors.red};
   padding: 10px 15px;
+  margin: 0.5rem 1rem;
 `;
 
 export const FlexContainer = styled.div`

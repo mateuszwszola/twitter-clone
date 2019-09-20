@@ -43,10 +43,10 @@ export const ProfileTweetsBoard = styled.div`
 
 export const Sidebar = styled.div``;
 
-export const ProfileList = styled.div`
+export const StyledProfilesList = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   padding: 1rem;

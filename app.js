@@ -14,6 +14,8 @@ const app = express();
 // Connect to the DB
 connectDB();
 
+const global_socket = require('./io').io();
+
 // Handle static assets placed in public directory
 app.use(express.static(path.join(__dirname, './public')));
 if (process.env.NODE_ENV !== 'test') {

@@ -5,7 +5,7 @@ import UserPreview from '../layout/UserPreview';
 import Loading from '../Loading';
 import { Container, LeftSidebar, Main } from './style';
 
-function Homepage({ profile, tweet, ...rest }) {
+function Homepage({ profile, tweet }) {
   return (
     <Container>
       <LeftSidebar>

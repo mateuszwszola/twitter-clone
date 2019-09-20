@@ -1,7 +1,10 @@
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
-const PrimaryHeading = styled.h1``;
+const PrimaryHeading = styled.h1`
+  text-align: center;
+  margin: 1rem;
+`;
 
 const SecondaryHeading = styled.h2``;
 
@@ -58,6 +61,13 @@ const EditProfileButton = styled(Button)`
   align-self: flex-end;
 `;
 
+const BackButton = styled(Button)`
+  border: 2px solid black;
+  border-radius: 5px;
+  color: black;
+  background-color: #fff;
+`;
+
 const FollowProfileButton = styled(EditProfileButton)`
   background-color: #f34c79;
   color: #fff;
@@ -65,6 +75,16 @@ const FollowProfileButton = styled(EditProfileButton)`
 
   &:hover {
     background-color: #e23d69;
+  }
+`;
+
+const ProfilesButton = styled(Button)`
+  margin: 0;
+  font-weight: bold;
+  color: ${props => props.theme.colors.green};
+  transition: 0.3s;
+  &:hover {
+    color: ${props => props.theme.colors.darkGray};
   }
 `;
 
@@ -162,6 +182,8 @@ export {
   Button,
   SignoutButton,
   EditProfileButton,
+  BackButton,
+  ProfilesButton,
   FollowProfileButton,
   StyledNavLink,
   DropdownLink,

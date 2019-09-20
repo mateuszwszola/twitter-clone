@@ -13,7 +13,7 @@ import UserPreviewCard from './UserPreviewCard';
 function UserPreview({ profile }) {
   return (
     <UserPreviewCard>
-      <UserPreviewCard.Background>
+      <UserPreviewCard.Background showColor={!(profile.backgroundPicture)}>
         {profile.backgroundPicture ? (
             <ProfileBackground src={profile.backgroundPicture} alt={`${profile.user.name || 'User'} background`} />
         ) : ''}

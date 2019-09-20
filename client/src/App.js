@@ -11,6 +11,7 @@ import SignUpContainer from './containers/SignUpContainer';
 import PrivateHomepage from './components/route/PrivateHomepage';
 import RenderCreateTweetModal from './components/CreateTweetModal';
 import ProfileContainer from './containers/ProfileContainer';
+import ProfilesContainer from './containers/ProfilesContainer';
 import SettingsContainer from './containers/SettingsContainer';
 import EditProfileContainer from './containers/EditProfileContainer';
 import PrivateRoute from './components/route/PrivateRoute';
@@ -54,6 +55,7 @@ function App() {
                   <Route exact path="/" component={PrivateHomepage} />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />
+                  <Route path="/profiles" component={ProfilesContainer} />
                   <Route path="/:username" component={ProfileContainer} />
                   <Route render={() => <div>404 Not Found</div>} />
                 </ModalSwitch>

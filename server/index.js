@@ -3,7 +3,7 @@
  */
 const http = require('http');
 const app = require('../app');
-
+const io = require('../io');
 /**
  * Simple logger function.
  */
@@ -34,6 +34,10 @@ app.set('port', port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
+/**
+ * Initialize Socket.io
+ */
+io.initialize(server);
 let availablePort = port;
 /**
  * Listen on provided port, on all network interfaces.

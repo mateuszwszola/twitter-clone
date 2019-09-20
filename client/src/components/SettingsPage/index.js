@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Container, ActionsContainer, Form, ChangePasswordButton, EditProfileButton, DeleteAccountButton  } from "./style";
+import { ActionsContainer, Form, ChangePasswordButton, EditProfileButton, DeleteAccountButton  } from "./style";
+import { Container } from 'shared/layout';
 import InputGroup from "components/InputGroup";
 
 function ChangePasswordForm({ handlePasswordFormSubmit, password, password2 }) {
