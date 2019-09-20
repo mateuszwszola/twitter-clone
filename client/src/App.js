@@ -18,6 +18,7 @@ import PrivateRoute from './components/route/PrivateRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import Alert from 'components/Alert';
 import ModalSwitch from './components/ModalSwitch';
+import NotFoundPage from 'components/NotFoundPage';
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -57,7 +58,7 @@ function App() {
                   <Route exact path="/signup" component={SignUpContainer} />
                   <Route path="/profiles" component={ProfilesContainer} />
                   <Route path="/:username" component={ProfileContainer} />
-                  <Route render={() => <div>404 Not Found</div>} />
+                  <Route component={NotFoundPage} />
                 </ModalSwitch>
               </Content>
             </Wrapper>

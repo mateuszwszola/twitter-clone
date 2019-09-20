@@ -5,7 +5,7 @@ import { Route } from 'react-router-dom';
 import { getProfileByUsername } from 'actions/profileActions';
 import Profile from 'components/Profile';
 import Loading from 'components/Loading';
-import DisplayErrors from 'components/DisplayErrors';
+import NotFoundPage from 'components/NotFoundPage';
 import { TweetModal } from 'components/Tweet';
 import isEmpty from 'utils/isEmpty';
 
@@ -18,7 +18,7 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
   }, [username]);
 
   if (!isEmpty(errors)) {
-    return <DisplayErrors errors={errors} />;
+    return <NotFoundPage message={errors[0].msg || 'User with that username does not exists'} />;
   }
 
   return (
