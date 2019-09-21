@@ -1,14 +1,14 @@
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
 
-const PrimaryHeading = styled.h1`
+export const PrimaryHeading = styled.h1`
   text-align: center;
   margin: 1rem;
 `;
 
-const SecondaryHeading = styled.h2``;
+export const SecondaryHeading = styled.h2``;
 
-const Input = styled.input`
+export const Input = styled.input`
   font-size: 1em;
   outline: none;
   display: block;
@@ -24,7 +24,7 @@ const Input = styled.input`
   }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   font-size: 1rem;
   padding: 0.7em 1em;
   margin: 5px;
@@ -45,7 +45,7 @@ const Button = styled.button`
     `}
 `;
 
-const SignoutButton = styled.button`
+export const SignoutButton = styled.button`
   color: black;
   font-weight: normal;
   width: 100%;
@@ -54,21 +54,21 @@ const SignoutButton = styled.button`
   padding: 12px;
 `;
 
-const EditProfileButton = styled(Button)`
+export const EditProfileButton = styled(Button)`
   border: 1px solid #67757f;
   color: #67757f;
   background-color: #fff;
   align-self: flex-end;
 `;
 
-const BackButton = styled(Button)`
+export const BackButton = styled(Button)`
   border: 2px solid black;
   border-radius: 5px;
   color: black;
   background-color: #fff;
 `;
 
-const FollowProfileButton = styled(EditProfileButton)`
+export const FollowProfileButton = styled(EditProfileButton)`
   background-color: #f34c79;
   color: #fff;
   border: none;
@@ -78,17 +78,7 @@ const FollowProfileButton = styled(EditProfileButton)`
   }
 `;
 
-const ProfilesButton = styled(Button)`
-  margin: 0;
-  font-weight: bold;
-  color: ${props => props.theme.colors.green};
-  transition: 0.3s;
-  &:hover {
-    color: ${props => props.theme.colors.darkGray};
-  }
-`;
-
-const StyledNavLink = styled(NavLink)`
+export const StyledNavLink = styled(NavLink)`
   padding: 15px;
   border-bottom: 2px solid transparent;
   font-weight: bold;
@@ -99,7 +89,7 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-const DropdownLink = styled(StyledNavLink)`
+export const DropdownLink = styled(StyledNavLink)`
   color: black;
   font-weight: normal;
   width: 100%;
@@ -107,14 +97,14 @@ const DropdownLink = styled(StyledNavLink)`
   border-radius: 0px;
 `;
 
-const FeedbackMessage = styled.div`
+export const FeedbackMessage = styled.div`
   color: ${props =>
     props.success ? props.theme.colors.green : props.theme.colors.red};
   padding: 5px;
   font-size: 0.8rem;
 `;
 
-const UserAvatar = styled.img`
+export const UserAvatar = styled.img`
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -141,14 +131,14 @@ const UserAvatar = styled.img`
     `}
 `;
 
-const ProfileBackground = styled.img`
+export const ProfileBackground = styled.img`
   object-fit: cover;
   width: 100%;
   max-width: 100%;
   height: 100%;
 `;
 
-const CloseButton = styled.a`
+export const CloseButton = styled.a`
   cursor: pointer;
   position: absolute;
   right: 32px;
@@ -175,21 +165,3 @@ const CloseButton = styled.a`
     transform: rotate(-45deg);
   }
 `;
-
-export {
-  PrimaryHeading,
-  SecondaryHeading,
-  Button,
-  SignoutButton,
-  EditProfileButton,
-  BackButton,
-  ProfilesButton,
-  FollowProfileButton,
-  StyledNavLink,
-  DropdownLink,
-  FeedbackMessage,
-  UserAvatar,
-  ProfileBackground,
-  Input,
-  CloseButton
-};

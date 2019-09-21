@@ -4,7 +4,8 @@ import {
     GET_COMMENTS,
     CLEAR_COMMENTS,
     REMOVE_TWEET,
-    LIKE_TWEET
+    LIKE_TWEET,
+    GET_ERRORS
 } from "actions/types";
 
 const initialState = {
@@ -61,6 +62,11 @@ export default function(state = initialState, action) {
                     },
                     ...comments.slice(likeIndex + 1)
                 ] : comments,
+            };
+        case GET_ERRORS:
+            return {
+                ...state,
+                loading: false
             };
         default:
             return state;

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { ActionsContainer, Form, ChangePasswordButton, EditProfileButton, DeleteAccountButton  } from "./style";
-import { Container } from 'shared/layout';
+import { Container, ActionsContainer, Form, ChangePasswordButton, EditProfileButton, DeleteAccountButton  } from "./style";
+import { PrimaryHeading } from 'shared/components';
 import InputGroup from "components/InputGroup";
 
 function ChangePasswordForm({ handlePasswordFormSubmit, password, password2 }) {
@@ -44,7 +44,7 @@ ChangePasswordForm.propTypes = {
 function SettingsPage({ password, password2, deleteAccount, handlePasswordFormSubmit }) {
     return (
         <Container>
-            <h1>Settings</h1>
+            <PrimaryHeading>Settings</PrimaryHeading>
             {/*<ChangePasswordForm */}
             {/*    handlePasswordFormSubmit={handlePasswordFormSubmit}*/}
             {/*    password={password}*/}

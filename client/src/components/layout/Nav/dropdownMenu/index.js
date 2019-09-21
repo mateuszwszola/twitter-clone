@@ -44,9 +44,6 @@ function DropdownMenu({ user, onLogout }) {
           </DropdownLink>
         </MenuItem>
         <MenuItem>
-          <DropdownLink to="/notfound">404 not found</DropdownLink>
-        </MenuItem>
-        <MenuItem>
           <SignoutButton onClick={onLogout}>
             <i className="fas fa-sign-out-alt" /> Sign Out
           </SignoutButton>

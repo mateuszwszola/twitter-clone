@@ -4,7 +4,7 @@ import { Button } from 'shared/components';
 export const Container = styled.div`
   height: 100%;
   max-width: 800px;
-  margin: 15px auto;
+  margin: 0 auto;
 `;
 
 export const Board = styled.div`

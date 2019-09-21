@@ -50,13 +50,14 @@ function App() {
                     component={EditProfileContainer}
                   />
                   <PrivateRoute
-                    path="/settings"
-                    component={SettingsContainer}
+                      exact
+                      path="/settings"
+                      component={SettingsContainer}
                   />
                   <Route exact path="/" component={PrivateHomepage} />
                   <Route exact path="/signin" component={SignInContainer} />
                   <Route exact path="/signup" component={SignUpContainer} />
-                  <Route path="/profiles" component={ProfilesContainer} />
+                  <Route exact path="/profiles" component={ProfilesContainer} />
                   <Route path="/:username" component={ProfileContainer} />
                   <Route component={NotFoundPage} />
                 </ModalSwitch>

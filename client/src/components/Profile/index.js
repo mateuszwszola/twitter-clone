@@ -8,6 +8,7 @@ import ProfileTweets from './ProfileTweets';
 import Following from './Following';
 import Followers from './Followers';
 import Likes from './Likes';
+import NotFoundPage from 'components/NotFoundPage';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
 import { Container, BackgroundContainer, Background, PagesContainer, AddBackground, AddBackgroundButton } from './style';
@@ -68,6 +69,7 @@ function Profile({
             <Route path={`${match.path}/following`} component={Following} />
             <Route path={`${match.path}/followers`} component={Followers} />
             <Route path={`${match.path}/likes`} component={Likes} />
+            <Route component={NotFoundPage} />
           </Switch>
         </PagesContainer>
          {/*<Sidebar>Right sidebar</Sidebar>*/}

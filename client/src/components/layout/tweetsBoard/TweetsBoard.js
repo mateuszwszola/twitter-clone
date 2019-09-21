@@ -33,7 +33,7 @@ function TweetsBoard({
     if (!tweets || tweets.length === 0) {
         return (
             <Container>
-                <InfoText>You don't have any tweets</InfoText>
+                <InfoText>There are no tweets to display</InfoText>
             </Container>
         );
     }

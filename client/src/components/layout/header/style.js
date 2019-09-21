@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 
 export const StyledHeader = styled.header`
   background-color: #fff;
@@ -28,6 +29,15 @@ export const LeftFlex = styled.div`
   flex-direction: row;
   align-items: center;
   flex: 1;
+`;
+
+export const ProfilesLink = styled(Link)`
+  color: ${props => props.theme.colors.gray};
+  font-weight: bold;
+  margin: 0 10px;
+  &:hover {
+    color: ${props => props.theme.colors.darkGray};
+  }
 `;
 
 export const Logo = styled.i`
