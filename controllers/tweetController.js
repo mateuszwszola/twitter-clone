@@ -4,6 +4,7 @@ const charLengthForProps = require('../helpers/charLengthForProps');
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
 const Profile = require('../models/Profile');
+const TweetComment = require('../models/TweetComment');
 
 exports.getTweets = async (req, res, next) => {
     try {
@@ -185,18 +186,14 @@ exports.deleteTweet = async (req, res, next) => {
 
         // Delete tweet
         await tweet.remove();
-        await Tweet.updateMany(
-            { _id: tweet_id },
-            { $pull: { comments: tweet_id}}
-        );
+        // Delete tweet comments
+        await TweetComment.remove({ tweet: tweet_id });
         await Profile.updateOne(
             { user: req.user.id },
             { $pull: { tweets: tweet_id, homepageTweets: tweet_id, likes: tweet_id } }
         );
-
-        const { followers } = await Profile.findOne({ user: req.user.id }).select('followers');
-        await Profile.updateMany(
-            { user: { $in: followers } },
+        // Pull tweet references from profiles
+        await Profile.updateMany({},
             { $pull: { homepageTweets: tweet_id, likes: tweet_id } }
         );
 
@@ -214,10 +211,6 @@ exports.getProfileLikes = async (req, res, next) => {
     const { user_id } = req.params;
 
     try {
-        const user = await User.findById(user_id);
-        if (!user) {
-            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
-        }
         const profile = await Profile.findOne({ user: user_id });
         if (!profile) {
             return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
@@ -226,6 +219,7 @@ exports.getProfileLikes = async (req, res, next) => {
         const tweets = await Tweet.find({
             _id: { $in: profile.likes }
         }).populate('user', ['name', 'username', 'avatar']);
+
 
         res.json(tweets);
     } catch (err) {

@@ -3,7 +3,6 @@ const auth = require('../../middleware/auth');
 const tweetController = require('../../controllers/tweetController');
 
 router.use('/like', require('./like'));
-router.use('/comment', require('./comment'));
 
 /*
   @route   GET api/tweets/all

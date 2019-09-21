@@ -36,10 +36,6 @@ const TweetSchema = new Schema({
   editted: {
     type: Boolean,
     default: false
-  },
-  comment: {
-    type: Boolean,
-    default: false
   }
 });
 
