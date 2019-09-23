@@ -28,7 +28,7 @@ exports.getUserTweets = async (req, res, next) => {
             return res.status(404).json({ errors: [{ msg: 'User does not exists' }]  });
         }
 
-        const tweets = await Tweet.find({ user: user_id, comment: false })
+        const tweets = await Tweet.find({ user: user_id })
             .sort({ created: -1 })
             .populate('user', ['name', 'username', 'avatar']);
 

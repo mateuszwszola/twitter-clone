@@ -15,7 +15,7 @@ exports.getComments = async (req, res, next) => {
             return res.status(404).json({ errors: [{ msg: 'Tweet does not exists' }]  });
         }
 
-        const comments = await Tweet.find({ _id: { $in: tweet.comments }})
+        const comments = await TweetComment.find({ tweet: tweet_id })
             .sort({ created: -1 })
             .populate('user', ['name', 'username', 'avatar']);
 
@@ -47,6 +47,7 @@ exports.createComment = async (req, res, next) => {
 
         const commentBody = {
             user: req.user.id,
+            tweet: tweet_id,
             text: req.body.text,
         };
         // Add optional media property if exists
@@ -152,6 +153,33 @@ exports.deleteComment = async (req, res, next) => {
         }
         next(err);
     }
+};
+
+exports.toggleCommentLike = async (req, res, next) => {
+  const { comment_id } = req.params;
+
+  try {
+    const comment = await TweetComment.findById(comment_id);
+    if (!comment) {
+        return res.status(404).json({ errors: [{ msg: 'Comment does not exists' }]});
+    }
+
+    const likeIndex = comment.likes.find(like => like.toString() === req.user.id);
+    if (likeIndex > -1) {
+        // remove like
+        comment.likes = comment.likes.filter(like => like.toString() !== req.user.id);
+    } else {
+        comment.likes.push(req.user.id);
+    }
+    await comment.save();
+    res.json(comment);
+  } catch(err) {
+      console.error(err.message);
+      if (err.kind === 'ObjectId') {
+          return res.status(404).json({ errors: [{ msg: 'Comment does not exists' }]});
+      }
+      next(err);
+  }
 };
 
 exports.validate = method => {

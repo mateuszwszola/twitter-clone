@@ -30,4 +30,11 @@ router.put('/comment/:comment_id', auth, commentController.validate('updateComme
  */
 router.delete('/comment/:comment_id', auth, commentController.deleteComment);
 
+/*
+  @route   POST api/comments/like/:comment_id
+  @desc    Toggle comment like
+  @access  Private
+ */
+router.post('/like/:comment_id', auth, commentController.toggleCommentLike);
+
 module.exports = router;

@@ -3,9 +3,9 @@ import {
     ADD_COMMENT,
     GET_COMMENTS,
     CLEAR_COMMENTS,
-    REMOVE_TWEET,
+    REMOVE_COMMENT,
     LIKE_TWEET,
-    GET_ERRORS
+    GET_ERRORS,
 } from "actions/types";
 
 const initialState = {
@@ -26,7 +26,7 @@ export default function(state = initialState, action) {
         case ADD_COMMENT:
             return {
                 ...state,
-                comments: comments !== null ? [payload.data, ...comments] : null,
+                comments: comments !== null ? [payload.data, ...comments] : state.comments,
                 loading: false
             };
         case GET_COMMENTS:
@@ -40,7 +40,7 @@ export default function(state = initialState, action) {
                 ...state,
                 comments: null
             };
-        case REMOVE_TWEET:
+        case REMOVE_COMMENT:
             return {
                 ...state,
                 comments: comments !== null
