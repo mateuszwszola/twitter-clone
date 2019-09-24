@@ -58,7 +58,7 @@ function EditProfileContainer({
     }
   }
 
-  if (loading || profile === null) {
+  if (profile === null) {
     return <Loading />;
   }
 

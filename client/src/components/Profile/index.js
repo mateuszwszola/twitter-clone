@@ -37,20 +37,24 @@ function Profile({
   return (
     <Container>
       <BackgroundContainer>
-        {profile.backgroundPicture ? (
+        {(profile.backgroundPicture) ? (
           <Background
             alt={`${profile.user.name} background`}
             src={profile.backgroundPicture}
           />
         ) : (
           <AddBackground>
-            <span>Add background picture</span>
-            {' '}
-            <AddBackgroundButton
-                className="fas fa-plus-circle"
-                as={Link}
-                to="/edit-profile"
-            />
+            {owner ? (
+              <>
+                <span>Add background picture</span>
+                {' '}
+                <AddBackgroundButton
+                    className="fas fa-plus-circle"
+                    as={Link}
+                    to="/edit-profile"
+                />
+              </>
+            ) : ''}
           </AddBackground>
         )}
       </BackgroundContainer>

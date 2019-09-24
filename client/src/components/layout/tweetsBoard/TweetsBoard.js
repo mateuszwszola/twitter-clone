@@ -19,9 +19,9 @@ import {
     LikeIcon,
     ItemGroup,
     LikeItemGroup,
-    InfoText,
     DeleteButton
 } from './style';
+import { InfoText } from 'shared/components';
 import portretPlaceholder from 'img/portret-placeholder.png';
 
 function TweetsBoard({

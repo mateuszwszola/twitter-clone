@@ -8,6 +8,13 @@ export const PrimaryHeading = styled.h1`
 
 export const SecondaryHeading = styled.h2``;
 
+export const InfoText = styled.p`
+  text-align: center;
+  padding: 10px 15px;
+  font-size: 1.15em;
+  color: ${props => props.theme.colors.darkGray};
+`;
+
 export const Input = styled.input`
   font-size: 1em;
   outline: none;

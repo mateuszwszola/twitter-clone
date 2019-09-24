@@ -17,7 +17,7 @@ function HomepageContainer({
     getUserHomepageTweets();
   }, [getUserProfile, getUserHomepageTweets]);
 
-  if (profile.loading || profile.profile === null) {
+  if (profile.profile === null) {
     return <Loading />;
   }
 
