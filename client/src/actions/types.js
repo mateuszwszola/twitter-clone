@@ -26,7 +26,7 @@ export const CLEAR_TWEETS = 'CLEAR_TWEETS';
 export const CREATE_TWEET = 'CREATE_TWEET';
 export const REMOVE_TWEET = 'REMOVE_TWEET';
 export const LIKE_TWEET = 'LIKE_TWEET';
-export const RETWEET_TWEET = 'RETWEET_TWEET';
+// export const RETWEET_TWEET = 'RETWEET_TWEET';
 // comment types
 export const COMMENT_LOADING = 'COMMENT_LOADING';
 export const ADD_COMMENT = 'ADD_COMMENT';

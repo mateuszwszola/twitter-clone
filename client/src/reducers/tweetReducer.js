@@ -7,9 +7,9 @@ import {
   CREATE_TWEET,
   REMOVE_TWEET,
   LIKE_TWEET,
-  RETWEET_TWEET,
   GET_ERRORS,
-  ADD_COMMENT
+  ADD_COMMENT,
+  REMOVE_COMMENT
 } from 'actions/types';
 
 const initialState = {
@@ -56,14 +56,6 @@ export default function(state = initialState, action) {
         tweets: state.tweets !== null ? payload.addNewTweetToState ? [payload.data, ...state.tweets] : [...state.tweets] : null,
         loading: false
       };
-    case ADD_COMMENT:
-      return {
-        ...state,
-        tweet: (state.tweet !== null && state.tweet._id === payload.tweetId) ? {
-          ...state.tweet,
-          comments: [payload.data._id, ...state.tweet.comments]
-        } : state.tweet
-      };
     case LIKE_TWEET:
       const likeIndex = tweets && tweets.findIndex(tweet => tweet._id === payload.tweetId);
 
@@ -86,28 +78,44 @@ export default function(state = initialState, action) {
               : [...tweet.likes, payload.authUserId]
         } : tweet
       };
-    case RETWEET_TWEET:
-      const retweetIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);
-
+    case ADD_COMMENT:
       return {
         ...state,
-        tweets: tweets && retweetIndex > -1 ? [
-          ...tweets.slice(0, retweetIndex),
-          {
-            ...tweets[retweetIndex],
-            retweets: tweets[retweetIndex].retweets.includes(payload.authUserId)
-                ? tweets[retweetIndex].retweets.filter(id => id !== payload.authUserId)
-                : [...tweets[retweetIndex].retweets, payload.authUserId]
-          },
-          ...tweets.slice(retweetIndex + 1)
-        ] : tweets,
-        tweet: tweet !== null && tweet._id === payload.tweetId ? {
-          ...tweet,
-          retweets: tweet.retweets.includes(payload.authUserId)
-              ? tweet.retweets.filter(id => id !== payload.authUserId)
-              : [...tweet.retweets, payload.authUserId]
-        } : tweet
+        tweet: state.tweet !== null ? {
+          ...state.tweet,
+          comments: [payload._id, ...state.tweet.comments]
+        } : state.tweet
       };
+    case REMOVE_COMMENT:
+      return {
+        ...state,
+        tweet: state.tweet !== null ? {
+          ...state.tweet,
+          comments: state.tweet.comments.filter(commentId => commentId !== payload)
+        } : state.tweet
+      };
+    // case RETWEET_TWEET:
+    //   const retweetIndex = tweets && state.tweets.findIndex(tweet => tweet._id === payload.tweetId);
+    //
+    //   return {
+    //     ...state,
+    //     tweets: tweets && retweetIndex > -1 ? [
+    //       ...tweets.slice(0, retweetIndex),
+    //       {
+    //         ...tweets[retweetIndex],
+    //         retweets: tweets[retweetIndex].retweets.includes(payload.authUserId)
+    //             ? tweets[retweetIndex].retweets.filter(id => id !== payload.authUserId)
+    //             : [...tweets[retweetIndex].retweets, payload.authUserId]
+    //       },
+    //       ...tweets.slice(retweetIndex + 1)
+    //     ] : tweets,
+    //     tweet: tweet !== null && tweet._id === payload.tweetId ? {
+    //       ...tweet,
+    //       retweets: tweet.retweets.includes(payload.authUserId)
+    //           ? tweet.retweets.filter(id => id !== payload.authUserId)
+    //           : [...tweet.retweets, payload.authUserId]
+    //     } : tweet
+    //   };
     case REMOVE_TWEET:
       return {
         ...state,

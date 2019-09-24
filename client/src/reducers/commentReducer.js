@@ -4,8 +4,7 @@ import {
     GET_COMMENTS,
     CLEAR_COMMENTS,
     REMOVE_COMMENT,
-    LIKE_TWEET,
-    GET_ERRORS,
+    GET_ERRORS, TOGGLE_COMMENT_LIKE,
 } from "actions/types";
 
 const initialState = {
@@ -26,7 +25,7 @@ export default function(state = initialState, action) {
         case ADD_COMMENT:
             return {
                 ...state,
-                comments: comments !== null ? [payload.data, ...comments] : state.comments,
+                comments: comments !== null ? [payload, ...comments] : state.comments,
                 loading: false
             };
         case GET_COMMENTS:
@@ -47,8 +46,8 @@ export default function(state = initialState, action) {
                     ? comments.filter(comment => comment._id !== payload)
                     : comments,
             };
-        case LIKE_TWEET:
-            const likeIndex = state.comments && state.comments.findIndex(comment => comment._id === payload.tweetId);
+        case TOGGLE_COMMENT_LIKE:
+            const likeIndex = state.comments && state.comments.findIndex(comment => comment._id === payload.commentId);
 
             return {
                 ...state,

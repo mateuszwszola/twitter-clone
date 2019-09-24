@@ -4,7 +4,8 @@ import {
     ADD_COMMENT,
     GET_COMMENTS,
     GET_ERRORS,
-    REMOVE_COMMENT, TOGGLE_COMMENT_LIKE
+    REMOVE_COMMENT,
+    TOGGLE_COMMENT_LIKE
 } from './types';
 import { setAlert } from './alertActions';
 
@@ -46,12 +47,11 @@ export const addComment = (tweetId, comment) => async dispatch => {
 
         dispatch({
             type: ADD_COMMENT,
-            payload: {
-                data: res.data,
-                tweetId
-            }
+            payload: res.data
         });
+        dispatch(setAlert('Comment successfully added', 'success'));
     } catch(err) {
+        dispatch(setAlert('There was an error. Cannot add a comment', 'danger'));
         dispatch({
             type: GET_ERRORS,
             payload: err.response.data.errors || []
@@ -63,11 +63,11 @@ export const removeComment = (commentId) => async dispatch => {
     try {
         await axios.delete(`/api/comments/comment/${commentId}`);
 
-        dispatch(setAlert('Comment successfully removed', 'success'));
         dispatch({
             type: REMOVE_COMMENT,
             payload: commentId
         });
+        dispatch(setAlert('Comment successfully removed', 'success'));
     } catch(err) {
         dispatch(setAlert('Comment cannot be removed', 'danger'));
         dispatch({
@@ -77,19 +77,22 @@ export const removeComment = (commentId) => async dispatch => {
     }
 };
 
-export const toggleCommentLike = (commentId) => async dispatch => {
+export const toggleCommentLike = (commentId, authUserId) => async dispatch => {
   try {
       await axios.post(`/api/comments/like/${commentId}`);
 
       dispatch({
           type: TOGGLE_COMMENT_LIKE,
-          payload: commentId
+          payload: {
+              commentId,
+              authUserId
+          }
       });
   } catch(err) {
       dispatch({
           type: GET_ERRORS,
           payload: err.response.data.errors || []
       });
-  };
+  }
 };
 

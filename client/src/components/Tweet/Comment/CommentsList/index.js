@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Moment from "react-moment";
-import { UserAvatar } from "shared/components";
-import portretPlaceholder from "img/portret-placeholder.png";
+import Moment from 'react-moment';
+import { UserAvatar } from 'shared/components';
+import portretPlaceholder from 'img/portret-placeholder.png';
 import {
     Container,
     Header,
@@ -20,7 +20,7 @@ import {
     LikeItemGroup,
     LikeIcon
 } from './style';
-import {DeleteButton} from "./style";
+import { DeleteButton } from "./style";
 
 function SingleComment({ comment, handleActionClick, auth }) {
     const user = {
