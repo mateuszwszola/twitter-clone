@@ -6,7 +6,7 @@ import {
     GET_ERRORS,
     REMOVE_COMMENT, TOGGLE_COMMENT_LIKE
 } from './types';
-import { setAlert } from '../alertActions';
+import { setAlert } from './alertActions';
 
 export const setCommentLoading = () => ({
     type: COMMENT_LOADING

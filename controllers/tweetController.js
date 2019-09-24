@@ -89,7 +89,7 @@ exports.createTweet = async (req, res, next) => {
 
     const tweetContent = { text: req.body.text };
 
-    if (req.body.media) {
+    if (req.body.hasOwnProperty('media')) {
         tweetContent.media = req.body.media;
     }
 
@@ -148,7 +148,7 @@ exports.updateTweet = async (req, res, next) => {
             editted: true
         };
 
-        if (req.body.media) {
+        if (req.body.hasOwnProperty('media')) {
             newTweet.media = req.body.media;
         }
 
@@ -225,7 +225,7 @@ exports.getProfileLikes = async (req, res, next) => {
     } catch (err) {
         console.error(err.message);
         if (err.kind === 'ObjectId') {
-            return res.status(404).json({ errors: [{ msg: 'User does not exists' }] });
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }] });
         }
         next(err);
     }

@@ -125,6 +125,7 @@ describe('Tweets', function() {
             testPopulatedUserObject(res.body, user);
         });
     });
+
     /*
         POST a tweet
         Private
@@ -298,7 +299,7 @@ describe('Tweets', function() {
             res.should.have.status(404);
             res.body.should.be.a('object');
             res.body.should.have.property('errors');
-            res.body.errors[0].should.have.property('msg', 'User does not exists');
+            res.body.errors[0].should.have.property('msg', 'Profile does not exists');
         });
 
 
@@ -373,65 +374,6 @@ describe('Tweets', function() {
             const updatedTweet = await Tweet.findById(tweet.id);
             updatedTweet.likes.should.be.a('array');
             updatedTweet.likes.length.should.be.eql(0);
-        });
-    });
-
-    /*
-       Add a comment
-       Private
-    */
-    describe('POST /comment/:tweet_id', function() {
-        let user;
-        let tweet;
-
-        beforeEach(async function() {
-            user = await new User(dummyUser).save();
-            await new Profile({ user: user.id }).save();
-            JWT_TOKEN = await generateJwtToken(user.id);
-            tweet = await new Tweet({ user: user.id, ...dummyTweet }).save();
-        });
-
-       it('should not POST if token not provided', async function() {
-            const res = await chai.request(server)
-                .post(`${API_URL}/comment/${tweet.id}`);
-
-            testNoTokenError(res);
-       });
-
-       it('should not POST if tweet does not exists', async function() {
-           const res = await chai.request(server)
-               .post(`${API_URL}/comment/${mongoObjectId}`)
-               .set('x-auth-token', JWT_TOKEN)
-               .send(dummyTweet);
-
-           testNotExistsTweet(res);
-       });
-
-       it('should POST - add a comment', async function() {
-           const res = await chai.request(server)
-               .post(`${API_URL}/comment/${tweet.id}`)
-               .set('x-auth-token', JWT_TOKEN)
-               .send(dummyTweet);
-
-           res.should.have.status(200);
-           res.body.should.be.a('object');
-           res.body.should.have.property('text', dummyTweet.text);
-           res.body.should.have.property('media', dummyTweet.media);
-           testPopulatedUserObject(res.body, user);
-       });
-    });
-
-    describe('GET /comment/:tweet_id/all', function() {
-        it('should get array of tweet comments', async function() {
-            const user = await new User(dummyUser).save();
-            const tweet = await new Tweet({ user: user.id, ...dummyTweet }).save();
-
-            const res = await chai.request(server)
-                .get(`${API_URL}/comment/${tweet.id}/all`);
-
-            res.should.have.status(200);
-            res.body.should.be.a('array');
-            res.body.should.have.length(0);
         });
     });
 

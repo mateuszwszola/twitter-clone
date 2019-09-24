@@ -25,44 +25,6 @@ exports.getLoggedInUserProfile = async (req, res, next) => {
     }
 };
 
-exports.getLoggedInUserProfileWithHomepageTweets = async (req, res, next) => {
-    try {
-        const profile = await Profile.findOne({ user: req.user.id })
-            .populate('user', ['name', 'username', 'avatar'])
-            .populate({
-                path: 'homepageTweets',
-                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
-            });
-
-        if (!profile) {
-            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
-        }
-        res.json(profile);
-    } catch (err) {
-        console.error(err.message);
-        next(err);
-    }
-};
-
-exports.getLoggedInUserProfileWithTweets = async (req, res, next) => {
-    try {
-        const profile = await Profile.findOne({ user: req.user.id })
-            .populate('user', ['name', 'username', 'avatar'])
-            .populate({
-                path: 'tweets',
-                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
-            });
-
-        if (!profile) {
-            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
-        }
-        res.json(profile);
-    } catch (err) {
-        console.error(err.message);
-        next(err);
-    }
-};
-
 exports.getAllProfiles = async (req, res, next) => {
     try {
         const profiles = await Profile.find({})
@@ -121,35 +83,6 @@ exports.getProfileByUsername = async (req, res, next) => {
                 .json({ errors: [{ msg: 'Profile does not exists' }]});
         }
 
-        res.json(profile);
-    } catch (err) {
-        console.error(err.message);
-        next(err);
-    }
-};
-
-exports.getProfileByUsernameWithTweets = async (req, res, next) => {
-    const { username } = req.params;
-
-    try {
-        const user = await User.findOne({ username });
-        if (!user) {
-            return res
-                .status(404)
-                .json({ errors: [{ msg: 'User with that username does not exists' }]});
-        }
-        const profile = await Profile.findOne({ user: user.id })
-            .populate('user', ['name', 'username', 'avatar'])
-            .populate({
-                path: 'tweets',
-                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
-            });
-
-        if (!profile) {
-            return res
-                .status(404)
-                .json({ errors: [{ msg: 'Profile does not exists' }] });
-        }
         res.json(profile);
     } catch (err) {
         console.error(err.message);
@@ -230,6 +163,73 @@ exports.deleteAccount = async (req, res, next) => {
     }
 };
 
+exports.getLoggedInUserProfileWithHomepageTweets = async (req, res, next) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id })
+            .populate('user', ['name', 'username', 'avatar'])
+            .populate({
+                path: 'homepageTweets',
+                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+            });
+
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
+        }
+        res.json(profile);
+    } catch (err) {
+        console.error(err.message);
+        next(err);
+    }
+};
+
+exports.getLoggedInUserProfileWithTweets = async (req, res, next) => {
+    try {
+        const profile = await Profile.findOne({ user: req.user.id })
+            .populate('user', ['name', 'username', 'avatar'])
+            .populate({
+                path: 'tweets',
+                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+            });
+
+        if (!profile) {
+            return res.status(404).json({ errors: [{ msg: 'Profile does not exists' }]});
+        }
+        res.json(profile);
+    } catch (err) {
+        console.error(err.message);
+        next(err);
+    }
+};
+
+exports.getProfileByUsernameWithTweets = async (req, res, next) => {
+    const { username } = req.params;
+
+    try {
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res
+                .status(404)
+                .json({ errors: [{ msg: 'User with that username does not exists' }]});
+        }
+        const profile = await Profile.findOne({ user: user.id })
+            .populate('user', ['name', 'username', 'avatar'])
+            .populate({
+                path: 'tweets',
+                populate: { path: 'user', select: ['name', 'username', 'avatar'] }
+            });
+
+        if (!profile) {
+            return res
+                .status(404)
+                .json({ errors: [{ msg: 'Profile does not exists' }] });
+        }
+        res.json(profile);
+    } catch (err) {
+        console.error(err.message);
+        next(err);
+    }
+};
+
 exports.getHomepageTweets = async (req, res, next) => {
     try {
         const profile = await Profile.findOne({ user: req.user.id });
@@ -237,7 +237,7 @@ exports.getHomepageTweets = async (req, res, next) => {
             return res.status(404).json({ msg: 'Profile does not exists' });
         }
 
-        const tweets = await Tweet.find({ id: { $in: profile.homepageTweets } })
+        const tweets = await Tweet.find({ _id: { $in: profile.homepageTweets } })
             .populate('user', ['name', 'username', 'avatar'])
             .sort({ created: -1 });
 

@@ -97,7 +97,7 @@ exports.updateComment = async (req, res, next) => {
             text: req.body.text,
         };
         // Add optional media property if exists
-        if (req.body.hasOwnProperty('media') && !isEmpty(req.body.media)) {
+        if (req.body.hasOwnProperty('media')) {
             commentBody.media = req.body.media;
         }
 
@@ -141,6 +141,7 @@ exports.deleteComment = async (req, res, next) => {
             { $pull: { comments: comment_id }}
         );
         // Pull comment references from profiles
+        // Actually, I am not adding comment likes to profile likes array, cause I want to keep only actual tweets there
         await Profile.updateMany({},
             { $pull: { likes: comment_id } }
         );
@@ -164,14 +165,16 @@ exports.toggleCommentLike = async (req, res, next) => {
         return res.status(404).json({ errors: [{ msg: 'Comment does not exists' }]});
     }
 
-    const likeIndex = comment.likes.find(like => like.toString() === req.user.id);
+    const likeIndex = comment.likes.findIndex(like => like.equals(req.user.id));
     if (likeIndex > -1) {
         // remove like
-        comment.likes = comment.likes.filter(like => like.toString() !== req.user.id);
+        comment.likes = comment.likes.filter(like => !like.equals(req.user.id));
     } else {
-        comment.likes.push(req.user.id);
+        comment.likes = [req.user.id, ...comment.likes];
     }
+
     await comment.save();
+
     res.json(comment);
   } catch(err) {
       console.error(err.message);

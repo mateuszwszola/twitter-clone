@@ -166,11 +166,7 @@ exports.loginUser = async (req, res, next) => {
     }
 
     const { username, password } = req.body;
-    /*
-      1. Server will receive username and password
-      2. Username can be user username or email
-      3. Check if username is user username or email
-    */
+
     let login = 'username';
     if (validator.isEmail(username)) {
         login = 'email';
