@@ -4,9 +4,11 @@ import {
     ADD_COMMENT,
     GET_COMMENTS,
     CLEAR_COMMENTS,
+    REMOVE_COMMENT,
+    TOGGLE_COMMENT_LIKE
 } from "actions/types";
 
-import { dummyTweet, dummyTweets } from '__fixtures__';
+import {dummyTweet, dummyTweets, dummyUser} from '__fixtures__';
 
 const initialState = {
   comments: null,
@@ -55,8 +57,8 @@ describe('commentReducer', () => {
     });
 
     describe('ADD_COMMENT', () => {
-        test('add a comment', () => {
-           const action = { type: ADD_COMMENT, payload: { data: dummyTweet } };
+        test('adds the comment', () => {
+           const action = { type: ADD_COMMENT, payload: dummyTweet };
 
            const currentState = {
                ...initialState,
@@ -65,10 +67,71 @@ describe('commentReducer', () => {
 
            const expectedState = {
                ...currentState,
-               comments: [action.payload.data, ...currentState.comments]
+               comments: [...currentState.comments, action.payload]
            };
 
            expect(commentReducer(currentState, action)).toEqual(expectedState);
         });
+    });
+
+    describe('REMOVE_COMMENT', () => {
+       test('removes the comment', () => {
+           const action = { type: REMOVE_COMMENT, payload: dummyTweets[0]._id };
+           const currentState = {
+               ...initialState,
+               comments: dummyTweets
+           };
+
+           const expectedState = {
+               ...currentState,
+               comments: [dummyTweets[1]]
+           };
+
+           expect(commentReducer(currentState, action)).toEqual(expectedState);
+       });
+    });
+
+    describe('TOGGLE_COMMENT_LIKE', () => {
+       test('adds a like', () => {
+           const action = { type: TOGGLE_COMMENT_LIKE, payload: { commentId: dummyTweets[1]._id, authUserId: dummyUser._id } };
+           const currentState = {
+               ...initialState,
+               comments: dummyTweets
+           };
+
+           const expectedState = {
+               ...currentState,
+               comments: [
+                   dummyTweets[0],
+                   {
+                       ...dummyTweets[1],
+                       likes: [dummyUser._id]
+                   }
+               ]
+           };
+
+           expect(commentReducer(currentState, action)).toEqual(expectedState);
+       });
+
+       test('removes a like', () => {
+           const action = { type: TOGGLE_COMMENT_LIKE, payload: { commentId: dummyTweets[1]._id, authUserId: dummyUser._id } };
+           const currentState = {
+               ...initialState,
+               comments: [
+                   dummyTweets[0],
+                   {
+                       ...dummyTweets[1],
+                       likes: [dummyUser._id]
+                   }
+               ]
+           };
+
+           const expectedState = {
+               ...currentState,
+               comments: dummyTweets
+           };
+
+           expect(commentReducer(currentState, action)).toEqual(expectedState);
+       });
     });
 });
