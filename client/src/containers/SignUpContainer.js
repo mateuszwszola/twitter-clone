@@ -34,7 +34,7 @@ function SignUpContainer(props) {
     }, [isAuthenticated, reduxErrors]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => clearErrors(), []);
+    useEffect(() => () => clearErrors(), []);
 
     const handleSubmit = e => {
         e.preventDefault();

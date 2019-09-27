@@ -8,7 +8,7 @@ import { ProfileTweetsBoard } from './style';
 
 function ProfileTweets({
   profile: { profile },
-  tweet: { loading, tweets },
+  tweet: { tweets, loading },
   getUserTweets
 }) {
   useEffect(() => {

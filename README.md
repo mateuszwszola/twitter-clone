@@ -6,6 +6,6 @@ that mimic basic design and functionality of the official Twitter app.
 
 > All right of picture and sign is reserved for [Twitter](https://twitter.com).
 >
-> I would like to hear some feedback, so if you see the code mistakes, bugs or you can tell me how I can improve the app, let me know, thank you!
+> I would like to hear some feedback, so if you see the code mistakes, bugs or have any tips on how I can improve the app, please let me know, thank you!
 
 

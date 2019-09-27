@@ -15,7 +15,7 @@ const TweetCommentSchema = new Schema({
         required: true
     },
     media: {
-        type: String, // url to the photo/video
+        type: String,
     },
     created: {
         type: Date,

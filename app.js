@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const compression = require('compression');
+const helmet = require('helmet');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 require('./config');
 const connectDB = require('./config/db');
-// const rateLimit = require('express-rate-limit');
 
 // Express app setup
 const app = express();
@@ -14,21 +14,29 @@ const app = express();
 // Connect to the DB
 connectDB();
 
-// const global_socket = require('./io').io();
-
-// Handle static assets placed in public directory
-app.use(express.static(path.join(__dirname, './public')));
-if (process.env.NODE_ENV !== 'test') {
-  app.use(logger('dev'));
-}
-// body parser
+app.use(compression());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// cookie parser
-app.use(cookieParser());
+
+if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
+  app.use(logger('dev'));
+}
+
+// const global_socket = require('./io').io();
 
 // Handle routes
 app.use('/api', require('./routes'));
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static assets
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 // 404 handler
 app.use((req, res) => {

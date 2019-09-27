@@ -83,7 +83,7 @@ export default function(state = initialState, action) {
         ...state,
         tweet: state.tweet !== null ? {
           ...state.tweet,
-          comments: [payload._id, ...state.tweet.comments]
+          comments: [...state.tweet.comments, payload._id]
         } : state.tweet
       };
     case REMOVE_COMMENT:

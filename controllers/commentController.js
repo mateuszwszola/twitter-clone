@@ -1,10 +1,12 @@
 const { body, validationResult } = require('express-validator');
-const charLengthForProps = require('../helpers/charLengthForProps');
 const { isEmpty } = require('lodash');
+const Filter = require('bad-words'),
+    filter = new Filter();
+const charLengthForProps = require('../helpers/charLengthForProps');
 
 const Tweet = require('../models/Tweet');
 const TweetComment = require('../models/TweetComment');
-const Profile = require('../models/Profile');
+// const Profile = require('../models/Profile');
 
 exports.getComments = async (req, res, next) => {
     const { tweet_id } = req.params;
@@ -142,9 +144,9 @@ exports.deleteComment = async (req, res, next) => {
         );
         // Pull comment references from profiles
         // Actually, I am not adding comment likes to profile likes array, cause I want to keep only actual tweets there
-        await Profile.updateMany({},
-            { $pull: { likes: comment_id } }
-        );
+        // await Profile.updateMany({},
+        //     { $pull: { likes: comment_id } }
+        // );
 
         res.json(comment);
     } catch(err) {
@@ -197,7 +199,10 @@ exports.validate = method => {
                     .trim()
                     .escape()
                     .isLength(charLengthForProps.tweet)
-                    .withMessage(`Text field must be between ${charLengthForProps.tweet.min} and ${charLengthForProps.tweet.max} chars`),
+                    .withMessage(`Text field must be between ${charLengthForProps.tweet.min} and ${charLengthForProps.tweet.max} chars`)
+                    .customSanitizer(value => {
+                        return filter.clean(value);
+                    }),
                 body('media')
                     .optional({ checkFalsy: true })
                     .isURL()

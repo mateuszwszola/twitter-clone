@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Loading from '../Loading';
 import ProfilesList from './ProfilesList';
 import ProfilePreview from './ProfilePreview';
+import { InfoText } from 'shared/components';
 
 function Following({
   profile: { profile, profiles, loading },
@@ -21,9 +22,15 @@ function Following({
         <Loading />
       ) : (
         <ProfilesList>
-          {profiles.map(profile => (
-            <ProfilePreview key={profile._id} profile={profile} />
-          ))}
+          {profiles.length > 0 ? (
+              <>
+                {profiles.map(profile => (
+                  <ProfilePreview key={profile._id} profile={profile} />
+                ))}
+              </>
+          ) : (
+              <InfoText>There are no profiles to display</InfoText>
+          )}
         </ProfilesList>
       )}
     </>

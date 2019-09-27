@@ -1,4 +1,6 @@
 const { body, validationResult } = require('express-validator');
+const Filter = require('bad-words'),
+    filter = new Filter();
 
 const Profile = require('../models/Profile');
 const Tweet = require('../models/Tweet');
@@ -257,7 +259,10 @@ exports.validate = method => {
                     .trim()
                     .isLength(charLengthForProps.bio)
                     .withMessage(`The bio must be between ${charLengthForProps.bio.min} and ${charLengthForProps.bio.max} chars long`)
-                    .escape(),
+                    .escape()
+                    .customSanitizer(value => {
+                        return filter.clean(value);
+                    }),
                 body('location')
                     .optional({ checkFalsy: true })
                     .trim()

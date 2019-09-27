@@ -15,7 +15,7 @@ export default function InputGroup({
   return (
     <div>
       <Input
-        error={error ? true : false}
+        error={!!error}
         type={type}
         name={name}
         value={value}

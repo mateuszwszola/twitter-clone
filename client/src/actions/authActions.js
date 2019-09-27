@@ -1,5 +1,6 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
+import { setAlert } from './alertActions';
 
 import {
   USER_LOADED,
@@ -51,6 +52,7 @@ export const registerUser = userData => async dispatch => {
 
     dispatch(loadUser());
   } catch (err) {
+    dispatch(setAlert('There was a problem with the server', 'danger'));
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data.errors || []
@@ -81,6 +83,7 @@ export const loginUser = userData => async dispatch => {
 
     dispatch(loadUser());
   } catch (err) {
+    dispatch(setAlert('There was a problem with the server', 'danger'));
     dispatch({
       type: GET_ERRORS,
       payload: err.response.data.errors || []
@@ -92,5 +95,6 @@ export const loginUser = userData => async dispatch => {
 };
 
 export const logoutUser = () => dispatch => {
+  dispatch(setAlert('Log out successfully', 'success', 1500));
   dispatch({ type: LOGOUT });
 };

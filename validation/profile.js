@@ -5,8 +5,6 @@ const { isEmpty, isDate } = require('lodash');
 module.exports = data => {
   const errors = {};
 
-  // I don't know exactly what req.body will contain. Sometimes it will be full information about profile, and sometimes just some properties to update so I need to loop through every property in req.body object, make sure it is a string, and then validate it
-
   const profileInformation = [
     'bio',
     'location',
@@ -14,7 +12,7 @@ module.exports = data => {
     'birthday',
     'avatar',
     'backgroundPicture',
-    'name', // This is an extra property which is placed in User model (but I would like to be able to change it with profile)
+    'name',
     'username'
   ];
 
@@ -24,8 +22,6 @@ module.exports = data => {
     website: { min: 3, max: 30 },
     name: { min: 2, max: 30 },
     username: { min: 6, max: 15 }
-    // TODO.md: Include min/max for the rest of profile information
-    // Figure out how to handle this, because right now I get an error when I send these properties, because below I am checking if profileInformation includes property sent to the server, if yes I am accesing min/max here which does not exists yet
   };
 
   const entries = Object.entries(data);

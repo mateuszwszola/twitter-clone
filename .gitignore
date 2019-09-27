@@ -1,8 +1,6 @@
 /node_modules
 package-lock.json
 .env
-NOTES
-TODO
 .idea
 .vscode
 dist

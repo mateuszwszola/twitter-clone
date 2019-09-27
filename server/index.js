@@ -4,11 +4,12 @@
 const http = require('http');
 const app = require('../app');
 const io = require('../io');
+const debug = require('debug')('http');
 /**
  * Simple logger function.
  */
 function log(message) {
-  process.stdout.write(`${message}\n`);
+  debug(`${message}\n`);
 }
 /**
  * Normalize a port into a number, string, or false.

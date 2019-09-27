@@ -1,5 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const charLengthForProps = require('../helpers/charLengthForProps');
+const Filter = require('bad-words'),
+    filter = new Filter();
 
 const Tweet = require('../models/Tweet');
 const User = require('../models/User');
@@ -335,7 +337,10 @@ exports.validate = method => {
                     .trim()
                     .escape()
                     .isLength(charLengthForProps.tweet)
-                    .withMessage(`Text field must be between ${charLengthForProps.tweet.min} and ${charLengthForProps.tweet.max} chars`),
+                    .withMessage(`Text field must be between ${charLengthForProps.tweet.min} and ${charLengthForProps.tweet.max} chars`)
+                    .customSanitizer(value => {
+                        return filter.clean(value);
+                    }),
                 body('media')
                     .optional({ checkFalsy: true })
                     .isURL()

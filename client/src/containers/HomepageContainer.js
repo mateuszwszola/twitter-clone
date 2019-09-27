@@ -9,7 +9,7 @@ import { getUserHomepageTweets } from 'actions/tweetActions';
 function HomepageContainer({
   getUserProfile,
   getUserHomepageTweets,
-  profile,
+  profile: { profile },
   tweet
 }) {
   useEffect(() => {
@@ -17,11 +17,11 @@ function HomepageContainer({
     getUserHomepageTweets();
   }, [getUserProfile, getUserHomepageTweets]);
 
-  if (profile.profile === null) {
+  if (profile === null) {
     return <Loading />;
   }
 
-  return <Homepage profile={profile.profile} tweet={tweet} />;
+  return <Homepage profile={profile} tweet={tweet} />;
 }
 
 HomepageContainer.propTypes = {

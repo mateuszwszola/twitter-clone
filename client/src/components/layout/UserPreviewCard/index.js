@@ -6,6 +6,7 @@ import MidFlex from './MidFlex';
 import StatsContainer from './StatsContainer';
 
 const UserPreviewCard = styled.div`
+  margin-bottom: 15px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
