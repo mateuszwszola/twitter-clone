@@ -9,7 +9,8 @@
     "client": "npm start --prefix client",
     "server": "nodemon ./server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha --exit"
+    "test": "mocha --exit",
+    "aws-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "author": "Mateusz Wszola",
   "license": "MIT",
