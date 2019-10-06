@@ -5,12 +5,12 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "node ./server/index.js",
+    "start": "npm run client-build && node ./server/index.js",
+    "client-build": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "client": "npm start --prefix client",
     "server": "nodemon ./server/index.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha --exit",
-    "aws-postbuild": "npm install --prefix client && npm run build --prefix client"
+    "test": "mocha --exit"
   },
   "author": "Mateusz Wszola",
   "license": "MIT",

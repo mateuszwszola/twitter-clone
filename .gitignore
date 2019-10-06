@@ -4,3 +4,7 @@ package-lock.json
 .idea
 .vscode
 dist
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
