@@ -2,8 +2,8 @@
  * Module dependencies.
  */
 const http = require('http');
-const app = require('../app');
-const io = require('../io');
+const app = require('./app');
+const io = require('./io');
 const debug = require('debug')('http');
 /**
  * Simple logger function.

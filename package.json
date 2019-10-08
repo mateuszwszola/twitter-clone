@@ -5,10 +5,9 @@
   "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "node ./server/index.js",
-    "aws-postbuild": "npm install --prefix client && npm run build --prefix client",
+    "start": "node server.js",
     "client": "npm start --prefix client",
-    "server": "nodemon ./server/index.js",
+    "server": "nodemon server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha --exit"
   },
