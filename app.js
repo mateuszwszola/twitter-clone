@@ -22,7 +22,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
   app.use(logger('dev'));
 }
-
 // const global_socket = require('./io').io();
 
 // Handle routes
