@@ -4,6 +4,7 @@ package-lock.json
 .idea
 .vscode
 dist
+test
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
