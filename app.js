@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const compression = require('compression');
 const helmet = require('helmet');
 const path = require('path');
 const logger = require('morgan');
@@ -14,7 +13,6 @@ const app = express();
 // Connect to the DB
 connectDB();
 
-app.use(compression());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
