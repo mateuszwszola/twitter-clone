@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 const debug = require('debug')('db');
-const { MONGO_URI, MONGO_TEST_URI, MONGO_URI_PROD } = require('./keys');
-
-const mongo_uri = process.env.NODE_ENV === 'production' ? MONGO_URI_PROD : MONGO_URI;
+const environment = process.env.NODE_ENV || 'development';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.NODE_ENV === 'test' ? MONGO_TEST_URI : mongo_uri, {
+    let dbUri = '';
+    if (environment === 'production') {
+      dbUri = process.env.MONGO_URI_PROD;
+    } else if (environment === 'test') {
+      dbUri = process.env.MONGO_URI_TEST;
+    } else {
+      dbUri = process.env.MONGO_URI_DEV;
+    }
+    
+    await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,

@@ -9,7 +9,7 @@ const debug = require('debug')('http');
  * Simple logger function.
  */
 function log(message) {
-  debug(`${message}\n`);
+  console.log(`${message}\n`);
 }
 /**
  * Normalize a port into a number, string, or false.

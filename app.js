@@ -4,7 +4,6 @@ const helmet = require('helmet');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-require('./config');
 const connectDB = require('./config/db');
 
 // Express app setup
@@ -17,7 +16,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-if (process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   app.use(logger('dev'));
 }
 // const global_socket = require('./io').io();
