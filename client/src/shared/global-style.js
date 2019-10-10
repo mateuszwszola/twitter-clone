@@ -3,7 +3,8 @@ import { createGlobalStyle } from 'styled-components/macro';
 const GlobalStyle = createGlobalStyle`
   html,
   body,
-  #root {
+  #root,
+  .wrapper {
     height: 100%;
   }
 

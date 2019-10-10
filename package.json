@@ -7,9 +7,10 @@
   "scripts": {
     "start": "node server.js",
     "client": "npm start --prefix client",
+    "client:test": "npm test --prefix client",
     "server": "nodemon -r dotenv/config server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "mocha --exit"
+    "test": "mocha -r dotenv/config --exit"
   },
   "author": "Mateusz Wszola",
   "license": "MIT",
