@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { TweetModal } from 'components/Tweet';
 import isEmpty from 'utils/isEmpty';
 
 function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
+  const [loading, setLoading] = useState(true);
   const { username } = match.params;
 
   useEffect(() => {
@@ -17,13 +18,19 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 
+  useEffect(() => {
+    if (profile.profile !== null) {
+      setLoading(false);
+    }
+  }, [profile.profile]);
+
   if (!isEmpty(errors)) {
     return <DisplayErrors errors={errors} />
   }
 
   return (
     <>
-      {profile.profile === null ? <Loading /> : <Profile profile={profile} />}
+      {loading ? <Loading /> : <Profile profile={profile} />}
       <Route path={`${match.path}/status/:status_id`} component={TweetModal} />
     </>
   );

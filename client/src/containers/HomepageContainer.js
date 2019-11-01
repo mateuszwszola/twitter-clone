@@ -9,7 +9,7 @@ import { getUserHomepageTweets } from 'actions/tweetActions';
 function HomepageContainer({
   getUserProfile,
   getUserHomepageTweets,
-  profile: { profile },
+  profile: { profile, loading },
   tweet
 }) {
   useEffect(() => {
@@ -17,7 +17,7 @@ function HomepageContainer({
     getUserHomepageTweets();
   }, [getUserProfile, getUserHomepageTweets]);
 
-  if (profile === null) {
+  if (profile === null || loading) {
     return <Loading />;
   }
 

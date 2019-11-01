@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getUserLikeTweets } from 'actions/tweetActions';
-import Loading from '../Loading';
 import TweetsBoard from 'components/layout/TweetsBoard';
 import { ProfileTweetsBoard } from "./style";
 
@@ -20,11 +19,7 @@ function Likes(
 
   return (
       <ProfileTweetsBoard>
-          {loading || tweets === null ? (
-              <Loading />
-          ) : (
-            <TweetsBoard tweets={tweets} />
-          )}
+          <TweetsBoard loading={loading} tweets={tweets} />
       </ProfileTweetsBoard>
   )
 }

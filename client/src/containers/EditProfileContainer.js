@@ -11,7 +11,7 @@ import moment from 'moment';
 function EditProfileContainer({
   history,
   errors,
-  profile: { profile, loading },
+  profile: { profile },
   getUserProfile,
   updateProfile
 }) {

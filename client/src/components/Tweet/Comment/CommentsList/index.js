@@ -21,6 +21,7 @@ import {
     LikeIcon
 } from './style';
 import { DeleteButton } from "./style";
+import Loading from 'components/Loading';
 
 function SingleComment({ comment, handleActionClick, auth }) {
     const user = {
@@ -83,7 +84,7 @@ SingleComment.propTypes = {
     handleActionClick: PropTypes.func.isRequired,
 };
 
-function CommentsList({ comments, auth, handleActionClick }) {
+function CommentsList({ comments, loading, auth, handleActionClick }) {
     if (!comments || comments.length === 0) {
         return (
             <div>
@@ -98,21 +99,28 @@ function CommentsList({ comments, auth, handleActionClick }) {
                 <Heading>Comments</Heading>
             </Header>
             <List>
-                {comments.map(comment => (
-                    <SingleComment
-                        key={comment._id}
-                        comment={comment}
-                        auth={auth}
-                        handleActionClick={handleActionClick}
-                    />
-                ))}
+                {loading ? (
+                    <Loading />
+                ) : (
+                    <>
+                        {comments.map(comment => (
+                            <SingleComment
+                                key={comment._id}
+                                comment={comment}
+                                auth={auth}
+                                handleActionClick={handleActionClick}
+                            />
+                        ))}
+                    </>
+                )}
             </List>
         </Container>
     )
 }
 
 CommentsList.propTypes = {
-    comments: PropTypes.array.isRequired,
+    comments: PropTypes.array,
+    loading: PropTypes.bool.isRequired,
     auth: PropTypes.object.isRequired,
     handleActionClick: PropTypes.func.isRequired,
 };

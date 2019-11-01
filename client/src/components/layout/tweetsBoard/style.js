@@ -2,6 +2,7 @@ import styled from 'styled-components/macro';
 import { Button } from 'shared/components';
 
 export const Container = styled.div`
+  position: relative;
   height: 100%;
   max-width: 800px;
   margin: 0 auto;
@@ -21,9 +22,17 @@ export const Header = styled.h3`
   margin: 5px;
 `;
 
-export const List = styled.ul``;
+export const List = styled.ul`
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 export const ListItem = styled.li`
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: row;

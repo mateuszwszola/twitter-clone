@@ -38,11 +38,7 @@ function Comment({ tweetId, comment: { comments, loading }, getComments, addComm
                 errors={errors}
                 userAvatar={auth.user && auth.user.avatar}
             />
-            {!comments ? (
-                <Loading />
-            ) : (
-                <CommentsList comments={comments} auth={auth} handleActionClick={handleActionClick} />
-            )}
+            <CommentsList loading={loading} comments={comments} auth={auth} handleActionClick={handleActionClick} />
         </>
     )
 }

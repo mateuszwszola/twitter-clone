@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TweetsBoard from '../layout/TweetsBoard';
 import UserPreview from '../layout/UserPreview';
-import Loading from '../Loading';
 import { Container, LeftSidebar, Main } from './style';
 
 function Homepage({ profile, tweet }) {
@@ -12,11 +11,7 @@ function Homepage({ profile, tweet }) {
         <UserPreview profile={profile} />
       </LeftSidebar>
       <Main>
-        {tweet.loading || tweet.tweets === null ? (
-          <Loading />
-        ) : (
-          <TweetsBoard tweets={tweet.tweets} />
-        )}
+          <TweetsBoard loading={tweet.loading} tweets={tweet.tweets} />
       </Main>
        {/*<RightSidebar>*/}
        {/*</RightSidebar>*/}

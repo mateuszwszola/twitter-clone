@@ -8,6 +8,7 @@ const Container = styled.main`
 
   width: 100%;
   max-width: 1300px;
+  height: 100%;
   margin: 0 auto;
   padding: 10px 15px;
 `;
@@ -21,6 +22,7 @@ const LeftSidebar = styled.div`
 const Main = styled.div`
   flex: 500px;
   max-width: 800px;
+  height: 100%;
 `;
 
 const RightSidebar = styled.div`

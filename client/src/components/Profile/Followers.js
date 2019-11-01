@@ -6,6 +6,7 @@ import Loading from '../Loading';
 import ProfilesList from './ProfilesList';
 import ProfilePreview from './ProfilePreview';
 import { InfoText } from 'shared/components';
+import { Container } from 'shared/layout';
 
 function Followers({
   profile: { profile, profiles, loading },
@@ -16,7 +17,7 @@ function Followers({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile.user._id]);
   return (
-    <>
+    <Container>
       {loading || profiles === null ? (
         <Loading />
       ) : (
@@ -32,7 +33,7 @@ function Followers({
           )}
         </ProfilesList>
       )}
-    </>
+    </Container>
   );
 };
 

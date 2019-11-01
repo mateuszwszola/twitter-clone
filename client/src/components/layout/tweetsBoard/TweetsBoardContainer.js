@@ -7,6 +7,7 @@ import TweetsBoard from './TweetsBoard';
 
 function TweetsBoardContainer({
     tweets,
+    loading,
     setCurrentTweet,
     likeTweet,
     removeTweet,
@@ -40,6 +41,7 @@ function TweetsBoardContainer({
     return (
             <TweetsBoard
                 tweets={tweets}
+                loading={loading}
                 auth={auth}
                 handleActionClick={handleActionClick}
                 handleTweetClick={handleTweetClick}
@@ -48,7 +50,6 @@ function TweetsBoardContainer({
 }
 
 TweetsBoardContainer.propTypes = {
-    tweets: PropTypes.array.isRequired,
     setCurrentTweet: PropTypes.func.isRequired,
     likeTweet: PropTypes.func.isRequired,
     removeTweet: PropTypes.func.isRequired,

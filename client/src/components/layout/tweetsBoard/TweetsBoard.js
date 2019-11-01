@@ -22,32 +22,28 @@ import {
     DeleteButton
 } from './style';
 import { InfoText } from 'shared/components';
+import Loading from 'components/Loading';
 import portretPlaceholder from 'img/portret-placeholder.png';
 
 function TweetsBoard({
     tweets,
     auth,
     handleTweetClick,
-    handleActionClick
+    handleActionClick,
+    loading
                      }) {
-    if (!tweets || tweets.length === 0) {
-        return (
-            <Container>
-                <InfoText>There are no tweets to display</InfoText>
-            </Container>
-        );
-    }
-
     return (
         <Container>
-            <Board>
-                <HeaderWrapper>
-                    <Header>Tweets</Header>
-                </HeaderWrapper>
-                <List>
-                    {tweets.length > 0
-                        ? tweets.map(tweet => {
-                            const owner = auth.user && auth.user._id === tweet.user._id;
+            {tweets === null || loading ? (
+                <Loading />
+            ) : (
+                <Board>
+                    <HeaderWrapper>
+                        <Header>Tweets</Header>
+                    </HeaderWrapper>
+                    <List>
+                        {tweets.length > 0
+                            ? tweets.map(tweet => {const owner = auth.user && auth.user._id === tweet.user._id;
                             const liked = !!(
                                 auth.user &&
                                 tweet.likes.find(userId => userId === auth.user._id)
@@ -95,7 +91,6 @@ function TweetsBoard({
                                             </LikeItemGroup>
                                         </TweetBottomGroup>
                                     </ListItemContent>
-
                                     {owner ? (
                                         <DeleteButton
                                             onClick={e => handleActionClick(e, 'remove', tweet._id)}
@@ -105,16 +100,20 @@ function TweetsBoard({
                                     ) : null}
                                 </ListItem>
                             );
-                        })
-                        : ''}
-                </List>
-            </Board>
+                                })
+                                : (
+                                    <InfoText>There are no tweets to display</InfoText>
+                                )}
+                        </List>
+                </Board>
+                )}
         </Container>
     );
 }
 
 TweetsBoard.propTypes = {
-    tweets: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired,
+    tweets: PropTypes.array,
     auth: PropTypes.object.isRequired,
     handleActionClick: PropTypes.func.isRequired,
     handleTweetClick: PropTypes.func.isRequired,

@@ -1,10 +1,17 @@
 import styled from 'styled-components/macro';
 
-export const StyledAlert = styled.div`
+export const Container = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+`
+
+export const StyledAlert = styled.div`
+  margin: 10px;
   background-color: ${props =>
     props.type === 'success'
       ? props.theme.colors.green
