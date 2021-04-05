@@ -2,10 +2,10 @@ const router = require('express').Router();
 const auth = require('../middleware/auth');
 const commentController = require('../controllers/commentController');
 
-/*
-    @route GET api/comments/:tweet_id
-    @desc Get all tweet comments
-    @access Public
+/**
+ * @route GET api/comments/:tweet_id
+ * @desc Get all tweet comments
+ * @access Public
  */
 router.get('/:tweet_id', commentController.getComments);
 

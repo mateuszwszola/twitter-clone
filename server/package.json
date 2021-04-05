@@ -1,7 +1,7 @@
 {
   "name": "twitter-clone",
   "version": "1.0.0",
-  "description": "Twitter clone built with the MERN stack",
+  "description": "A full-stack Twitter clone built using Node, Express, React and MongoDB",
   "main": "server.js",
   "private": true,
   "scripts": {
