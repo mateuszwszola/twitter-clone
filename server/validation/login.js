@@ -1,7 +1,7 @@
 const validator = require('validator');
 const isEmpty = require('./is-empty');
 
-module.exports = data => {
+module.exports = (data) => {
   const errors = {};
 
   data.username = isEmpty(data.username) ? '' : data.username;
@@ -17,6 +17,6 @@ module.exports = data => {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

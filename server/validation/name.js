@@ -18,6 +18,6 @@ module.exports = (name) => {
 
   return {
     nameErrors,
-    isNameValid: isEmpty(nameErrors)
+    isNameValid: isEmpty(nameErrors),
   };
 };

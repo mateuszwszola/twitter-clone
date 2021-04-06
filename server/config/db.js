@@ -12,12 +12,12 @@ const connectDB = async () => {
     } else {
       dbUri = process.env.MONGO_URI_DEV;
     }
-    
+
     await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
 
     debug('MongoDB connected...');

@@ -1,4 +1,4 @@
 const mongoose = require('mongoose');
-module.exports = function() {
-    return mongoose.Types.ObjectId();
+module.exports = function () {
+  return mongoose.Types.ObjectId();
 };

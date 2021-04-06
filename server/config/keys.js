@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   NODE_ENV: process.env.NODE_ENV,
   MONGO_URI_DEV: process.env.MONGO_URI,

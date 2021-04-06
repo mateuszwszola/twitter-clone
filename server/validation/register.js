@@ -4,7 +4,7 @@ const isEmpty = require('./is-empty');
 // const validateName = require('./name');
 
 // Data -> req.body object from register user request
-module.exports = data => {
+module.exports = (data) => {
   const errors = {};
 
   // Validator accepts only string, so if some property of req.body are empty, set it to empty string
@@ -62,6 +62,6 @@ module.exports = data => {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };

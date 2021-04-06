@@ -2,7 +2,7 @@
 const validator = require('validator');
 const { isEmpty, isDate } = require('lodash');
 
-module.exports = data => {
+module.exports = (data) => {
   const errors = {};
 
   const profileInformation = [
@@ -13,7 +13,7 @@ module.exports = data => {
     'avatar',
     'backgroundPicture',
     'name',
-    'username'
+    'username',
   ];
 
   const lengthForProps = {
@@ -21,7 +21,7 @@ module.exports = data => {
     location: { min: 2, max: 30 },
     website: { min: 3, max: 30 },
     name: { min: 2, max: 30 },
-    username: { min: 6, max: 15 }
+    username: { min: 6, max: 15 },
   };
 
   const entries = Object.entries(data);
@@ -39,9 +39,9 @@ module.exports = data => {
         lengthForProps[property] &&
         !validator.isLength(value, lengthForProps[property])
       ) {
-        errors[property] = `${property} must be between ${
-          lengthForProps[property].min
-        } and ${lengthForProps[property].max}`;
+        errors[
+          property
+        ] = `${property} must be between ${lengthForProps[property].min} and ${lengthForProps[property].max}`;
       }
     }
 
@@ -72,7 +72,7 @@ module.exports = data => {
         if (!isDate(birthdayDate)) {
           errors.birthday = 'Birthday must be a valid date';
         }
-        const prependWithZero = value => value < 10 ? '0' + value : value;
+        const prependWithZero = (value) => (value < 10 ? '0' + value : value);
         const date = new Date();
         const year = date.getFullYear();
         const month = prependWithZero(date.getMonth() + 1);
@@ -95,6 +95,6 @@ module.exports = data => {
 
   return {
     errors,
-    isValid: isEmpty(errors)
+    isValid: isEmpty(errors),
   };
 };
