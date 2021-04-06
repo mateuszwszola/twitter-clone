@@ -11,6 +11,9 @@
     "lint": "eslint \"./**/*.js\"",
     "format": "prettier --write \"./**/*.js\""
   },
+  "engines": {
+    "node": ">12.0.0"
+  },
   "author": "Mateusz Wszola",
   "license": "MIT",
   "dependencies": {
@@ -28,6 +31,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^5.12.3",
     "morgan": "^1.10.0",
+    "pino": "^6.11.2",
     "socket.io": "^4.0.1",
     "uuid": "^8.3.2",
     "validator": "^13.5.2"

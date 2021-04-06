@@ -18,6 +18,9 @@ const ProfileSchema = new Schema({
   birthday: {
     type: Date,
   },
+  avatar: {
+    type: String,
+  },
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],

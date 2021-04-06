@@ -1,9 +1,10 @@
 const express = require('express');
 require('express-async-errors');
 const helmet = require('helmet');
-const logger = require('morgan');
+const morgan = require('morgan');
 const connectDB = require('./config/db');
 const { comments, profiles, tweets, users } = require('./components');
+const { handleNotFound, handleError } = require('./utils/error');
 
 // Express app setup
 const app = express();
@@ -19,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(logger('dev'));
+  app.use(morgan('dev'));
 }
 
 // Handle routes
@@ -28,18 +29,10 @@ app.use('/api/profiles', profiles);
 app.use('/api/tweets', tweets);
 app.use('/api/users', users);
 
-// 404 handler
-app.use((req, res, next) => {
-  return res
-    .status(404)
-    .json({ errors: [{ msg: `Route ${req.url} Not Found` }] });
-});
+// 404 error handler
+app.use(handleNotFound);
 
-// 500 - Any server error handler
-app.use((err, req, res, next) => {
-  return res
-    .status(500)
-    .json({ errors: [{ msg: err.message || 'Internal Server Error' }] });
-});
+// Error handler
+app.use(handleError);
 
 module.exports = app;

@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
-const debug = require('debug')('db');
-const environment = process.env.NODE_ENV || 'development';
+const { NODE_ENV } = require('./keys');
+const logger = require('../utils/logger');
 
 const connectDB = async () => {
   try {
     let dbUri = '';
-    if (environment === 'production') {
+    if (NODE_ENV === 'production') {
       dbUri = process.env.MONGO_URI_PROD;
-    } else if (environment === 'test') {
+    } else if (NODE_ENV === 'test') {
       dbUri = process.env.MONGO_URI_TEST;
     } else {
       dbUri = process.env.MONGO_URI_DEV;
@@ -20,10 +20,9 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
 
-    debug('MongoDB connected...');
+    logger.info('MongoDB connected...');
   } catch (err) {
-    debug(err.message);
-    console.log(err.message);
+    logger.error(err);
     // Exit process with failure
     process.exit(1);
   }

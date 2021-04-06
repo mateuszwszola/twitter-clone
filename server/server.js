@@ -2,13 +2,9 @@
  * Module dependencies.
  */
 const http = require('http');
+const logger = require('./utils/logger');
 const app = require('./app');
-/**
- * Simple logger function.
- */
-function log(message) {
-  console.log(`${message}\n`);
-}
+
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -52,7 +48,7 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      log(`${bind} requires elevated privileges`);
+      logger.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
@@ -60,7 +56,7 @@ function onError(error) {
         availablePort += 1;
         startServer(availablePort);
       } else {
-        log(`${bind} is already in use`);
+        logger.error(`${bind} is already in use`);
         process.exit(1);
       }
       break;
@@ -76,7 +72,7 @@ function onListening() {
   const bind = `${typeof addr === 'string' ? 'pipe' : 'port'} ${
     typeof addr === 'string' ? addr : addr.port
   }`;
-  log(`Server is listening on ${bind}`);
+  logger.info(`Server is listening on ${bind}`);
 }
 /**
  * Start server.
