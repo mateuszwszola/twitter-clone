@@ -4,6 +4,6 @@
 
 // module.exports.tweets = require('./tweets').tweetAPI;
 
-// module.exports.users = require('./users').userAPI;
+module.exports.users = require('./users').userAPI;
 
 module.exports.auth = require('./auth').authAPI;

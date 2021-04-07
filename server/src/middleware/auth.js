@@ -3,7 +3,7 @@ const { ErrorHandler } = require('../utils/error');
 
 const authenticate = async (req, _res, next) => {
   // Get token from header
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers['authorization'];
 
   if (authHeader) {
     // Bearer token -> token

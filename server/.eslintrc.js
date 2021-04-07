@@ -20,5 +20,5 @@ module.exports = {
     'prettier/prettier': 'error',
     'node/no-unpublished-require': 'off',
   },
-  plugins: ['prettier', 'security', 'promise', 'jest'],
+  plugins: ['security', 'promise', 'jest', 'prettier'],
 };
