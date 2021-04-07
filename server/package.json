@@ -7,8 +7,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "test": "jest -i --colors --verbose --detectOpenHandles",
-    "test:watch": "jest -i --watchAll",
+    "test": "jest -i --colors --verbose --detectOpenHandles --runInBand",
+    "test:watch": "jest -i --watchAll --runInBand",
     "lint": "eslint **/*.js",
     "format": "prettier --write **/*.js"
   },

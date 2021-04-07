@@ -3,8 +3,6 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const { ErrorHandler } = require('../../utils/error');
 const { generateAccessToken, hashPassword } = require('../../utils/auth');
-const { Profile } = require('../profiles');
-const logger = require('../../utils/logger');
 
 const Schema = mongoose.Schema;
 
@@ -54,14 +52,11 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// UserSchema.post('save', async function (user) {
-//   // Create empty user profile
-//   try {
-//     await Profile.create({ user: user._id });
-//   } catch (err) {
-//     logger.error({ err }, 'Error while creating user profile');
-//   }
-// });
+UserSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 UserSchema.methods.generateAuthToken = function () {
   const user = this;
@@ -84,11 +79,11 @@ UserSchema.statics.findByCredentials = async function (
     [isEmail ? 'email' : 'username']: username,
   });
   if (!user) {
-    throw new ErrorHandler(422, 'Invalid login credentials');
+    throw new ErrorHandler(401, 'Invalid login credentials');
   }
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
-    throw new ErrorHandler(422, 'Invalid login credentials');
+    throw new ErrorHandler(401, 'Invalid login credentials');
   }
 
   return user;

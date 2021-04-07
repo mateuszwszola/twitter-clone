@@ -7,7 +7,7 @@ const validate = (validationRules) => [
 
     if (!errors.isEmpty()) {
       return res
-        .status(422)
+        .status(400)
         .json({ errors: errors.array({ onlyFirstError: true }) });
     }
 
