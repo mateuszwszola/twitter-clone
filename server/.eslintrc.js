@@ -3,12 +3,14 @@ module.exports = {
     commonjs: true,
     es2021: true,
     node: true,
+    jest: true,
   },
   extends: [
     'eslint:recommended',
     'plugin:node/recommended',
     'plugin:security/recommended',
     'plugin:promise/recommended',
+    'plugin:jest/recommended',
     'prettier',
   ],
   parserOptions: {
@@ -16,6 +18,7 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': 'error',
+    'node/no-unpublished-require': 'off',
   },
-  plugins: ['prettier', 'security', 'promise'],
+  plugins: ['prettier', 'security', 'promise', 'jest'],
 };
