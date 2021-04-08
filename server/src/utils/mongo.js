@@ -1,5 +1,7 @@
 /* eslint-disable promise/no-return-wrap */
 
+const mongoose = require('mongoose');
+
 const paginatePlugin = (schema) => {
   /**
    * @typedef {Object} QueryResult
@@ -73,6 +75,9 @@ const paginatePlugin = (schema) => {
   };
 };
 
+const isValidObjectId = (value) => mongoose.Types.ObjectId.isValid(value);
+
 module.exports = {
   paginatePlugin,
+  isValidObjectId,
 };

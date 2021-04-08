@@ -17,7 +17,7 @@ exports.getUserById = async (req, res) => {
   const { userId } = req.params;
   const { role, id: authUserId } = req.user;
 
-  if (role !== 'admin' || authUserId.toString() !== userId) {
+  if (role !== 'admin' && authUserId !== userId) {
     throw new ErrorHandler(
       403,
       'You are not authorized to access this resource'

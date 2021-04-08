@@ -304,4 +304,64 @@ describe('Users routes', () => {
       expect(res.body.results).toHaveLength(1);
     });
   });
+
+  describe('GET /api/users/:userId', () => {
+    it('When user is the owner, should return 200 and a user', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app)
+        .get(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user).toMatchObject({
+        _id: userOne._id.toString(),
+        name: userOne.name,
+        email: userOne.email.toLowerCase(),
+        role: userOne.role,
+        username: formatUsername(userOne.username),
+      });
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app).get(`/api/users/${userOne._id}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When user is trying to get another user, should return 403 error', async () => {
+      await insertUsers([userOne, userTwo]);
+
+      const res = await request(app)
+        .get(`/api/users/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    it('When admin is trying to get another user, should return 200 and user', async () => {
+      await insertUsers([userOne, admin]);
+
+      const res = await request(app)
+        .get(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveProperty('user');
+      expect(res.body.user._id.toString()).toBe(userOne._id.toString());
+    });
+
+    it('When userId is not a valid mongo id, should return 400 error', async () => {
+      await insertUsers([admin]);
+
+      const res = await request(app)
+        .get('/api/users/invalidId')
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
 });

@@ -1,6 +1,8 @@
 const router = require('express').Router();
+const { param } = require('express-validator');
 const { authenticate, authorize } = require('../../middleware/auth');
 const validate = require('../../middleware/validate');
+const { isValidObjectId } = require('../../utils/mongo');
 const userController = require('./userController');
 const {
   update: updateValidationRules,
@@ -19,7 +21,12 @@ router.get('/', authenticate, authorize('admin'), userController.getUsers);
  * @desc    Get user by id
  * @access  User, Admin
  */
-router.get('/:userId', authenticate, userController.getUserById);
+router.get(
+  '/:userId',
+  authenticate,
+  validate([param('userId').custom(isValidObjectId)]),
+  userController.getUserById
+);
 
 /**
  * @route   POST api/users
@@ -55,6 +62,7 @@ router.delete(
   '/:userId',
   authenticate,
   authorize('admin'),
+  validate([param('userId').custom(isValidObjectId)]),
   userController.deleteUser
 );
 

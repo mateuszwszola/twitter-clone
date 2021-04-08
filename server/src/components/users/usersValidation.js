@@ -1,11 +1,13 @@
-const { body, checkSchema } = require('express-validator');
+const { body, checkSchema, check } = require('express-validator');
 const charLengthForProps = require('../../helpers/charLengthForProps');
 const { User } = require('./');
 const { formatUsername } = require('../../utils/helpers');
 const { roles } = require('../../config/roles');
+const { isValidObjectId } = require('../../utils/mongo');
 
 const update = () => {
   return [
+    check('userId').custom(isValidObjectId),
     body('name')
       .optional({ checkFalsy: true })
       .isLength(charLengthForProps.name)
