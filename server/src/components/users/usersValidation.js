@@ -1,7 +1,8 @@
-const { body } = require('express-validator');
+const { body, checkSchema } = require('express-validator');
 const charLengthForProps = require('../../helpers/charLengthForProps');
 const { User } = require('./');
 const { formatUsername } = require('../../utils/helpers');
+const { roles } = require('../../config/roles');
 
 const update = () => {
   return [
@@ -31,9 +32,9 @@ const create = () => {
   const roleSchema = {
     role: {
       in: 'body',
+      errorMessage: 'Invalid user role',
       isIn: {
-        options: [['admin', 'user']],
-        errorMessage: 'Invalid user role',
+        options: [roles],
       },
     },
   };
@@ -86,7 +87,7 @@ const create = () => {
       .withMessage(
         `The password must be between ${charLengthForProps.password.min} and ${charLengthForProps.password.max} chars`
       ),
-    body(roleSchema),
+    checkSchema(roleSchema),
   ];
 };
 

@@ -5,11 +5,12 @@ const { Profile } = require('../profiles');
 const { pick } = require('lodash');
 
 exports.getUsers = async (req, res) => {
-  const { skip, limit } = req.query;
+  const filters = pick(req.query, ['name', 'role']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
 
-  const users = await User.find({}).skip(skip).limit(limit);
+  const users = await User.paginate(filters, options);
 
-  res.json({ users });
+  res.json(users);
 };
 
 exports.getUserById = async (req, res) => {
@@ -41,7 +42,10 @@ exports.createUser = async (req, res) => {
     'role',
   ]);
 
-  const user = await User.create(userBody);
+  const user = new User(userBody);
+  const profile = new Profile({ user: user.id });
+
+  await Promise.all([user.save(), profile.save()]);
 
   res.status(201).json({ user });
 };

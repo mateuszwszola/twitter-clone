@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const authController = require('./authController');
-const authValidate = require('./authValidate');
+const authValidation = require('./authValidation');
 const validate = require('../../middleware/validate');
 
 /**
@@ -10,7 +10,7 @@ const validate = require('../../middleware/validate');
  */
 router.post(
   '/register',
-  validate(authValidate.register),
+  validate(authValidation.register),
   authController.registerUser
 );
 
@@ -19,6 +19,6 @@ router.post(
  * @desc    Login user | Return JWT
  * @access  Public
  */
-router.post('/login', validate(authValidate.login), authController.loginUser);
+router.post('/login', validate(authValidation.login), authController.loginUser);
 
 module.exports = router;

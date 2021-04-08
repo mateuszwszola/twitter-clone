@@ -40,14 +40,14 @@ describe('Auth routes', () => {
 
       expect(res.body.token).toBeDefined();
 
-      const { id: userId } = res.body.user;
+      const { _id: userId } = res.body.user;
       const [dbUser, dbProfile] = await Promise.all([
         User.findById(userId),
         Profile.findOne({ user: userId }),
       ]);
 
-      expect(dbUser).toBeDefined();
-      expect(dbProfile).toBeDefined();
+      expect(dbUser._id.toString()).toBe(userId);
+      expect(dbProfile.user.toString()).toBe(userId);
     });
 
     it('When email is invalid, should return error', async () => {
@@ -91,6 +91,30 @@ describe('Auth routes', () => {
 
       const loginCredentials = {
         username: userOne.email,
+        password: userOne.password,
+      };
+
+      const res = await request(app)
+        .post('/api/auth/login')
+        .send(loginCredentials);
+
+      expect(res.statusCode).toBe(200);
+
+      expect(res.body.user).toMatchObject({
+        role: 'user',
+        name: userOne.name,
+        username: formatUsername(userOne.username),
+        email: userOne.email.toLowerCase(),
+      });
+
+      expect(res.body.token).toBeDefined();
+    });
+
+    it('When username and password match, should return user and token', async () => {
+      await insertUsers([userOne]);
+
+      const loginCredentials = {
+        username: userOne.username,
         password: userOne.password,
       };
 

@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const { ErrorHandler } = require('../../utils/error');
 const { generateAccessToken, hashPassword } = require('../../utils/auth');
+const { paginatePlugin } = require('../../utils/mongo');
+const { roles } = require('../../config/roles');
 
 const Schema = mongoose.Schema;
 
@@ -11,32 +13,43 @@ const UserSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     username: {
       type: String,
       required: true,
       lowercase: true,
       unique: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       lowercase: true,
       unique: true,
-      validate: (value) => validator.isEmail(value),
+      trim: true,
+      validate: (value) => {
+        if (!validator.isEmail(value)) {
+          throw new ErrorHandler('Invalid email');
+        }
+      },
     },
     password: {
       type: String,
       required: true,
+      minlength: 8,
     },
     role: {
       type: String,
-      enum: ['admin', 'user'],
+      enum: roles,
       default: 'user',
     },
   },
   { timestamps: true }
 );
+
+// Add paginate plugin
+UserSchema.plugin(paginatePlugin);
 
 UserSchema.pre('save', async function (next) {
   const user = this;

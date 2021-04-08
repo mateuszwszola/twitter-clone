@@ -17,7 +17,7 @@ const getUserTwoAccessToken = () =>
     },
   });
 
-const getAdminUserToken = () =>
+const getAdminAccessToken = () =>
   generateAccessToken({
     user: {
       id: admin._id,
@@ -28,5 +28,5 @@ const getAdminUserToken = () =>
 module.exports = {
   getUserOneAccessToken,
   getUserTwoAccessToken,
-  getAdminUserToken,
+  getAdminAccessToken,
 };

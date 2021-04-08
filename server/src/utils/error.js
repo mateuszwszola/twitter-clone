@@ -12,15 +12,15 @@ class ErrorHandler extends Error {
 }
 
 const handleNotFound = (req, _res, next) => {
-  logger.info(`Route ${req.url} not found`);
-
   const error = new ErrorHandler(404, `Route ${req.originalUrl} Not Found`);
   next(error);
 };
 
 // eslint-disable-next-line
 const handleError = (err, req, res, next) => {
-  logger.error(err);
+  if (config.env === 'development') {
+    logger.error(err);
+  }
 
   if (res.headersSent) {
     next(err);

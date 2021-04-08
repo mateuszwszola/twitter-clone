@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { authenticate, authorize } = require('../../middleware/auth');
-const paginate = require('../../middleware/paginate');
 const validate = require('../../middleware/validate');
 const userController = require('./userController');
 const {
@@ -13,13 +12,7 @@ const {
  * @desc    Get all users
  * @access  Admin
  */
-router.get(
-  '/',
-  authenticate,
-  authorize('admin'),
-  paginate(),
-  userController.getUsers
-);
+router.get('/', authenticate, authorize('admin'), userController.getUsers);
 
 /**
  * @route   GET api/users/:userId
