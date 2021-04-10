@@ -353,5 +353,210 @@ describe('Users routes', () => {
     });
   });
 
-  describe('PATCH /api/users/:userId', () => {});
+  describe('PATCH /api/users/:userId', () => {
+    it('When user data is ok, should update a user', async () => {
+      await insertUsers([userOne]);
+      const updateBody = {
+        name: faker.name.findName(),
+        email: faker.internet.email().toLowerCase(),
+        password: 'newPassword1',
+      };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      console.log('res.body', res.body);
+
+      expect(res.statusCode).toBe(200);
+
+      expect(res.body.user).not.toHaveProperty('password');
+      expect(res.body.user).toMatchObject({
+        _id: userOne._id.toHexString(),
+        name: updateBody.name,
+        email: updateBody.email,
+        role: 'user',
+      });
+
+      const dbUser = await User.findById(userOne._id);
+      expect(dbUser).toBeDefined();
+      expect(dbUser.password).not.toBe(updateBody.password);
+      expect(dbUser).toMatchObject({
+        name: updateBody.name,
+        email: updateBody.email,
+        role: 'user',
+      });
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { name: faker.name.findName() };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When user is updating another user, should return 403 error', async () => {
+      await insertUsers([userOne, userTwo]);
+      const updateBody = { name: faker.name.findName() };
+
+      const res = await request(app)
+        .patch(`/api/users/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    it('When user is trying to update its role, should not update and return 400', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { role: 'admin' };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When admin is updating another user, should successfully update user and return 200', async () => {
+      await insertUsers([userOne, admin]);
+      const updateBody = { name: faker.name.findName() };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When admin is updating another user role, should successfully update and return 200', async () => {
+      await insertUsers([userOne, admin]);
+      const updateBody = { role: 'admin' };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(200);
+
+      const dbUser = await User.findById(userOne._id);
+      expect(dbUser.role).toBe('admin');
+    });
+
+    it('When admin is trying to update user that does not exists, should return 404', async () => {
+      await insertUsers([admin]);
+      const updateBody = { name: faker.name.findName() };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When userId is not a valid mongo id, should return 400 error', async () => {
+      await insertUsers([admin]);
+      const updateBody = { name: faker.name.findName() };
+
+      const res = await request(app)
+        .patch('/api/users/invalidId')
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When email is invalid, should return 400 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { email: 'invalidEmail' };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When email is already taken, should return 400 error', async () => {
+      await insertUsers([userOne, userTwo]);
+      const updateBody = { email: userTwo.email };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When email is my email, should not return 400 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { email: userOne.email };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When username is already taken, should return 400 error', async () => {
+      await insertUsers([userOne, userTwo]);
+      const updateBody = { username: userTwo.username };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When username is my username, should not return 400 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { username: userOne.username };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When password is less than 8 characters, should return 400 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { password: 'passwd1' };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When password does not contain both letters and numbers, should return 400 error', async () => {
+      await insertUsers([userOne]);
+      const updateBody = { password: 'password' };
+
+      const res = await request(app)
+        .patch(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
 });

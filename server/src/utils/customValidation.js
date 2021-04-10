@@ -17,7 +17,17 @@ const password = (value, helpers) => {
   return value;
 };
 
+const username = (value, helpers) => {
+  if (!value.match(/^[0-9a-zA-Z_.-]+$/)) {
+    return helpers.message(
+      'username must only contain numbers, letters, ".", "-", "_"'
+    );
+  }
+  return value;
+};
+
 module.exports = {
   objectId,
   password,
+  username,
 };

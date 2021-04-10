@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const userController = require('./user.controller');
 const userValidation = require('./user.validation');
-const validate = require('../../middleware/validate');
 const auth = require('../../middleware/auth');
 
 /**
@@ -12,7 +11,7 @@ const auth = require('../../middleware/auth');
 router.get(
   '/',
   auth('getUsers'),
-  validate(userValidation.getUsers),
+  userValidation.getUsers,
   userController.getUsers
 );
 
@@ -24,7 +23,7 @@ router.get(
 router.get(
   '/:userId',
   auth('getUsers'),
-  validate(userValidation.getUser),
+  userValidation.getUser,
   userController.getUserById
 );
 
@@ -36,7 +35,7 @@ router.get(
 router.post(
   '/',
   auth('manageUsers'),
-  validate(userValidation.createUser),
+  userValidation.createUser,
   userController.createUser
 );
 
@@ -48,7 +47,7 @@ router.post(
 router.patch(
   '/:userId',
   auth('manageUsers'),
-  validate(userValidation.updateUser),
+  userValidation.updateUser,
   userController.updateUser
 );
 
@@ -60,7 +59,7 @@ router.patch(
 router.delete(
   '/:userId',
   auth('manageUsers'),
-  validate(userValidation.deleteUser),
+  userValidation.deleteUser,
   userController.deleteUser
 );
 

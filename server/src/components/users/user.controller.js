@@ -1,4 +1,3 @@
-const { matchedData } = require('express-validator');
 const { pick } = require('lodash');
 const { ErrorHandler } = require('../../utils/error');
 const { User } = require('./');
@@ -15,14 +14,6 @@ exports.getUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
   const { userId } = req.params;
-  const { role, id: authUserId } = req.user;
-
-  if (role !== 'admin' && authUserId !== userId) {
-    throw new ErrorHandler(
-      403,
-      'You are not authorized to access this resource'
-    );
-  }
 
   const user = await User.findById(userId);
 
@@ -60,15 +51,24 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const newValues = matchedData(req.body, { includeOptionals: false });
-  const { id: authUserId } = req.user;
+  const newValues = pick(req.body, [
+    'name',
+    'username',
+    'email',
+    'password',
+    'role',
+  ]);
   const { userId } = req.params;
 
-  if (authUserId.toString() !== userId) {
-    throw new ErrorHandler(
-      403,
-      'You are not authorized to access this resource'
-    );
+  if (newValues.email && (await User.isEmailTaken(newValues.email, userId))) {
+    throw new ErrorHandler(400, 'Email already taken');
+  }
+
+  if (
+    newValues.username &&
+    (await User.isUsernameTaken(newValues.username, userId))
+  ) {
+    throw new ErrorHandler(400, 'Username already taken');
   }
 
   const user = await User.findById(userId);

@@ -22,6 +22,14 @@ const UserSchema = new Schema(
       lowercase: true,
       unique: true,
       trim: true,
+      validate(value) {
+        if (!value.match(/^[0-9a-zA-Z_.-]+$/)) {
+          throw new ErrorHandler(
+            400,
+            'username must only contain numbers, letters, ".", "-", "_"'
+          );
+        }
+      },
     },
     email: {
       type: String,
@@ -29,7 +37,7 @@ const UserSchema = new Schema(
       lowercase: true,
       unique: true,
       trim: true,
-      validate: (value) => {
+      validate(value) {
         if (!validator.isEmail(value)) {
           throw new ErrorHandler('Invalid email');
         }
@@ -39,6 +47,14 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       minlength: 8,
+      validate(value) {
+        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+          throw new ErrorHandler(
+            400,
+            'Password must contain at least one letter and one number'
+          );
+        }
+      },
     },
     role: {
       type: String,
@@ -102,12 +118,18 @@ UserSchema.statics.findByCredentials = async function (
 };
 
 UserSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({
+    email: email.toLowerCase(),
+    _id: { $ne: excludeUserId },
+  });
   return !!user;
 };
 
 UserSchema.statics.isUsernameTaken = async function (username, excludeUserId) {
-  const user = await this.findOne({ username, _id: { $ne: excludeUserId } });
+  const user = await this.findOne({
+    username: username.toLowerCase(),
+    _id: { $ne: excludeUserId },
+  });
   return !!user;
 };
 

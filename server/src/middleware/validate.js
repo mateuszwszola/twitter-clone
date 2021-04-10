@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { pick } = require('lodash');
 const { ErrorHandler } = require('../utils/error');
 
-const validate = (schema) => (req, res, next) => {
+const validate = (schema) => (req, _res, next) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
   const object = pick(req, Object.keys(validSchema));
   const { value, error } = Joi.compile(validSchema)
