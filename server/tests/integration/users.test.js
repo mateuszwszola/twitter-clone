@@ -367,8 +367,6 @@ describe('Users routes', () => {
         .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
         .send(updateBody);
 
-      console.log('res.body', res.body);
-
       expect(res.statusCode).toBe(200);
 
       expect(res.body.user).not.toHaveProperty('password');
@@ -555,6 +553,74 @@ describe('Users routes', () => {
         .patch(`/api/users/${userOne._id}`)
         .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
         .send(updateBody);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/users/:userId', () => {
+    it('When owner is deleting, should delete user, profile and return 200', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app)
+        .delete(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+
+      const [dbUser, dbProfile] = await Promise.all([
+        User.findById(userOne._id),
+        Profile.findOne({ user: userOne._id }),
+      ]);
+
+      expect(dbUser).toBeNull();
+      expect(dbProfile).toBeNull();
+    });
+
+    it('When admin is deleting another user, should delete and return 200', async () => {
+      await insertUsers([userOne, admin]);
+
+      const res = await request(app)
+        .delete(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When user is deleting another user, should return 403 error', async () => {
+      await insertUsers([userOne, userTwo]);
+
+      const res = await request(app)
+        .delete(`/api/users/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app).delete(`/api/users/${userOne._id}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When user does not exists, should return 404 error', async () => {
+      await insertUsers([admin]);
+
+      const res = await request(app)
+        .delete(`/api/users/${userOne._id}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When mongo id is invalid, should return 400 error', async () => {
+      await insertUsers([admin]);
+
+      const res = await request(app)
+        .delete('/api/users/invalidId')
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
 
       expect(res.statusCode).toBe(400);
     });
