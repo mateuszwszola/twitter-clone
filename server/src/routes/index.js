@@ -1,10 +1,10 @@
 const express = require('express');
-const { auth: authRoutes } = require('../components');
-const { users: usersRoutes } = require('../components');
+const { auth } = require('../components');
+const { users } = require('../components');
 
 const router = express.Router();
 
-router.use('/auth', authRoutes);
-router.use('/users', usersRoutes);
+router.use('/auth', auth.authRoutes);
+router.use('/users', users.userRoutes);
 
 module.exports = router;

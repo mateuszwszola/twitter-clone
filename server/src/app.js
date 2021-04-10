@@ -2,8 +2,11 @@ const express = require('express');
 require('express-async-errors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const compression = require('compression');
 const cors = require('cors');
+const passport = require('passport');
 const config = require('./config/keys');
+const { jwtStrategy } = require('./config/passport');
 const routes = require('./routes');
 const { handleNotFound, handleError } = require('./utils/error');
 
@@ -12,12 +15,18 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
+app.use(compression());
 
 if (config.env !== 'test') {
   app.use(morgan('dev'));
 }
 
 app.use(cors());
+app.options('*', cors());
+
+// jwt authentication
+app.use(passport.initialize());
+passport.use('jwt', jwtStrategy);
 
 // Handle routes
 app.use('/api', routes);

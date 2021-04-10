@@ -1,37 +1,41 @@
-const { verifyToken } = require('../utils/auth');
+/* eslint-disable promise/no-callback-in-promise */
+const passport = require('passport');
 const { ErrorHandler } = require('../utils/error');
+const { roleRights } = require('../config/roles');
 
-const authenticate = async (req, _res, next) => {
-  // Get token from header
-  const authHeader = req.headers['authorization'];
+const verifyCallback = (req, resolve, reject, requiredRights) => async (
+  err,
+  user,
+  info
+) => {
+  if (err || info || !user) {
+    return reject(new ErrorHandler(401, 'You are not authenticated'));
+  }
+  req.user = user;
 
-  if (authHeader) {
-    // Bearer token -> token
-    const token = authHeader.split(' ')[1];
-
-    try {
-      const { user } = await verifyToken(token);
-      req.user = user;
-      next();
-    } catch (err) {
-      throw new ErrorHandler(403, 'You are not authorized');
+  if (requiredRights.length) {
+    const userRights = roleRights.get(user.role);
+    const hasRequiredRights = requiredRights.every((requiredRight) =>
+      userRights.includes(requiredRight)
+    );
+    if (!hasRequiredRights && req.params.userId !== user.id) {
+      return reject(new ErrorHandler(403, 'You are not authorized'));
     }
-  } else {
-    throw new ErrorHandler(401, 'No authorization token provided');
   }
+
+  resolve();
 };
 
-const authorize = (...permittedRoles) => (req, _res, next) => {
-  const { user } = req;
-
-  if (user && permittedRoles.includes(user.role)) {
-    next();
-  } else {
-    throw new ErrorHandler(403, 'Forbidden');
-  }
+const auth = (...requiredRights) => async (req, res, next) => {
+  return new Promise((resolve, reject) => {
+    passport.authenticate(
+      'jwt',
+      { session: false },
+      verifyCallback(req, resolve, reject, requiredRights)
+    )(req, res, next);
+  })
+    .then(() => next())
+    .catch((err) => next(err));
 };
 
-module.exports = {
-  authenticate,
-  authorize,
-};
+module.exports = auth;

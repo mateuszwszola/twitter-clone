@@ -1,3 +1,3 @@
-module.exports.authAPI = require('./authAPI');
+module.exports.authRoutes = require('./auth.routes');
 
-module.exports.authController = require('./authController');
+module.exports.authController = require('./auth.controller');

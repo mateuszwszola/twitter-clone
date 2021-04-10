@@ -4,9 +4,8 @@ const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const { userOne, insertUsers } = require('../fixtures/user.fixture');
 const { User } = require('../../src/components/users');
-const { Profile } = require('../../src/components/profiles');
+const Profile = require('../../src/components/profiles/profile.model');
 const { formatUsername } = require('../../src/utils/helpers');
-const charLengthForProps = require('../../src/helpers/charLengthForProps');
 
 setupTestDB();
 
@@ -18,8 +17,7 @@ describe('Auth routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email(),
         username: faker.internet.userName(),
-        password: 'password123',
-        repeat_password: 'password123',
+        password: 'Password123',
       };
     });
 
@@ -76,7 +74,7 @@ describe('Auth routes', () => {
       expect(res.statusCode).toBe(400);
     });
 
-    it(`When password length is less than ${charLengthForProps.password.min}, should return error`, async () => {
+    it(`When password length is less than 8 characters, should return error`, async () => {
       newUser.password = 'passwd1';
 
       const res = await request(app).post('/api/auth/register').send(newUser);

@@ -1,5 +1,5 @@
-module.exports.User = require('./user');
+module.exports.User = require('./user.model');
 
-module.exports.userAPI = require('./userAPI');
+module.exports.userRoutes = require('./user.routes');
 
-module.exports.userController = require('./userController');
+module.exports.userController = require('./user.controller');

@@ -1,4 +1,4 @@
-module.exports.Profile = require('./profile');
+module.exports.Profile = require('./profile.model');
 
 module.exports.profileAPI = require('./profileAPI');
 

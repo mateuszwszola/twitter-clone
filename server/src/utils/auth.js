@@ -2,7 +2,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../config/keys');
 
-const generateAccessToken = (payload) => {
+const generateAccessToken = (userId) => {
+  const payload = {
+    sub: userId,
+  };
+
   return jwt.sign(payload, config.jwt.secret, {
     expiresIn: Number(config.jwt.expires || 3600),
   });

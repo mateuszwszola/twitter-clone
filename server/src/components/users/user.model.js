@@ -5,6 +5,7 @@ const { ErrorHandler } = require('../../utils/error');
 const { generateAccessToken, hashPassword } = require('../../utils/auth');
 const { paginatePlugin } = require('../../utils/mongo');
 const { roles } = require('../../config/roles');
+const { formatUsername } = require('../../utils/helpers');
 
 const Schema = mongoose.Schema;
 
@@ -62,6 +63,10 @@ UserSchema.pre('save', async function (next) {
       return next(err);
     }
   }
+  if (user.isModified('username')) {
+    user.username = formatUsername(user.username);
+  }
+
   next();
 });
 
@@ -73,13 +78,7 @@ UserSchema.methods.toJSON = function () {
 
 UserSchema.methods.generateAuthToken = function () {
   const user = this;
-  const payload = {
-    user: {
-      id: user.id,
-      role: user.role,
-    },
-  };
-  const token = generateAccessToken(payload);
+  const token = generateAccessToken(user.id);
   return token;
 };
 
@@ -100,6 +99,16 @@ UserSchema.statics.findByCredentials = async function (
   }
 
   return user;
+};
+
+UserSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
+};
+
+UserSchema.statics.isUsernameTaken = async function (username, excludeUserId) {
+  const user = await this.findOne({ username, _id: { $ne: excludeUserId } });
+  return !!user;
 };
 
 const User = mongoose.model('User', UserSchema);

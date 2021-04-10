@@ -1,29 +1,11 @@
 const { generateAccessToken } = require('../../src/utils/auth');
 const { userOne, userTwo, admin } = require('./user.fixture');
 
-const getUserOneAccessToken = () =>
-  generateAccessToken({
-    user: {
-      id: userOne._id,
-      role: userOne.role,
-    },
-  });
+const getUserOneAccessToken = () => generateAccessToken(userOne._id);
 
-const getUserTwoAccessToken = () =>
-  generateAccessToken({
-    user: {
-      id: userTwo._id,
-      role: userTwo.role,
-    },
-  });
+const getUserTwoAccessToken = () => generateAccessToken(userTwo._id);
 
-const getAdminAccessToken = () =>
-  generateAccessToken({
-    user: {
-      id: admin._id,
-      role: admin.role,
-    },
-  });
+const getAdminAccessToken = () => generateAccessToken(admin._id);
 
 module.exports = {
   getUserOneAccessToken,

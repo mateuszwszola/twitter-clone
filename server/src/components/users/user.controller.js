@@ -1,8 +1,8 @@
 const { matchedData } = require('express-validator');
+const { pick } = require('lodash');
 const { ErrorHandler } = require('../../utils/error');
 const { User } = require('./');
-const { Profile } = require('../profiles');
-const { pick } = require('lodash');
+const Profile = require('../profiles/profile.model');
 
 exports.getUsers = async (req, res) => {
   const filters = pick(req.query, ['name', 'role']);
@@ -42,7 +42,16 @@ exports.createUser = async (req, res) => {
     'role',
   ]);
 
+  if (await User.isEmailTaken(userBody.email)) {
+    throw new ErrorHandler(400, 'Email already taken');
+  }
+
+  if (await User.isUsernameTaken(userBody.username)) {
+    throw new ErrorHandler(400, 'Username already taken');
+  }
+
   const user = new User(userBody);
+  // Create user profile
   const profile = new Profile({ user: user.id });
 
   await Promise.all([user.save(), profile.save()]);

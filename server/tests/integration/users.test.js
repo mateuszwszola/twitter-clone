@@ -14,7 +14,7 @@ const {
 } = require('../fixtures/user.fixture');
 const { formatUsername } = require('../../src/utils/helpers');
 const { User } = require('../../src/components/users');
-const { Profile } = require('../../src/components/profiles');
+const Profile = require('../../src/components/profiles/profile.model');
 
 setupTestDB();
 
@@ -105,21 +105,9 @@ describe('Users routes', () => {
       expect(res.statusCode).toBe(403);
     });
 
-    it('When name length is invalid, should return 400 error', async () => {
-      await insertUsers([admin]);
-      newUser.name = 'N   ';
-
-      const res = await request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
-        .send(newUser);
-
-      expect(res.statusCode).toBe(400);
-    });
-
     it('When username length is invalid, should return 400 error', async () => {
       await insertUsers([admin]);
-      newUser.username = 'U   ';
+      newUser.username = 'U';
 
       const res = await request(app)
         .post('/api/users')
@@ -364,4 +352,6 @@ describe('Users routes', () => {
       expect(res.statusCode).toBe(400);
     });
   });
+
+  describe('PATCH /api/users/:userId', () => {});
 });

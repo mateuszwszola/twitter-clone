@@ -1,28 +1,22 @@
-const { validationResult } = require('express-validator');
+const Joi = require('joi');
+const { pick } = require('lodash');
+const { ErrorHandler } = require('../utils/error');
 
-const validate = (validationRules = []) => {
-  if (typeof validationRules === 'function') {
-    validationRules = validationRules();
+const validate = (schema) => (req, res, next) => {
+  const validSchema = pick(schema, ['params', 'query', 'body']);
+  const object = pick(req, Object.keys(validSchema));
+  const { value, error } = Joi.compile(validSchema)
+    .prefs({ errors: { label: 'key' } })
+    .validate(object);
+
+  if (error) {
+    const errorMessage = error.details
+      .map((details) => details.message)
+      .join(', ');
+    return next(new ErrorHandler(400, errorMessage));
   }
-
-  if (!Array.isArray(validationRules)) {
-    validationRules = [validationRules];
-  }
-
-  return [
-    ...validationRules,
-    (req, res, next) => {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ errors: errors.array({ onlyFirstError: true }) });
-      }
-
-      next();
-    },
-  ];
+  Object.assign(req, value);
+  return next();
 };
 
 module.exports = validate;
