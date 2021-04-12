@@ -282,6 +282,7 @@ describe('Users routes', () => {
         .set('Authorization', `Bearer ${getAdminAccessToken()}`)
         .query({ page: 2, limit: 2 });
 
+      expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
         results: expect.any(Array),
         page: 2,

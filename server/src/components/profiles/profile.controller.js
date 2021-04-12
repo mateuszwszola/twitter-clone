@@ -26,11 +26,11 @@ exports.getProfiles = async (req, res) => {
 
   const profiles = await Profile.paginate({}, options);
 
-  res.json({ profiles });
+  res.json(profiles);
 };
 
 exports.updateProfile = async (req, res) => {
-  const { userId } = req.user;
+  const { userId } = req.params;
 
   const fields = [
     'bio',

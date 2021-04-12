@@ -25,8 +25,8 @@ const updateProfile = {
       location: Joi.string().max(255),
       website: Joi.string().custom(url).max(255),
       birthday: Joi.date(),
-      avatar: Joi.string().custom(url),
-      backgroundImage: Joi.string().custom(url),
+      avatar: Joi.string().custom(url).max(255),
+      backgroundImage: Joi.string().custom(url).max(255),
     })
     .min(1),
 };

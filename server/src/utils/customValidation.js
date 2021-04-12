@@ -32,6 +32,7 @@ const url = (value, helpers) => {
   if (!validator.isURL(value)) {
     return helpers.message('"{{#label}}" must be a valid url');
   }
+  return value;
 };
 
 module.exports = {
