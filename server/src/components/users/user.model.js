@@ -39,7 +39,7 @@ const UserSchema = new Schema(
       trim: true,
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new ErrorHandler('Invalid email');
+          throw new ErrorHandler(400, 'Invalid email');
         }
       },
     },

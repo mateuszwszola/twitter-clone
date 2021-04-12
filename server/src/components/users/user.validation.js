@@ -9,8 +9,8 @@ const validate = require('../../middleware/validate');
 
 /* 
   Defining validation as middleware functions gives access to
-  information from request and response objects, allowing to change schema
-  based on criteria for example: if user is an admin, it can also update user role
+  information from request and response objects, allowing to change the schema
+  based on criteria for example: if a user is an admin, it can also update the user role
 */
 
 const getUsers = (req, res, next) => {
@@ -30,7 +30,7 @@ const getUsers = (req, res, next) => {
 const getUser = (req, res, next) => {
   const schema = {
     params: Joi.object().keys({
-      userId: Joi.string().custom(objectId),
+      userId: Joi.string().required().custom(objectId),
     }),
   };
 
@@ -77,7 +77,7 @@ const updateUser = (req, res, next) => {
 const deleteUser = (req, res, next) => {
   const schema = {
     params: Joi.object().keys({
-      userId: Joi.string().custom(objectId),
+      userId: Joi.string().required().custom(objectId),
     }),
   };
 

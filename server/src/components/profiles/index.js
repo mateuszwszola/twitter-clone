@@ -1,5 +1,5 @@
 module.exports.Profile = require('./profile.model');
 
-module.exports.profileAPI = require('./profileAPI');
+module.exports.profileRoutes = require('./profile.routes');
 
-module.exports.profileController = require('./profileController');
+module.exports.profileController = require('./profile.controller');
