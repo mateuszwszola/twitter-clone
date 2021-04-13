@@ -5,8 +5,26 @@ const auth = require('../../middleware/auth');
 const validate = require('../../middleware/validate');
 
 /**
+ * @route   POST / DELETE api/profiles/follow/:userId
+ * @desc    Follow / unfollow profile
+ * @access  User
+ */
+router
+  .route('/follow/:userId')
+  .post(
+    auth(),
+    validate(profileValidation.getProfile),
+    profileController.followProfile
+  )
+  .delete(
+    auth(),
+    validate(profileValidation.getProfile),
+    profileController.unfollowProfile
+  );
+
+/**
  *  @route   GET api/profiles
- *  @desc    Get all profiles
+ *  @desc    Get profiles
  *  @access  Public
  */
 router.get(
@@ -27,7 +45,7 @@ router.get(
 );
 
 /**
- * @route   PUT api/profiles/:userId
+ * @route   PATCH api/profiles/:userId
  * @desc    Update user's profile
  * @access  Owner, Admin
  */

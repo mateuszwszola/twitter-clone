@@ -3,6 +3,8 @@ const { objectId, url } = require('../../utils/customValidation');
 
 const getProfiles = {
   query: Joi.object().keys({
+    following: Joi.string().custom(objectId),
+    followers: Joi.string().custom(objectId),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),

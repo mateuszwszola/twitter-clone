@@ -5,7 +5,6 @@ const setupTestDB = require('../utils/setupTestDB');
 const {
   getAdminAccessToken,
   getUserOneAccessToken,
-  getUserTwoAccessToken,
 } = require('../fixtures/token.fixture');
 const {
   admin,
@@ -19,14 +18,12 @@ setupTestDB();
 
 describe('Profiles routes', () => {
   describe('GET /api/profiles', () => {
-    beforeEach(async () => {
+    it('Should return 200 with profiles with populated user data and apply default query options', async () => {
       await Promise.all([
         insertUsers([userOne, userTwo]),
         Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
       ]);
-    });
 
-    it('Should return 200 with profiles with populated user data and apply the default query options', async () => {
       const res = await request(app).get('/api/profiles');
 
       expect(res.statusCode).toBe(200);
@@ -44,6 +41,11 @@ describe('Profiles routes', () => {
     });
 
     it('When limit param is specified, should limit returned array', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+      ]);
+
       const res = await request(app).get('/api/profiles').query({ limit: 1 });
 
       expect(res.statusCode).toBe(200);
@@ -58,6 +60,11 @@ describe('Profiles routes', () => {
     });
 
     it('When page and limit are specified, should return correct page', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+      ]);
+
       const res = await request(app)
         .get('/api/profiles')
         .query({ limit: 1, page: 2 });
@@ -71,6 +78,46 @@ describe('Profiles routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(1);
+    });
+
+    it('When followers filter is applied, should return profiles user follows', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ followers: userOne._id.toString() });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].user._id).toBe(userTwo._id.toString());
+      expect(res.body.results[0].user).toHaveProperty('name');
+      expect(res.body.results[0].user).toHaveProperty('username');
+    });
+
+    it('When following filter is applied, should return profile followers', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ following: userTwo._id.toString() });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].user._id).toBe(userOne._id.toString());
+      expect(res.body.results[0].user).toHaveProperty('name');
+      expect(res.body.results[0].user).toHaveProperty('username');
     });
   });
 
@@ -214,6 +261,193 @@ describe('Profiles routes', () => {
         .patch(`/api/profiles/${userOne._id}`)
         .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
         .send({});
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('POST /api/profiles/follow/:userId', () => {
+    it('When data is ok, should follow profile', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(200);
+
+      const [dbProfileOne, dbProfileTwo] = await Promise.all([
+        Profile.findOne({ user: userOne._id }),
+        Profile.findOne({ user: userTwo._id }),
+      ]);
+
+      expect(dbProfileOne.isFollowing(dbProfileTwo.user)).toBe(true);
+      expect(dbProfileTwo.followers.includes(dbProfileOne.user)).toBe(true);
+    });
+
+    it('When userId is invalid, should return 400 error', async () => {
+      await Promise.all([insertUsers([userOne])]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await Promise.all([
+        insertUsers([userTwo]),
+        Profile.insertMany([{ user: userTwo._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/${userTwo._id}`)
+        .send();
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When profile does not exists, should return 404 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When user is trying to follow their profile, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user already follow profile, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/profiles/follow/:userId', () => {
+    it('When data is ok, should unfollow profile', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send()
+        .expect(200);
+
+      expect(res.statusCode).toBe(200);
+
+      const [dbProfileOne, dbProfileTwo] = await Promise.all([
+        Profile.findOne({ user: userOne._id }),
+        Profile.findOne({ user: userTwo._id }),
+      ]);
+
+      expect(dbProfileOne.isFollowing(dbProfileTwo.user)).toBe(false);
+      expect(dbProfileTwo.followers.includes(dbProfileOne.user)).toBe(false);
+    });
+
+    it('When userId is invalid, should return 400 error', async () => {
+      await Promise.all([insertUsers([userOne])]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await Promise.all([
+        insertUsers([userTwo]),
+        Profile.insertMany([{ user: userTwo._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/${userTwo._id}`)
+        .send();
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When profile does not exists, should return 404 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When user is trying to unfollow their profile, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/${userOne._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user does not follow profile, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/profiles/follow/${userTwo._id}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send();
 
       expect(res.statusCode).toBe(400);
     });
