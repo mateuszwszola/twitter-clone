@@ -18,8 +18,7 @@ exports.getProfile = async (req, res) => {
 
 exports.getProfiles = async (req, res) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const filters = pick(req.query, ['following', 'followers']);
-
+  const filters = pick(req.query, ['following', 'followers', 'likes']); // TODO: Handle tweet likes
   options.populate = {
     path: 'user',
     select: ['name', 'username'],

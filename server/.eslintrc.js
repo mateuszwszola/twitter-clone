@@ -19,6 +19,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'node/no-unpublished-require': 'off',
+    'security/detect-non-literal-fs-filename': 'off',
   },
   plugins: ['security', 'promise', 'jest', 'prettier'],
 };

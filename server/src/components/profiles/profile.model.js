@@ -48,7 +48,8 @@ const ProfileSchema = new Schema(
     },
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    tweetLikes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
+    likes: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
+    retweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
   },
   { timestamps: true }
 );
@@ -57,53 +58,51 @@ const ProfileSchema = new Schema(
 ProfileSchema.plugin(paginatePlugin);
 
 ProfileSchema.methods.follow = function (userId) {
-  const user = this;
-
-  if (!user.following.includes(userId)) {
-    user.following.push(userId);
+  if (!this.following.includes(userId)) {
+    this.following.push(userId);
   }
 
-  return user.save();
+  return this.save();
 };
 
 ProfileSchema.methods.unfollow = function (userId) {
-  const user = this;
-
-  if (user.following.includes(userId)) {
-    user.following.remove(userId);
+  if (this.following.includes(userId)) {
+    this.following.remove(userId);
   }
 
-  return user.save();
+  return this.save();
 };
 
 ProfileSchema.methods.isFollowing = function (userId) {
-  const user = this;
-  return user.following.includes(userId);
+  return this.following.includes(userId);
 };
 
-ProfileSchema.methods.likeTweet = function (tweetId) {
-  const user = this;
-
-  if (!user.tweetLikes.includes(tweetId)) {
-    user.tweetLikes.push(tweetId);
+ProfileSchema.methods.like = function (tweetId) {
+  if (!this.likes.includes(tweetId)) {
+    this.likes.push(tweetId);
   }
 
-  return user.save();
+  return this.save();
 };
 
-ProfileSchema.methods.unlikeTweet = function (tweetId) {
-  const user = this;
-
-  if (user.tweetLikes.includes(tweetId)) {
-    user.tweetLikes.remove(tweetId);
+ProfileSchema.methods.unlike = function (tweetId) {
+  if (this.likes.includes(tweetId)) {
+    this.likes.remove(tweetId);
   }
 
-  return user.save();
+  return this.save();
 };
 
-ProfileSchema.methods.likesTweet = function (tweetId) {
-  const user = this;
-  return user.tweetLikes.includes(tweetId);
+ProfileSchema.methods.likesIt = function (tweetId) {
+  return this.likes.includes(tweetId);
+};
+
+ProfileSchema.methods.retweet = function (tweetId) {
+  if (!this.retweets.includes(tweetId)) {
+    this.retweets.push(tweetId);
+  }
+
+  return this.save();
 };
 
 const Profile = mongoose.model('Profile', ProfileSchema);

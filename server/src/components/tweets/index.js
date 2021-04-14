@@ -1,5 +1,5 @@
-module.exports.Tweet = require('./tweet');
+module.exports.Tweet = require('./tweet.model');
 
-module.exports.tweetAPI = require('./tweetAPI');
+module.exports.tweetRoutes = require('./tweet.routes');
 
-module.exports.tweetController = require('./tweetController');
+module.exports.tweetController = require('./tweet.controller');
