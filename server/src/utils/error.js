@@ -18,13 +18,12 @@ const handleNotFound = (req, _res, next) => {
 
 // eslint-disable-next-line
 const handleError = (err, req, res, next) => {
-  if (config.env === 'development') {
-    logger.error(err);
-  }
-
   if (res.headersSent) {
     next(err);
   } else {
+    if (config.env !== 'test') {
+      logger.error(err);
+    }
     res.status(err.statusCode || 500);
     res.json({
       message: err.message || 'Internal Server Error',

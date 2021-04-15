@@ -7,7 +7,7 @@ const cors = require('cors');
 const passport = require('passport');
 const config = require('./config/keys');
 const { jwtStrategy } = require('./config/passport');
-const routes = require('./routes');
+const { getRoutes } = require('./routes');
 const { handleNotFound, handleError } = require('./utils/error');
 
 const app = express();
@@ -29,7 +29,7 @@ app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
 // Handle routes
-app.use('/api', routes);
+app.use('/api', getRoutes());
 
 // 404 error handler
 app.use(handleNotFound);
