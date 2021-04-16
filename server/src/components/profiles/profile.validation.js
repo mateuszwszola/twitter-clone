@@ -5,6 +5,8 @@ const getProfiles = {
   query: Joi.object().keys({
     following: Joi.string().custom(objectId),
     followers: Joi.string().custom(objectId),
+    likes: Joi.string().custom(objectId),
+    retweets: Joi.string().custom(objectId),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),

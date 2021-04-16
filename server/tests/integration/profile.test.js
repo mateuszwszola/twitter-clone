@@ -1,5 +1,6 @@
 const request = require('supertest');
 const faker = require('faker');
+const mongoose = require('mongoose');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
 const {
@@ -13,6 +14,7 @@ const {
   insertUsers,
 } = require('../fixtures/user.fixture');
 const { Profile } = require('../../src/components/profiles');
+const Tweet = require('../../src/components/tweets/tweet.model');
 
 setupTestDB();
 
@@ -96,8 +98,6 @@ describe('Profiles routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].user._id).toBe(userTwo._id.toString());
-      expect(res.body.results[0].user).toHaveProperty('name');
-      expect(res.body.results[0].user).toHaveProperty('username');
     });
 
     it('When following filter is applied, should return profile followers', async () => {
@@ -116,21 +116,119 @@ describe('Profiles routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
       expect(res.body.results[0].user._id).toBe(userOne._id.toString());
-      expect(res.body.results[0].user).toHaveProperty('name');
-      expect(res.body.results[0].user).toHaveProperty('username');
     });
 
-    it.skip('When likes filter is applied, should return profiles who liked a tweet', () => {});
+    it('When likes filter is applied, should return profiles who liked a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, likes: [tweetId] },
+          { user: userTwo._id },
+        ]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+            likes: [userOne._id],
+          },
+        ]),
+      ]);
 
-    it.skip('When retweets filter is applied, should return profiles who retweeted a tweet', () => {});
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ likes: tweetId.toString() });
 
-    it.skip('When following filter is applied and profile does not exists, should return 404 error', () => {});
+      expect(res.statusCode).toBe(200);
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].user).toMatchObject({
+        _id: userOne._id.toString(),
+      });
+    });
 
-    it.skip('When followers filter is applied and profile does not exists, should return 404 error', () => {});
+    it('When retweets filter is applied, should return profiles who retweeted a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, retweets: [tweetId] },
+          { user: userTwo._id },
+        ]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+            retweets: [userOne._id],
+          },
+        ]),
+      ]);
 
-    it.skip('When likes filter is applied and tweet does not exists, should return 404 error', () => {});
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ retweets: tweetId.toString() });
 
-    it.skip('When retweets filter is applied and tweet does not exists, should return 404 error', () => {});
+      expect(res.statusCode).toBe(200);
+      expect(res.body.results).toHaveLength(1);
+      expect(res.body.results[0].user).toMatchObject({
+        _id: userOne._id.toString(),
+      });
+    });
+
+    it('When following filter is applied and profile does not exists, should return 404 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, following: [userTwo._id] }]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ following: userTwo._id.toString() });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When followers filter is applied and profile does not exists, should return 404 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, followers: [userTwo._id] }]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ followers: userTwo._id.toString() });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When likes filter is applied and tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ likes: tweetId.toString() });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When retweets filter is applied and tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/profiles')
+        .query({ retweets: tweetId.toString() });
+
+      expect(res.statusCode).toBe(404);
+    });
   });
 
   describe('GET /api/profiles/:userId', () => {
