@@ -14,6 +14,7 @@ const {
   getAdminAccessToken,
 } = require('../fixtures/token.fixture');
 const { Tweet } = require('../../src/components/tweets');
+const Profile = require('../../src/components/profiles/profile.model');
 
 setupTestDB();
 
@@ -641,5 +642,393 @@ describe('Tweets routes', () => {
 
       expect(res.statusCode).toBe(400);
     });
+  });
+
+  describe('POST /api/tweets/like/:tweetId', () => {
+    it('When tweet exists and user is authenticated, should like a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet.likes).toContain(userOne._id.toString());
+
+      const [dbTweet, dbProfile] = await Promise.all([
+        Tweet.findById(tweetId),
+        Profile.findOne({ user: userOne._id }),
+      ]);
+      expect(dbTweet.likes).toContainEqual(userOne._id);
+      expect(dbProfile.likes).toContainEqual(tweetId);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+
+      const res = await request(app).post(`/api/tweets/like/${tweetId}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/like/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user already likes a tweet, should return 400 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.random.words(10),
+            likes: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/tweets/like/:tweetId', () => {
+    it('When tweet exists and user is authenticated, should successfully remove like from a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, likes: [tweetId] },
+          { user: userTwo._id },
+        ]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+            likes: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet.likes).toHaveLength(0);
+
+      const [dbTweet, dbProfile] = await Promise.all([
+        Tweet.findById(tweetId),
+        Profile.findOne({ user: userOne._id }),
+      ]);
+      expect(dbTweet.likes).toHaveLength(0);
+      expect(dbProfile.likes).toHaveLength(0);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.random.words(10),
+            likes: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app).delete(`/api/tweets/like/${tweetId}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/like/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user did not like a tweet yet, should return 400 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/like/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('POST /api/tweets/retweet/:tweetId', () => {
+    it('When tweet exists and user is authenticated, should retweet a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet.retweets).toContain(userOne._id.toString());
+
+      const [dbTweet, dbProfile] = await Promise.all([
+        Tweet.findById(tweetId),
+        Profile.findOne({ user: userOne._id }),
+      ]);
+      expect(dbTweet.retweets).toContainEqual(userOne._id);
+      expect(dbProfile.retweets).toContainEqual(tweetId);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+
+      const res = await request(app).post(`/api/tweets/retweet/${tweetId}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/retweet/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user already retweeted a tweet, should return 400 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.random.words(10),
+            retweets: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .post(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/tweets/retweet/:tweetId', () => {
+    it('When tweet exists and user is authenticated, should successfully un retweet a tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, retweets: [tweetId] },
+          { user: userTwo._id },
+        ]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+            retweets: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet.retweets).toHaveLength(0);
+
+      const [dbTweet, dbProfile] = await Promise.all([
+        Tweet.findById(tweetId),
+        Profile.findOne({ user: userOne._id }),
+      ]);
+      expect(dbTweet.retweets).toHaveLength(0);
+      expect(dbProfile.retweets).toHaveLength(0);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.random.words(10),
+            retweets: [userOne._id],
+          },
+        ]),
+      ]);
+
+      const res = await request(app).delete(`/api/tweets/retweet/${tweetId}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/retweet/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When user did not retweet a tweet yet, should return 400 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/retweet/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('GET /api/tweets/feed', () => {
+    it("When happy path, should return tweets feed for user -> Combination of user's tweets and profile's tweets user is following", async () => {});
+
+    it('When limit and page params are specified, should limit and return given page of tweets', async () => {});
   });
 });

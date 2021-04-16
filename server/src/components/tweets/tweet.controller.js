@@ -2,10 +2,41 @@ const { pick } = require('lodash');
 const Tweet = require('./tweet.model');
 const { ErrorHandler } = require('../../utils/error');
 const User = require('../users/user.model');
+const Profile = require('../profiles/profile.model');
+
+const getFeedTweets = async (req, res) => {
+  const options = pick(req.query, ['limit', 'page']);
+  const { _id: userId } = req.user;
+  options.populate = {
+    path: 'author',
+    select: ['name', 'username'],
+  };
+  options.sortBy = 'createdAt:desc';
+
+  const tweets = await Tweet.paginate(
+    {
+      $or: [
+        { user: userId },
+        {
+          user: {
+            $in: await Profile.findOne({ user: userId }).select('following'),
+          },
+        },
+      ],
+    },
+    options
+  );
+
+  res.json(tweets);
+};
 
 const getTweets = async (req, res) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const filters = pick(req.query, ['likes', 'retweets', 'replyTo']);
+  const filters = pick(req.query, ['author', 'likes', 'retweets', 'replyTo']);
+
+  if (filters.author && !(await User.exists({ _id: filters.author }))) {
+    throw new ErrorHandler(404, 'User does not exists');
+  }
 
   if (filters.likes && !(await User.exists({ _id: filters.likes }))) {
     throw new ErrorHandler(404, 'User does not exists');
@@ -106,10 +137,99 @@ const deleteTweet = async (req, res) => {
   res.json({ tweet });
 };
 
+const likeTweet = async (req, res) => {
+  const { tweetId } = req.params;
+  const { _id: userId } = req.user;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ErrorHandler(404, 'Tweet not found');
+  }
+
+  const profile = await Profile.findOne({ user: userId });
+
+  if (profile.likesIt(tweetId)) {
+    throw new ErrorHandler(400, 'User already likes a tweet');
+  }
+
+  await Promise.all([profile.like(tweetId), tweet.like(userId)]);
+
+  res.json({ tweet });
+};
+
+const unlikeTweet = async (req, res) => {
+  const { tweetId } = req.params;
+  const { _id: userId } = req.user;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ErrorHandler(404, 'Tweet not found');
+  }
+
+  const profile = await Profile.findOne({ user: userId });
+
+  if (!profile.likesIt(tweetId)) {
+    throw new ErrorHandler(400, 'User did not liked the tweet yet');
+  }
+
+  await Promise.all([profile.unlike(tweetId), tweet.unlike(userId)]);
+
+  res.json({ tweet });
+};
+
+const retweet = async (req, res) => {
+  const { tweetId } = req.params;
+  const { _id: userId } = req.user;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ErrorHandler(404, 'Tweet not found');
+  }
+
+  const profile = await Profile.findOne({ user: userId });
+
+  if (profile.retweeted(tweetId)) {
+    throw new ErrorHandler(400, 'User already retweeted a tweet');
+  }
+
+  await Promise.all([profile.retweet(tweetId), tweet.retweet(userId)]);
+
+  res.json({ tweet });
+};
+
+const unRetweet = async (req, res) => {
+  const { tweetId } = req.params;
+  const { _id: userId } = req.user;
+
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ErrorHandler(404, 'Tweet not found');
+  }
+
+  const profile = await Profile.findOne({ user: userId });
+
+  if (!profile.retweeted(tweetId)) {
+    throw new ErrorHandler(400, 'User did not retweeted a tweet yet');
+  }
+
+  await Promise.all([profile.unRetweet(tweetId), tweet.unRetweet(userId)]);
+
+  res.json({ tweet });
+};
+
 module.exports = {
+  getFeedTweets,
   getTweets,
   getTweet,
   createTweet,
   updateTweet,
   deleteTweet,
+  likeTweet,
+  unlikeTweet,
+  retweet,
+  unRetweet,
 };

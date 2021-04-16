@@ -41,6 +41,38 @@ TweetSchema.methods.updateRepliesCount = async function () {
   return this.save();
 };
 
+TweetSchema.methods.like = function (userId) {
+  if (!this.likes.some((id) => id.equals(userId))) {
+    this.likes.push(userId);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
+TweetSchema.methods.unlike = function (userId) {
+  if (this.likes.some((id) => id.equals(userId))) {
+    this.likes.remove(userId);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
+TweetSchema.methods.retweet = function (userId) {
+  if (!this.retweets.some((id) => id.equals(userId))) {
+    this.retweets.push(userId);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
+TweetSchema.methods.unRetweet = function (userId) {
+  if (this.retweets.some((id) => id.equals(userId))) {
+    this.retweets.remove(userId);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
 const Tweet = mongoose.model('Tweet', TweetSchema);
 
 module.exports = Tweet;

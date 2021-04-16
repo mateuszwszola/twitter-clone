@@ -119,6 +119,18 @@ describe('Profiles routes', () => {
       expect(res.body.results[0].user).toHaveProperty('name');
       expect(res.body.results[0].user).toHaveProperty('username');
     });
+
+    it.skip('When likes filter is applied, should return profiles who liked a tweet', () => {});
+
+    it.skip('When retweets filter is applied, should return profiles who retweeted a tweet', () => {});
+
+    it.skip('When following filter is applied and profile does not exists, should return 404 error', () => {});
+
+    it.skip('When followers filter is applied and profile does not exists, should return 404 error', () => {});
+
+    it.skip('When likes filter is applied and tweet does not exists, should return 404 error', () => {});
+
+    it.skip('When retweets filter is applied and tweet does not exists, should return 404 error', () => {});
   });
 
   describe('GET /api/profiles/:userId', () => {

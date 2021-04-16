@@ -5,6 +5,32 @@ const tweetController = require('./tweet.controller');
 const tweetValidation = require('./tweet.validation');
 
 router
+  .route('/feed')
+  .get(
+    auth(),
+    validate(tweetValidation.getFeedTweets),
+    tweetController.getFeedTweets
+  );
+
+router
+  .route('/like/:tweetId')
+  .post(auth(), validate(tweetValidation.getTweet), tweetController.likeTweet)
+  .delete(
+    auth(),
+    validate(tweetValidation.getTweet),
+    tweetController.unlikeTweet
+  );
+
+router
+  .route('/retweet/:tweetId')
+  .post(auth(), validate(tweetValidation.getTweet), tweetController.retweet)
+  .delete(
+    auth(),
+    validate(tweetValidation.getTweet),
+    tweetController.unRetweet
+  );
+
+router
   .route('/')
   .get(validate(tweetValidation.getTweets), tweetController.getTweets)
   .post(
