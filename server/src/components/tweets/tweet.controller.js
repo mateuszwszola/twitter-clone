@@ -56,7 +56,7 @@ const createTweet = async (req, res) => {
 
   const tweet = await Tweet.create(values);
 
-  res.json({ tweet });
+  res.status(201).json({ tweet });
 
   if (values.replyTo) {
     const originalTweet = await Tweet.findById(values.replyTo);
@@ -76,7 +76,7 @@ const updateTweet = async (req, res) => {
     throw new ErrorHandler(404, 'Tweet not found');
   }
 
-  if (!tweet.author.equals(authUserId)) {
+  if (!tweet.author.equals(authUserId) && req.user.role !== 'admin') {
     throw new ErrorHandler(403, "You cannot update someone's tweet");
   }
 
@@ -97,7 +97,7 @@ const deleteTweet = async (req, res) => {
     throw new ErrorHandler(404, 'Tweet not found');
   }
 
-  if (!tweet.author.equals(authUserId)) {
+  if (!tweet.author.equals(authUserId) && req.user.role !== 'admin') {
     throw new ErrorHandler(403, "You cannot delete someone's tweet");
   }
 

@@ -3,7 +3,16 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const { userOne, insertUsers, userTwo } = require('../fixtures/user.fixture');
+const {
+  userOne,
+  userTwo,
+  admin,
+  insertUsers,
+} = require('../fixtures/user.fixture');
+const {
+  getUserOneAccessToken,
+  getAdminAccessToken,
+} = require('../fixtures/token.fixture');
 const { Tweet } = require('../../src/components/tweets');
 
 setupTestDB();
@@ -211,6 +220,426 @@ describe('Tweets routes', () => {
 
         expect(res.statusCode).toBe(404);
       });
+    });
+  });
+
+  describe('POST /api/tweets', () => {
+    it('When data is ok, should add a tweet and return successful response with a new tweet', async () => {
+      await insertUsers([userOne]);
+      const tweet = {
+        text: faker.lorem.words(10),
+      };
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(tweet)
+        .expect(201);
+
+      expect(res.body.tweet).toMatchObject({
+        text: tweet.text,
+        author: userOne._id.toString(),
+      });
+      const dbTweet = await Tweet.findById(res.body.tweet._id);
+      expect(dbTweet).toMatchObject({
+        text: tweet.text,
+        author: userOne._id,
+      });
+    });
+
+    it('When data is ok, should add a tweet reply and return successful response with a new tweet', async () => {
+      const tweet = {
+        _id: mongoose.Types.ObjectId(),
+        author: userOne._id,
+        text: faker.lorem.words(10),
+      };
+      await Promise.all([insertUsers([userOne]), Tweet.insertMany([tweet])]);
+
+      const newTweet = {
+        text: faker.lorem.words(10),
+        replyTo: tweet._id,
+      };
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet)
+        .expect(201);
+
+      expect(res.body.tweet).toMatchObject({
+        ...newTweet,
+        replyTo: tweet._id.toString(),
+        author: userOne._id.toString(),
+      });
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const newTweet = { text: faker.lorem.words(10) };
+
+      const res = await request(app).post('/api/tweets').send(newTweet);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When required fields are not provided, should return 400 error', async () => {
+      await insertUsers([userOne]);
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send({});
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When tweet length is invalid, should return 400 error', async () => {
+      await insertUsers([userOne]);
+      const newTweet = { text: '' };
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When replyTo tweet id is invalid mongo id, should return 400 error', async () => {
+      await insertUsers([userOne]);
+      const newTweet = { text: faker.lorem.words(10), replyTo: 'invalidId' };
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When replyTo tweet does not exists, should return 404 error', async () => {
+      await insertUsers([userOne]);
+      const newTweet = {
+        text: faker.lorem.words(10),
+        replyTo: mongoose.Types.ObjectId(),
+      };
+
+      const res = await request(app)
+        .post('/api/tweets')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  describe('GET /api/tweets/:tweetId', () => {
+    it('When tweet exists, should return tweet with populated author data', async () => {
+      await insertUsers([userOne]);
+      const tweet = await Tweet.create({
+        author: userOne._id,
+        text: faker.lorem.words(10),
+      });
+
+      const res = await request(app)
+        .get(`/api/tweets/${tweet._id}`)
+        .expect(200);
+
+      expect(res.body.tweet).toMatchObject({
+        text: tweet.text,
+        author: {
+          _id: userOne._id.toString(),
+          name: expect.any(String),
+          username: expect.any(String),
+        },
+      });
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      const res = await request(app).get(`/api/tweets/invalidId`);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const res = await request(app).get(
+        `/api/tweets/${mongoose.Types.ObjectId()}`
+      );
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  describe('PATCH /api/tweets/:tweetId', () => {
+    it('When data is ok, should successfully update and return tweet', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet).toMatchObject({
+        text: newTweet.text,
+        edited: true,
+      });
+      const dbTweet = await Tweet.findById(tweetId);
+      expect(dbTweet.edited).toBe(true);
+      expect(dbTweet.text).toBe(newTweet.text);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([insertUsers([userOne])]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([insertUsers([userOne])]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it("When user is trying to update another user's tweet, should return 403 error", async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    it("When admin is trying to update another user's tweet, should successfully update", async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, admin]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const newTweet = { text: faker.random.words(10) };
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.tweet).toHaveProperty('text', newTweet.text);
+    });
+
+    it('When no tweet data is provided, should return 400 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const newTweet = {};
+
+      const res = await request(app)
+        .patch(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .send(newTweet);
+
+      expect(res.statusCode).toBe(400);
+    });
+  });
+
+  describe('DELETE /api/tweets/:tweetId', () => {
+    it('When a user is deleting their tweet, should successfully delete', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      const dbTweet = await Tweet.findById(tweetId);
+      expect(dbTweet).toBeNull();
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app).delete(`/api/tweets/${tweetId}`);
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it("When user is trying to delete another user's tweet, should return 403 error", async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userTwo._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    it("When admin is trying to delete another user's tweet, should successfully delete", async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([userOne, admin]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: userOne._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When admin is trying to delete their tweet, should successfully delete', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([
+        insertUsers([admin]),
+        Tweet.insertMany([
+          {
+            _id: tweetId,
+            author: admin._id,
+            text: faker.lorem.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('When tweet does not exists, should return 404 error', async () => {
+      const tweetId = mongoose.Types.ObjectId();
+      await Promise.all([insertUsers([userOne])]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/${tweetId}`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    it('When tweetId is invalid mongo id, should return 400 error', async () => {
+      await Promise.all([insertUsers([userOne])]);
+
+      const res = await request(app)
+        .delete(`/api/tweets/invalidId`)
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(400);
     });
   });
 });
