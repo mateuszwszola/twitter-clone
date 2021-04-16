@@ -19,6 +19,88 @@ const Profile = require('../../src/components/profiles/profile.model');
 setupTestDB();
 
 describe('Tweets routes', () => {
+  describe('GET /api/tweets/feed', () => {
+    it("When request is ok, should return user feed's tweets -> Combination of user's tweets and tweets from profiles user is following", async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+        Tweet.insertMany([
+          {
+            author: userOne._id,
+            text: faker.random.words(10),
+          },
+          {
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/tweets/feed')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toMatchObject({
+        results: expect.any(Array),
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(2);
+    });
+
+    it('When access token is missing, should return 401 error', async () => {
+      await Promise.all([
+        insertUsers([userOne]),
+        Profile.insertMany([{ user: userOne._id }]),
+      ]);
+
+      const res = await request(app).get('/api/tweets/feed');
+
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('When limit and page params are specified, should limit and return given page of tweets', async () => {
+      await Promise.all([
+        insertUsers([userOne, userTwo]),
+        Profile.insertMany([
+          { user: userOne._id, following: [userTwo._id] },
+          { user: userTwo._id, followers: [userOne._id] },
+        ]),
+        Tweet.insertMany([
+          {
+            author: userOne._id,
+            text: faker.random.words(10),
+          },
+          {
+            author: userTwo._id,
+            text: faker.random.words(10),
+          },
+        ]),
+      ]);
+
+      const res = await request(app)
+        .get('/api/tweets/feed')
+        .set('Authorization', `Bearer ${getUserOneAccessToken()}`)
+        .query({ limit: 1, page: 2 });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toMatchObject({
+        results: expect.any(Array),
+        page: 2,
+        limit: 1,
+        totalPages: 2,
+        totalResults: 2,
+      });
+      expect(res.body.results).toHaveLength(1);
+    });
+  });
+
   describe('GET /api/tweets', () => {
     describe('Returns tweets based on different options and filters', () => {
       it('When request is ok, should return tweets with populated author data and apply default query options', async () => {
@@ -36,11 +118,14 @@ describe('Tweets routes', () => {
           totalResults: 1,
         });
         expect(res.body.results).toHaveLength(1);
-        const [resTweet] = res.body.results;
-        expect(resTweet.text).toBe(tweet.text);
-        expect(resTweet.author._id).toBe(tweet.author.toString());
-        expect(resTweet.author).toHaveProperty('name');
-        expect(resTweet.author).toHaveProperty('username');
+        expect(res.body.results[0]).toMatchObject({
+          text: tweet.text,
+          author: {
+            _id: tweet.author.toString(),
+            name: expect.any(String),
+            username: expect.any(String),
+          },
+        });
       });
 
       it('When limit param is specified, should limit returned tweets', async () => {
@@ -1024,11 +1109,5 @@ describe('Tweets routes', () => {
 
       expect(res.statusCode).toBe(400);
     });
-  });
-
-  describe('GET /api/tweets/feed', () => {
-    it("When happy path, should return tweets feed for user -> Combination of user's tweets and profile's tweets user is following", async () => {});
-
-    it('When limit and page params are specified, should limit and return given page of tweets', async () => {});
   });
 });

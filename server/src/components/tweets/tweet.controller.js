@@ -4,7 +4,7 @@ const { ErrorHandler } = require('../../utils/error');
 const User = require('../users/user.model');
 const Profile = require('../profiles/profile.model');
 
-const getFeedTweets = async (req, res) => {
+const getFeedsTweets = async (req, res) => {
   const options = pick(req.query, ['limit', 'page']);
   const { _id: userId } = req.user;
   options.populate = {
@@ -13,13 +13,15 @@ const getFeedTweets = async (req, res) => {
   };
   options.sortBy = 'createdAt:desc';
 
+  const profile = await Profile.findOne({ user: userId });
+
   const tweets = await Tweet.paginate(
     {
       $or: [
-        { user: userId },
+        { author: userId },
         {
-          user: {
-            $in: await Profile.findOne({ user: userId }).select('following'),
+          author: {
+            $in: profile.following,
           },
         },
       ],
@@ -222,7 +224,7 @@ const unRetweet = async (req, res) => {
 };
 
 module.exports = {
-  getFeedTweets,
+  getFeedsTweets,
   getTweets,
   getTweet,
   createTweet,

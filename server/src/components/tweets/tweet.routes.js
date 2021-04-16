@@ -8,8 +8,8 @@ router
   .route('/feed')
   .get(
     auth(),
-    validate(tweetValidation.getFeedTweets),
-    tweetController.getFeedTweets
+    validate(tweetValidation.getFeedsTweets),
+    tweetController.getFeedsTweets
   );
 
 router

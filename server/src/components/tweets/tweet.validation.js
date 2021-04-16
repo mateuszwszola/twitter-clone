@@ -1,6 +1,13 @@
 const Joi = require('joi');
 const { objectId } = require('../../utils/customValidation');
 
+const getFeedsTweets = {
+  query: Joi.object().keys({
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 const getTweets = {
   query: Joi.object().keys({
     likes: Joi.string().custom(objectId),
@@ -37,6 +44,7 @@ const deleteTweet = {
 };
 
 module.exports = {
+  getFeedsTweets,
   getTweets,
   getTweet,
   createTweet,
