@@ -35,9 +35,7 @@ const TweetSchema = new Schema(
 TweetSchema.plugin(paginatePlugin);
 
 TweetSchema.methods.updateRepliesCount = async function () {
-  this.repliesCount = await mongoose
-    .model('Tweet')
-    .countDocuments({ replyTo: this._id });
+  this.repliesCount = await mongoose.model('Tweet').countDocuments({ replyTo: this._id });
   return this.save();
 };
 

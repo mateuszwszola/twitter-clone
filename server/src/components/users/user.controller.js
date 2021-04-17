@@ -25,13 +25,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const userBody = pick(req.body, [
-    'name',
-    'username',
-    'email',
-    'password',
-    'role',
-  ]);
+  const userBody = pick(req.body, ['name', 'username', 'email', 'password', 'role']);
 
   if (await User.isEmailTaken(userBody.email)) {
     throw new ErrorHandler(400, 'Email already taken');
@@ -51,23 +45,14 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const newValues = pick(req.body, [
-    'name',
-    'username',
-    'email',
-    'password',
-    'role',
-  ]);
+  const newValues = pick(req.body, ['name', 'username', 'email', 'password', 'role']);
   const { userId } = req.params;
 
   if (newValues.email && (await User.isEmailTaken(newValues.email, userId))) {
     throw new ErrorHandler(400, 'Email already taken');
   }
 
-  if (
-    newValues.username &&
-    (await User.isUsernameTaken(newValues.username, userId))
-  ) {
+  if (newValues.username && (await User.isUsernameTaken(newValues.username, userId))) {
     throw new ErrorHandler(400, 'Username already taken');
   }
 

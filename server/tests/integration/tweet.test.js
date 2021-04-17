@@ -3,16 +3,8 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const {
-  userOne,
-  userTwo,
-  admin,
-  insertUsers,
-} = require('../fixtures/user.fixture');
-const {
-  getUserOneAccessToken,
-  getAdminAccessToken,
-} = require('../fixtures/token.fixture');
+const { userOne, userTwo, admin, insertUsers } = require('../fixtures/user.fixture');
+const { getUserOneAccessToken, getAdminAccessToken } = require('../fixtures/token.fixture');
 const { Tweet } = require('../../src/components/tweets');
 const Profile = require('../../src/components/profiles/profile.model');
 
@@ -39,9 +31,7 @@ describe('Tweets routes', () => {
         ]),
       ]);
 
-      const res = await request(app)
-        .get('/api/tweets/feed')
-        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+      const res = await request(app).get('/api/tweets/feed').set('Authorization', `Bearer ${getUserOneAccessToken()}`);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toMatchObject({
@@ -55,10 +45,7 @@ describe('Tweets routes', () => {
     });
 
     it('When access token is missing, should return 401 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app).get('/api/tweets/feed');
 
@@ -135,10 +122,7 @@ describe('Tweets routes', () => {
         ];
         await Promise.all([insertUsers([userOne]), Tweet.insertMany(tweets)]);
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ limit: 1 })
-          .expect(200);
+        const res = await request(app).get('/api/tweets').query({ limit: 1 }).expect(200);
 
         expect(res.body).toEqual({
           results: expect.any(Array),
@@ -157,10 +141,7 @@ describe('Tweets routes', () => {
         ];
         await Promise.all([insertUsers([userOne]), Tweet.insertMany(tweets)]);
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ limit: 1, page: 2 })
-          .expect(200);
+        const res = await request(app).get('/api/tweets').query({ limit: 1, page: 2 }).expect(200);
 
         expect(res.body).toEqual({
           results: expect.any(Array),
@@ -181,20 +162,12 @@ describe('Tweets routes', () => {
           },
           { author: userOne._id, text: faker.lorem.words(10) },
         ];
-        await Promise.all([
-          insertUsers([userOne, userTwo]),
-          Tweet.insertMany(tweets),
-        ]);
+        await Promise.all([insertUsers([userOne, userTwo]), Tweet.insertMany(tweets)]);
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ likes: userTwo._id.toString() })
-          .expect(200);
+        const res = await request(app).get('/api/tweets').query({ likes: userTwo._id.toString() }).expect(200);
 
         expect(res.body.results).toHaveLength(1);
-        expect(res.body.results[0]).toHaveProperty('likes', [
-          userTwo._id.toString(),
-        ]);
+        expect(res.body.results[0]).toHaveProperty('likes', [userTwo._id.toString()]);
       });
 
       it('When retweets param is specified, should return tweets retweeted by a user', async () => {
@@ -206,20 +179,12 @@ describe('Tweets routes', () => {
           },
           { author: userOne._id, text: faker.lorem.words(10) },
         ];
-        await Promise.all([
-          insertUsers([userOne, userTwo]),
-          Tweet.insertMany(tweets),
-        ]);
+        await Promise.all([insertUsers([userOne, userTwo]), Tweet.insertMany(tweets)]);
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ retweets: userTwo._id.toString() })
-          .expect(200);
+        const res = await request(app).get('/api/tweets').query({ retweets: userTwo._id.toString() }).expect(200);
 
         expect(res.body.results).toHaveLength(1);
-        expect(res.body.results[0]).toHaveProperty('retweets', [
-          userTwo._id.toString(),
-        ]);
+        expect(res.body.results[0]).toHaveProperty('retweets', [userTwo._id.toString()]);
       });
 
       it('When replyTo param is specified, should return top level tweet replies', async () => {
@@ -236,45 +201,30 @@ describe('Tweets routes', () => {
             replyTo: tweetId,
           },
         ];
-        await Promise.all([
-          insertUsers([userOne, userTwo]),
-          Tweet.insertMany(tweets),
-        ]);
+        await Promise.all([insertUsers([userOne, userTwo]), Tweet.insertMany(tweets)]);
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ replyTo: tweetId.toString() })
-          .expect(200);
+        const res = await request(app).get('/api/tweets').query({ replyTo: tweetId.toString() }).expect(200);
 
         expect(res.body.results).toHaveLength(1);
-        expect(res.body.results[0]).toHaveProperty(
-          'replyTo',
-          tweetId.toString()
-        );
+        expect(res.body.results[0]).toHaveProperty('replyTo', tweetId.toString());
       });
     });
 
     describe('Returns 400 error if invalid mongo id provided', () => {
       it('When likes param is invalid mongo id, should return 400 error', async () => {
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ likes: 'invalidId' });
+        const res = await request(app).get('/api/tweets').query({ likes: 'invalidId' });
 
         expect(res.statusCode).toBe(400);
       });
 
       it('When retweets param is invalid mongo id, should return 400 error', async () => {
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ retweets: 'invalidId' });
+        const res = await request(app).get('/api/tweets').query({ retweets: 'invalidId' });
 
         expect(res.statusCode).toBe(400);
       });
 
       it('When replyTo param is invalid mongo id, should return 400 error', async () => {
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ replyTo: 'invalidId' });
+        const res = await request(app).get('/api/tweets').query({ replyTo: 'invalidId' });
 
         expect(res.statusCode).toBe(400);
       });
@@ -282,17 +232,13 @@ describe('Tweets routes', () => {
 
     describe('Returns 404 error if resource with provided id does not exists', () => {
       it('When likes param is specified and user does not exists, should return 404 error', async () => {
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ likes: userOne._id.toString() });
+        const res = await request(app).get('/api/tweets').query({ likes: userOne._id.toString() });
 
         expect(res.statusCode).toBe(404);
       });
 
       it('When retweets param is specified and user does not exists, should return 404 error', async () => {
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ retweets: userOne._id.toString() });
+        const res = await request(app).get('/api/tweets').query({ retweets: userOne._id.toString() });
 
         expect(res.statusCode).toBe(404);
       });
@@ -300,9 +246,7 @@ describe('Tweets routes', () => {
       it('When replyTo param is specified and tweet does not exists, should return 404 error', async () => {
         const tweetId = mongoose.Types.ObjectId();
 
-        const res = await request(app)
-          .get('/api/tweets')
-          .query({ replyTo: tweetId.toString() });
+        const res = await request(app).get('/api/tweets').query({ replyTo: tweetId.toString() });
 
         expect(res.statusCode).toBe(404);
       });
@@ -426,9 +370,7 @@ describe('Tweets routes', () => {
         text: faker.lorem.words(10),
       });
 
-      const res = await request(app)
-        .get(`/api/tweets/${tweet._id}`)
-        .expect(200);
+      const res = await request(app).get(`/api/tweets/${tweet._id}`).expect(200);
 
       expect(res.body.tweet).toMatchObject({
         text: tweet.text,
@@ -447,9 +389,7 @@ describe('Tweets routes', () => {
     });
 
     it('When tweet does not exists, should return 404 error', async () => {
-      const res = await request(app).get(
-        `/api/tweets/${mongoose.Types.ObjectId()}`
-      );
+      const res = await request(app).get(`/api/tweets/${mongoose.Types.ObjectId()}`);
 
       expect(res.statusCode).toBe(404);
     });
@@ -528,9 +468,7 @@ describe('Tweets routes', () => {
 
       const newTweet = { text: faker.random.words(10) };
 
-      const res = await request(app)
-        .patch(`/api/tweets/${tweetId}`)
-        .send(newTweet);
+      const res = await request(app).patch(`/api/tweets/${tweetId}`).send(newTweet);
 
       expect(res.statusCode).toBe(401);
     });
@@ -751,10 +689,7 @@ describe('Tweets routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.tweet.likes).toContain(userOne._id.toString());
 
-      const [dbTweet, dbProfile] = await Promise.all([
-        Tweet.findById(tweetId),
-        Profile.findOne({ user: userOne._id }),
-      ]);
+      const [dbTweet, dbProfile] = await Promise.all([Tweet.findById(tweetId), Profile.findOne({ user: userOne._id })]);
       expect(dbTweet.likes).toContainEqual(userOne._id);
       expect(dbProfile.likes).toContainEqual(tweetId);
     });
@@ -769,10 +704,7 @@ describe('Tweets routes', () => {
 
     it('When tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/tweets/like/${tweetId}`)
@@ -782,10 +714,7 @@ describe('Tweets routes', () => {
     });
 
     it('When tweetId is invalid mongo id, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/tweets/like/invalidId`)
@@ -822,10 +751,7 @@ describe('Tweets routes', () => {
       const tweetId = mongoose.Types.ObjectId();
       await Promise.all([
         insertUsers([userOne, userTwo]),
-        Profile.insertMany([
-          { user: userOne._id, likes: [tweetId] },
-          { user: userTwo._id },
-        ]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }, { user: userTwo._id }]),
         Tweet.insertMany([
           {
             _id: tweetId,
@@ -843,10 +769,7 @@ describe('Tweets routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.tweet.likes).toHaveLength(0);
 
-      const [dbTweet, dbProfile] = await Promise.all([
-        Tweet.findById(tweetId),
-        Profile.findOne({ user: userOne._id }),
-      ]);
+      const [dbTweet, dbProfile] = await Promise.all([Tweet.findById(tweetId), Profile.findOne({ user: userOne._id })]);
       expect(dbTweet.likes).toHaveLength(0);
       expect(dbProfile.likes).toHaveLength(0);
     });
@@ -873,10 +796,7 @@ describe('Tweets routes', () => {
 
     it('When tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id, likes: [tweetId] }])]);
 
       const res = await request(app)
         .delete(`/api/tweets/like/${tweetId}`)
@@ -886,10 +806,7 @@ describe('Tweets routes', () => {
     });
 
     it('When tweetId is invalid mongo id, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .delete(`/api/tweets/like/invalidId`)
@@ -942,10 +859,7 @@ describe('Tweets routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.tweet.retweets).toContain(userOne._id.toString());
 
-      const [dbTweet, dbProfile] = await Promise.all([
-        Tweet.findById(tweetId),
-        Profile.findOne({ user: userOne._id }),
-      ]);
+      const [dbTweet, dbProfile] = await Promise.all([Tweet.findById(tweetId), Profile.findOne({ user: userOne._id })]);
       expect(dbTweet.retweets).toContainEqual(userOne._id);
       expect(dbProfile.retweets).toContainEqual(tweetId);
     });
@@ -960,10 +874,7 @@ describe('Tweets routes', () => {
 
     it('When tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/tweets/retweet/${tweetId}`)
@@ -973,10 +884,7 @@ describe('Tweets routes', () => {
     });
 
     it('When tweetId is invalid mongo id, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/tweets/retweet/invalidId`)
@@ -1013,10 +921,7 @@ describe('Tweets routes', () => {
       const tweetId = mongoose.Types.ObjectId();
       await Promise.all([
         insertUsers([userOne, userTwo]),
-        Profile.insertMany([
-          { user: userOne._id, retweets: [tweetId] },
-          { user: userTwo._id },
-        ]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }, { user: userTwo._id }]),
         Tweet.insertMany([
           {
             _id: tweetId,
@@ -1034,10 +939,7 @@ describe('Tweets routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.tweet.retweets).toHaveLength(0);
 
-      const [dbTweet, dbProfile] = await Promise.all([
-        Tweet.findById(tweetId),
-        Profile.findOne({ user: userOne._id }),
-      ]);
+      const [dbTweet, dbProfile] = await Promise.all([Tweet.findById(tweetId), Profile.findOne({ user: userOne._id })]);
       expect(dbTweet.retweets).toHaveLength(0);
       expect(dbProfile.retweets).toHaveLength(0);
     });
@@ -1064,10 +966,7 @@ describe('Tweets routes', () => {
 
     it('When tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }])]);
 
       const res = await request(app)
         .delete(`/api/tweets/retweet/${tweetId}`)
@@ -1077,10 +976,7 @@ describe('Tweets routes', () => {
     });
 
     it('When tweetId is invalid mongo id, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .delete(`/api/tweets/retweet/invalidId`)

@@ -1,10 +1,6 @@
 const Joi = require('joi');
 const { roles } = require('../../config/roles');
-const {
-  objectId,
-  password,
-  username,
-} = require('../../utils/customValidation');
+const { objectId, password, username } = require('../../utils/customValidation');
 const validate = require('../../middleware/validate');
 
 /* 

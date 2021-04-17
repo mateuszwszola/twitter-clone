@@ -66,10 +66,7 @@ const getTweets = async (req, res) => {
 const getTweet = async (req, res) => {
   const { tweetId } = req.params;
 
-  const tweet = await Tweet.findById(tweetId).populate('author', [
-    'name',
-    'username',
-  ]);
+  const tweet = await Tweet.findById(tweetId).populate('author', ['name', 'username']);
 
   if (!tweet) {
     throw new ErrorHandler(404, 'Tweet not found');

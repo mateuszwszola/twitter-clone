@@ -20,12 +20,7 @@ exports.getProfile = async (req, res) => {
 
 exports.getProfiles = async (req, res) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const filters = pick(req.query, [
-    'following',
-    'followers',
-    'likes',
-    'retweets',
-  ]);
+  const filters = pick(req.query, ['following', 'followers', 'likes', 'retweets']);
 
   if (filters.following && !(await User.exists({ _id: filters.following }))) {
     throw new ErrorHandler(404, 'User does not exists');
@@ -56,14 +51,7 @@ exports.getProfiles = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   const { userId } = req.params;
 
-  const fields = [
-    'bio',
-    'location',
-    'website',
-    'birthday',
-    'avatar',
-    'backgroundImage',
-  ];
+  const fields = ['bio', 'location', 'website', 'birthday', 'avatar', 'backgroundImage'];
 
   const newValues = pick(req.body, fields);
 

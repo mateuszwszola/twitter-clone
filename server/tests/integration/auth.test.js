@@ -39,10 +39,7 @@ describe('Auth routes', () => {
       expect(res.body.token).toBeDefined();
 
       const { _id: userId } = res.body.user;
-      const [dbUser, dbProfile] = await Promise.all([
-        User.findById(userId),
-        Profile.findOne({ user: userId }),
-      ]);
+      const [dbUser, dbProfile] = await Promise.all([User.findById(userId), Profile.findOne({ user: userId })]);
 
       expect(dbUser._id.toString()).toBe(userId);
       expect(dbProfile.user.toString()).toBe(userId);
@@ -92,9 +89,7 @@ describe('Auth routes', () => {
         password: userOne.password,
       };
 
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send(loginCredentials);
+      const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
       expect(res.statusCode).toBe(200);
 
@@ -118,9 +113,7 @@ describe('Auth routes', () => {
         password: userOne.password,
       };
 
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send(loginCredentials);
+      const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
       expect(res.statusCode).toBe(200);
 
@@ -140,9 +133,7 @@ describe('Auth routes', () => {
         password: userOne.password,
       };
 
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send(loginCredentials);
+      const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
       expect(res.statusCode).toBe(401);
     });
@@ -155,9 +146,7 @@ describe('Auth routes', () => {
         password: 'wrongPassword123',
       };
 
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send(loginCredentials);
+      const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
       expect(res.statusCode).toBe(401);
     });

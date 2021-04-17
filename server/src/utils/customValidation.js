@@ -12,18 +12,14 @@ const password = (value, helpers) => {
     return helpers.message('password must be at least 8 characters');
   }
   if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-    return helpers.message(
-      'password must contain at least 1 letter and 1 number'
-    );
+    return helpers.message('password must contain at least 1 letter and 1 number');
   }
   return value;
 };
 
 const username = (value, helpers) => {
   if (!value.match(/^[0-9a-zA-Z_.-]+$/)) {
-    return helpers.message(
-      'username must only contain numbers, letters, ".", "-", "_"'
-    );
+    return helpers.message('username must only contain numbers, letters, ".", "-", "_"');
   }
   return value;
 };

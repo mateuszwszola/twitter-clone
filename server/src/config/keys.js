@@ -7,9 +7,7 @@ module.exports = {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
   mongoose: {
-    devUri: process.env.MONGO_URI_DEV,
-    prodUri: process.env.MONGO_URI_PROD,
-    testUri: process.env.MONGO_URI_TEST,
+    uri: process.env.MONGO_URI + (process.env.NODE_ENV === 'test' ? '-test' : ''),
     options: {
       useCreateIndex: true,
       useNewUrlParser: true,

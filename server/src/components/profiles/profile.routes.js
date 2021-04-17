@@ -11,38 +11,22 @@ const validate = require('../../middleware/validate');
  */
 router
   .route('/follow/:userId')
-  .post(
-    auth(),
-    validate(profileValidation.getProfile),
-    profileController.followProfile
-  )
-  .delete(
-    auth(),
-    validate(profileValidation.getProfile),
-    profileController.unfollowProfile
-  );
+  .post(auth(), validate(profileValidation.getProfile), profileController.followProfile)
+  .delete(auth(), validate(profileValidation.getProfile), profileController.unfollowProfile);
 
 /**
  *  @route   GET api/profiles
  *  @desc    Get profiles
  *  @access  Public
  */
-router.get(
-  '/',
-  validate(profileValidation.getProfiles),
-  profileController.getProfiles
-);
+router.get('/', validate(profileValidation.getProfiles), profileController.getProfiles);
 
 /**
  * @route   GET api/profiles/:userId
  * @desc    Get user's profile
  * @access  Public
  */
-router.get(
-  '/:userId',
-  validate(profileValidation.getProfile),
-  profileController.getProfile
-);
+router.get('/:userId', validate(profileValidation.getProfile), profileController.getProfile);
 
 /**
  * @route   PATCH api/profiles/:userId

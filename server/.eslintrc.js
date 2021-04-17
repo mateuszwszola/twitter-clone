@@ -11,13 +11,12 @@ module.exports = {
     'plugin:security/recommended',
     'plugin:promise/recommended',
     'plugin:jest/recommended',
-    'prettier',
+    'plugin:prettier/recommended',
   ],
   parserOptions: {
     ecmaVersion: 12,
   },
   rules: {
-    'prettier/prettier': 'error',
     'node/no-unpublished-require': 'off',
     'security/detect-non-literal-fs-filename': 'off',
   },

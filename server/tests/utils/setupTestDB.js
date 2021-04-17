@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
-const config = require('../../src/config/keys');
+const connectDB = require('../../src/config/db');
 
 const remove = (collection) => {
   return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ const remove = (collection) => {
 
 const setupTestDB = () => {
   beforeAll(async () => {
-    await mongoose.connect(config.mongoose.testUri, config.mongoose.options);
+    await connectDB();
   });
 
   beforeEach(async () => {

@@ -8,11 +8,7 @@ const validate = require('../../middleware/validate');
  * @desc    Register user | Return JWT
  * @access  Public
  */
-router.post(
-  '/register',
-  validate(authValidation.register),
-  authController.registerUser
-);
+router.post('/register', validate(authValidation.register), authController.registerUser);
 
 /**
  * @route   POST api/users/login

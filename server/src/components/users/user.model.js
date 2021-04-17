@@ -24,10 +24,7 @@ const UserSchema = new Schema(
       trim: true,
       validate(value) {
         if (!value.match(/^[0-9a-zA-Z_.-]+$/)) {
-          throw new ErrorHandler(
-            400,
-            'username must only contain numbers, letters, ".", "-", "_"'
-          );
+          throw new ErrorHandler(400, 'username must only contain numbers, letters, ".", "-", "_"');
         }
       },
     },
@@ -49,10 +46,7 @@ const UserSchema = new Schema(
       minlength: 8,
       validate(value) {
         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new ErrorHandler(
-            400,
-            'Password must contain at least one letter and one number'
-          );
+          throw new ErrorHandler(400, 'Password must contain at least one letter and one number');
         }
       },
     },
@@ -98,11 +92,7 @@ UserSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-UserSchema.statics.findByCredentials = async function (
-  username,
-  password,
-  isEmail
-) {
+UserSchema.statics.findByCredentials = async function (username, password, isEmail) {
   const user = await this.findOne({
     [isEmail ? 'email' : 'username']: username,
   });

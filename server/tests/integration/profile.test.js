@@ -3,16 +3,8 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const {
-  getAdminAccessToken,
-  getUserOneAccessToken,
-} = require('../fixtures/token.fixture');
-const {
-  admin,
-  userOne,
-  userTwo,
-  insertUsers,
-} = require('../fixtures/user.fixture');
+const { getAdminAccessToken, getUserOneAccessToken } = require('../fixtures/token.fixture');
+const { admin, userOne, userTwo, insertUsers } = require('../fixtures/user.fixture');
 const { Profile } = require('../../src/components/profiles');
 const Tweet = require('../../src/components/tweets/tweet.model');
 
@@ -67,9 +59,7 @@ describe('Profiles routes', () => {
         Profile.insertMany([{ user: userOne._id }, { user: userTwo._id }]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ limit: 1, page: 2 });
+      const res = await request(app).get('/api/profiles').query({ limit: 1, page: 2 });
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
@@ -91,9 +81,7 @@ describe('Profiles routes', () => {
         ]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ followers: userOne._id.toString() });
+      const res = await request(app).get('/api/profiles').query({ followers: userOne._id.toString() });
 
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
@@ -109,9 +97,7 @@ describe('Profiles routes', () => {
         ]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ following: userTwo._id.toString() });
+      const res = await request(app).get('/api/profiles').query({ following: userTwo._id.toString() });
 
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
@@ -122,10 +108,7 @@ describe('Profiles routes', () => {
       const tweetId = mongoose.Types.ObjectId();
       await Promise.all([
         insertUsers([userOne, userTwo]),
-        Profile.insertMany([
-          { user: userOne._id, likes: [tweetId] },
-          { user: userTwo._id },
-        ]),
+        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }, { user: userTwo._id }]),
         Tweet.insertMany([
           {
             _id: tweetId,
@@ -136,9 +119,7 @@ describe('Profiles routes', () => {
         ]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ likes: tweetId.toString() });
+      const res = await request(app).get('/api/profiles').query({ likes: tweetId.toString() });
 
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
@@ -151,10 +132,7 @@ describe('Profiles routes', () => {
       const tweetId = mongoose.Types.ObjectId();
       await Promise.all([
         insertUsers([userOne, userTwo]),
-        Profile.insertMany([
-          { user: userOne._id, retweets: [tweetId] },
-          { user: userTwo._id },
-        ]),
+        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }, { user: userTwo._id }]),
         Tweet.insertMany([
           {
             _id: tweetId,
@@ -165,9 +143,7 @@ describe('Profiles routes', () => {
         ]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ retweets: tweetId.toString() });
+      const res = await request(app).get('/api/profiles').query({ retweets: tweetId.toString() });
 
       expect(res.statusCode).toBe(200);
       expect(res.body.results).toHaveLength(1);
@@ -182,9 +158,7 @@ describe('Profiles routes', () => {
         Profile.insertMany([{ user: userOne._id, following: [userTwo._id] }]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ following: userTwo._id.toString() });
+      const res = await request(app).get('/api/profiles').query({ following: userTwo._id.toString() });
 
       expect(res.statusCode).toBe(404);
     });
@@ -195,37 +169,25 @@ describe('Profiles routes', () => {
         Profile.insertMany([{ user: userOne._id, followers: [userTwo._id] }]),
       ]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ followers: userTwo._id.toString() });
+      const res = await request(app).get('/api/profiles').query({ followers: userTwo._id.toString() });
 
       expect(res.statusCode).toBe(404);
     });
 
     it('When likes filter is applied and tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id, likes: [tweetId] }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id, likes: [tweetId] }])]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ likes: tweetId.toString() });
+      const res = await request(app).get('/api/profiles').query({ likes: tweetId.toString() });
 
       expect(res.statusCode).toBe(404);
     });
 
     it('When retweets filter is applied and tweet does not exists, should return 404 error', async () => {
       const tweetId = mongoose.Types.ObjectId();
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id, retweets: [tweetId] }])]);
 
-      const res = await request(app)
-        .get('/api/profiles')
-        .query({ retweets: tweetId.toString() });
+      const res = await request(app).get('/api/profiles').query({ retweets: tweetId.toString() });
 
       expect(res.statusCode).toBe(404);
     });
@@ -233,22 +195,14 @@ describe('Profiles routes', () => {
 
   describe('GET /api/profiles/:userId', () => {
     it('When userId is ok, should return 200 and profile with populated user data', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
-      const res = await request(app)
-        .get(`/api/profiles/${userOne._id}`)
-        .send()
-        .expect(200);
+      const res = await request(app).get(`/api/profiles/${userOne._id}`).send().expect(200);
 
       expect(res.body).toHaveProperty('profile');
       expect(res.body.profile).toHaveProperty('user');
       expect(res.body.profile.user.name).toBe(userOne.name);
-      expect(res.body.profile.user.username).toBe(
-        userOne.username.toLowerCase()
-      );
+      expect(res.body.profile.user.username).toBe(userOne.username.toLowerCase());
     });
 
     it('When invalid object id, should return 400 error', async () => {
@@ -278,10 +232,7 @@ describe('Profiles routes', () => {
     });
 
     it('When profile data is ok, should update a profile', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .patch(`/api/profiles/${userOne._id}`)
@@ -299,23 +250,15 @@ describe('Profiles routes', () => {
     });
 
     it('When access token is missing, should return 401 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
-      const res = await request(app)
-        .patch(`/api/profiles/${userOne._id}`)
-        .send(newProfile);
+      const res = await request(app).patch(`/api/profiles/${userOne._id}`).send(newProfile);
 
       expect(res.statusCode).toBe(401);
     });
 
     it("When user is updating another user's profile, should return 403 error", async () => {
-      await Promise.all([
-        insertUsers([userOne, userTwo]),
-        Profile.insertMany([{ user: userTwo._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne, userTwo]), Profile.insertMany([{ user: userTwo._id }])]);
 
       const res = await request(app)
         .patch(`/api/profiles/${userTwo._id}`)
@@ -326,10 +269,7 @@ describe('Profiles routes', () => {
     });
 
     it("When admin is updating another user's profile, should successfully update and return 200", async () => {
-      await Promise.all([
-        insertUsers([userOne, admin]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne, admin]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .patch(`/api/profiles/${userOne._id}`)
@@ -362,10 +302,7 @@ describe('Profiles routes', () => {
     });
 
     it('When empty request body, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .patch(`/api/profiles/${userOne._id}`)
@@ -411,23 +348,15 @@ describe('Profiles routes', () => {
     });
 
     it('When access token is missing, should return 401 error', async () => {
-      await Promise.all([
-        insertUsers([userTwo]),
-        Profile.insertMany([{ user: userTwo._id }]),
-      ]);
+      await Promise.all([insertUsers([userTwo]), Profile.insertMany([{ user: userTwo._id }])]);
 
-      const res = await request(app)
-        .post(`/api/profiles/follow/${userTwo._id}`)
-        .send();
+      const res = await request(app).post(`/api/profiles/follow/${userTwo._id}`).send();
 
       expect(res.statusCode).toBe(401);
     });
 
     it('When profile does not exists, should return 404 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/profiles/follow/${userTwo._id}`)
@@ -438,10 +367,7 @@ describe('Profiles routes', () => {
     });
 
     it('When user is trying to follow their profile, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .post(`/api/profiles/follow/${userOne._id}`)
@@ -508,23 +434,15 @@ describe('Profiles routes', () => {
     });
 
     it('When access token is missing, should return 401 error', async () => {
-      await Promise.all([
-        insertUsers([userTwo]),
-        Profile.insertMany([{ user: userTwo._id }]),
-      ]);
+      await Promise.all([insertUsers([userTwo]), Profile.insertMany([{ user: userTwo._id }])]);
 
-      const res = await request(app)
-        .delete(`/api/profiles/follow/${userTwo._id}`)
-        .send();
+      const res = await request(app).delete(`/api/profiles/follow/${userTwo._id}`).send();
 
       expect(res.statusCode).toBe(401);
     });
 
     it('When profile does not exists, should return 404 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .delete(`/api/profiles/follow/${userTwo._id}`)
@@ -535,10 +453,7 @@ describe('Profiles routes', () => {
     });
 
     it('When user is trying to unfollow their profile, should return 400 error', async () => {
-      await Promise.all([
-        insertUsers([userOne]),
-        Profile.insertMany([{ user: userOne._id }]),
-      ]);
+      await Promise.all([insertUsers([userOne]), Profile.insertMany([{ user: userOne._id }])]);
 
       const res = await request(app)
         .delete(`/api/profiles/follow/${userOne._id}`)

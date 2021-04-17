@@ -2,16 +2,8 @@ const request = require('supertest');
 const faker = require('faker');
 const app = require('../../src/app');
 const setupTestDB = require('../utils/setupTestDB');
-const {
-  getAdminAccessToken,
-  getUserOneAccessToken,
-} = require('../fixtures/token.fixture');
-const {
-  admin,
-  userOne,
-  insertUsers,
-  userTwo,
-} = require('../fixtures/user.fixture');
+const { getAdminAccessToken, getUserOneAccessToken } = require('../fixtures/token.fixture');
+const { admin, userOne, insertUsers, userTwo } = require('../fixtures/user.fixture');
 const { formatUsername } = require('../../src/utils/helpers');
 const { User } = require('../../src/components/users');
 const Profile = require('../../src/components/profiles/profile.model');
@@ -51,10 +43,7 @@ describe('Users routes', () => {
       });
 
       const { _id: userId } = res.body.user;
-      const [dbUser, dbProfile] = await Promise.all([
-        User.findById(userId),
-        Profile.findOne({ user: userId }),
-      ]);
+      const [dbUser, dbProfile] = await Promise.all([User.findById(userId), Profile.findOne({ user: userId })]);
       expect(dbUser).toBeDefined();
       expect(dbProfile).toBeDefined();
       expect(dbUser.password).not.toBe(newUser.password);
@@ -79,10 +68,7 @@ describe('Users routes', () => {
       expect(res.body.user.role).toBe('admin');
 
       const { _id: userId } = res.body.user;
-      const [dbUser, dbProfile] = await Promise.all([
-        User.findById(userId),
-        Profile.findOne({ user: userId }),
-      ]);
+      const [dbUser, dbProfile] = await Promise.all([User.findById(userId), Profile.findOne({ user: userId })]);
       expect(dbUser).toBeDefined();
       expect(dbProfile).toBeDefined();
       expect(dbUser.role).toBe('admin');
@@ -182,9 +168,7 @@ describe('Users routes', () => {
     it('Should return 200 with users and apply the default query options', async () => {
       await insertUsers([userOne, userTwo, admin]);
 
-      const res = await request(app)
-        .get('/api/users')
-        .set('Authorization', `Bearer ${getAdminAccessToken()}`);
+      const res = await request(app).get('/api/users').set('Authorization', `Bearer ${getAdminAccessToken()}`);
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({
@@ -208,9 +192,7 @@ describe('Users routes', () => {
     it('When non-admin is trying to access all users, should return 403', async () => {
       await insertUsers([userOne, userTwo, admin]);
 
-      const res = await request(app)
-        .get('/api/users')
-        .set('Authorization', `Bearer ${getUserOneAccessToken()}`);
+      const res = await request(app).get('/api/users').set('Authorization', `Bearer ${getUserOneAccessToken()}`);
 
       expect(res.statusCode).toBe(403);
     });
@@ -392,9 +374,7 @@ describe('Users routes', () => {
       await insertUsers([userOne]);
       const updateBody = { name: faker.name.findName() };
 
-      const res = await request(app)
-        .patch(`/api/users/${userOne._id}`)
-        .send(updateBody);
+      const res = await request(app).patch(`/api/users/${userOne._id}`).send(updateBody);
 
       expect(res.statusCode).toBe(401);
     });
