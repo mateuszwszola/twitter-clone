@@ -9,8 +9,8 @@ const theme = {
     green: '#3e8e41',
     red: '#E23D68',
     gray: '#67757E',
-    darkGray: '#7B878F'
-  }
+    darkGray: '#7B878F',
+  },
 };
 
-export default props => <ThemeProvider theme={theme} {...props} />;
+export default (props) => <ThemeProvider theme={theme} {...props} />;

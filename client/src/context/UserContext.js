@@ -1,53 +1,21 @@
-import React, { Component } from 'react';
+import { createContext, useContext } from 'react';
+import { useAuth } from './AuthContext';
 
-import checkForToken from 'utils/checkForToken';
-import isEmpty from 'utils/isEmpty';
+const UserContext = createContext();
 
-let UserContext;
-const { Provider, Consumer } = (UserContext = React.createContext());
+function UserProvider(props) {
+  const { user } = useAuth();
 
-class UserProvider extends Component {
-  state = {
-    isAuthenticated: false,
-    user: {}
-  };
-
-  handleAuthentication = () => {
-    const decoded = checkForToken();
-
-    this.setState(() => ({
-      isAuthenticated: !isEmpty(decoded),
-      user: decoded
-    }));
-  };
-
-  // Check authentication when app loads
-  componentDidMount() {
-    this.handleAuthentication();
-  }
-
-  render() {
-    return (
-      <Provider
-        value={{
-          ...this.state,
-          authenticateUser: this.handleAuthentication
-        }}
-      >
-        {this.props.children}
-      </Provider>
-    );
-  }
+  return <UserContext.Provider value={user} {...props} />;
 }
 
-function withUserContext(Component) {
-  return function(props) {
-    return (
-      <Consumer>
-        {authProps => <Component {...props} {...authProps} />}
-      </Consumer>
-    );
-  };
+export function useUser() {
+  const context = useContext(UserContext);
+
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
 }
 
-export { UserProvider, Consumer as UserConsumer, withUserContext, UserContext };
+export default UserProvider;

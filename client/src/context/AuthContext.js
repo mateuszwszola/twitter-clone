@@ -38,8 +38,9 @@ function AuthProvider(props) {
     try {
       const res = await axios.post('/api/auth/login', body, config);
       setState({ ...res.data });
+      return res.data;
     } catch (error) {
-      console.error(error.message);
+      Promise.reject(error);
     }
   };
 
@@ -55,8 +56,9 @@ function AuthProvider(props) {
     try {
       const res = await axios.post('/api/auth/register', body, config);
       setState({ ...res.data });
-    } catch (err) {
-      console.error(err.message);
+      return res.data;
+    } catch (error) {
+      console.error(error);
     }
   };
 

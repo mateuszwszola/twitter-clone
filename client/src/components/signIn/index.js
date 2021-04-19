@@ -7,12 +7,11 @@ import { Container } from 'shared/layout';
 import { SignInContainer, Title, Form, Helper } from './style';
 
 function SignIn({ username, password, onSubmit, errors }) {
-  const errorMsg = (errors[0] && errors[0].msg) || null;
-
   return (
     <Container>
       <SignInContainer>
         <Title>Sign In</Title>
+        {errors.message && <p>{errors.message}</p>}
         <Form onSubmit={onSubmit} data-cy="signin-form">
           <InputGroup
             data-cy="signin-username-input"
@@ -21,8 +20,8 @@ function SignIn({ username, password, onSubmit, errors }) {
             {...username}
             placeholder="Email or username"
             autocomplete="username"
-            error={errors.length > 0}
-            errorMsg={errorMsg}
+            error={Object.keys(errors).length > 0}
+            errorMsg={errors?.username}
           />
           <InputGroup
             data-cy="signin-password-input"
@@ -31,7 +30,7 @@ function SignIn({ username, password, onSubmit, errors }) {
             {...password}
             placeholder="Password"
             autocomplete="current-password"
-            error={errors.length > 0}
+            error={Object.keys(errors).length > 0}
             errorMsg={errors?.password}
           />
           <Button type="submit" primary>
@@ -39,7 +38,7 @@ function SignIn({ username, password, onSubmit, errors }) {
           </Button>
         </Form>
         <Helper>
-          New to Twitter?
+          New?
           <Link to="/signup" className="login-signup-link">
             Sign up now <i className="fas fa-angle-double-right" />
           </Link>
@@ -53,7 +52,7 @@ SignIn.propTypes = {
   username: PropTypes.object.isRequired,
   password: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.array.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 export default SignIn;
