@@ -97,11 +97,11 @@ UserSchema.statics.findByCredentials = async function (username, password, isEma
     [isEmail ? 'email' : 'username']: username,
   });
   if (!user) {
-    throw new ErrorHandler(401, 'Invalid login credentials');
+    throw new ErrorHandler(400, 'Invalid login credentials');
   }
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) {
-    throw new ErrorHandler(401, 'Invalid login credentials');
+    throw new ErrorHandler(400, 'Invalid login credentials');
   }
 
   return user;

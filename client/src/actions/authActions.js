@@ -1,7 +1,6 @@
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import setAuthToken from '../utils/setAuthToken';
-import { setAlert } from './alertActions';
-
 import {
   USER_LOADED,
   REGISTER_SUCCESS,
@@ -10,91 +9,110 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   GET_ERRORS,
-  AUTH_ERROR
+  AUTH_ERROR,
+  CLEAR_PROFILE,
 } from './types';
 
-// Load user
-export const loadUser = () => async dispatch => {
-  if (localStorage.getItem('token')) {
-    setAuthToken(localStorage.getItem('token'));
-  }
-  try {
-    const res = await axios.get('/api/users/current');
+export const loadUser = () => async (dispatch) => {
+  const token = localStorage.getItem('token');
+  setAuthToken(token);
 
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
-    });
-  } catch (error) {
-    dispatch({
-      type: AUTH_ERROR
-    });
+  if (!token) {
+    return dispatch(logoutUser());
+  }
+
+  const decoded = jwtDecode(token);
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    dispatch(logoutUser());
+    window.location.href = '/signin';
+  } else {
+    try {
+      const res = await axios.get(`/api/users/${decoded.sub}`);
+
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data.user,
+      });
+    } catch (error) {
+      dispatch({
+        type: AUTH_ERROR,
+      });
+    }
   }
 };
 
-// Register user
-export const registerUser = userData => async dispatch => {
+export const registerUser = (userData) => async (dispatch) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify(userData);
 
   try {
-    const res = await axios.post('/api/users/register', body, config);
+    const res = await axios.post('/api/auth/register', body, config);
 
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
-
-    dispatch(loadUser());
   } catch (err) {
-    dispatch(setAlert('There was a problem with the server', 'danger'));
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors || []
+      payload: err.response.data.errors || [],
     });
 
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
 
-// Login User
-export const loginUser = userData => async dispatch => {
+export const loginUser = (userData) => async (dispatch) => {
   const config = {
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   };
 
   const body = JSON.stringify(userData);
 
   try {
-    const res = await axios.post('/api/users/login', body, config);
+    const res = await axios.post('/api/auth/login', body, config);
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
-
-    dispatch(loadUser());
   } catch (err) {
-    dispatch(setAlert('There was a problem with the server', 'danger'));
     dispatch({
       type: GET_ERRORS,
-      payload: err.response.data.errors || []
+      payload: err.response.data.message || [],
     });
+
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
 
-export const logoutUser = () => dispatch => {
-  dispatch(setAlert('Log out successfully', 'success', 1500));
+export const logoutUser = () => (dispatch) => {
   dispatch({ type: LOGOUT });
+};
+
+export const deleteAccount = (userId) => async (dispatch) => {
+  try {
+    if (window.confirm('Are you sure? This action cannot be undone!')) {
+      await axios.delete(`/api/users/${userId}`);
+
+      dispatch({ type: LOGOUT });
+      dispatch({ type: CLEAR_PROFILE });
+    }
+  } catch (err) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data.errors || [],
+    });
+  }
 };

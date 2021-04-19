@@ -3,20 +3,29 @@
   "version": "1.0.0",
   "dependencies": {
     "axios": "^0.21.1",
-    "classnames": "^2.2.6",
-    "jwt-decode": "^2.2.0",
-    "moment": "^2.24.0",
+    "classnames": "^2.3.1",
+    "date-fns": "^2.21.1",
+    "husky": "^6.0.0",
+    "jwt-decode": "^3.1.2",
+    "lint-staged": "^10.5.4",
+    "moment": "^2.29.1",
     "prop-types": "^15.7.2",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-moment": "^0.9.6",
-    "react-redux": "^7.1.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
-    "redux": "^4.0.4",
-    "redux-devtools-extension": "^2.13.8",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-moment": "^1.1.1",
+    "react-query": "^3.13.10",
+    "react-redux": "^7.2.3",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
-    "styled-components": "^4.4.0"
+    "styled-components": "^5.2.3"
+  },
+  "devDependencies": {
+    "babel-plugin-macros": "^3.0.1",
+    "cypress": "^7.1.0",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,6 +34,16 @@
     "eject": "react-scripts eject",
     "cypress:open": "cypress open"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
   "proxy": "http://localhost:3001",
   "browserslist": [
     ">0.2%",
@@ -32,13 +51,14 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "babel-plugin-macros": "^2.6.1",
-    "cypress": "^3.4.1"
-  },
   "babelMacros": {
     "styledComponents": {
       "pure": true
     }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
   }
 }

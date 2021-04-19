@@ -2,21 +2,20 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TweetsBoard from 'components/layout/TweetsBoard';
-import { getUserTweets } from 'actions/tweetActions';
+import { getTweets } from 'actions/tweetActions';
 import { ProfileTweetsBoard } from './style';
 
 function ProfileTweets({
   profile: { profile },
   tweet: { tweets, loading },
-  getUserTweets
+  getUserTweets,
 }) {
   useEffect(() => {
     getUserTweets(profile.user._id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile.user._id]);
   return (
     <ProfileTweetsBoard>
-        <TweetsBoard loading={loading} tweets={tweets} />
+      <TweetsBoard loading={loading} tweets={tweets} />
     </ProfileTweetsBoard>
   );
 }
@@ -24,15 +23,14 @@ function ProfileTweets({
 ProfileTweets.propTypes = {
   tweet: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-  getUserTweets: PropTypes.func.isRequired
+  getUserTweets: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   tweet: state.tweet,
-  profile: state.profile
+  profile: state.profile,
 });
 
-export default connect(
-  mapStateToProps,
-  { getUserTweets }
-)(ProfileTweets);
+export default connect(mapStateToProps, { getUserTweets: getTweets })(
+  ProfileTweets
+);

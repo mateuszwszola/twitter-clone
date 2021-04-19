@@ -2,21 +2,20 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import { getProfileByUsername } from 'actions/profileActions';
+import { getProfile } from 'actions/profileActions';
 import Profile from 'components/Profile';
 import Loading from 'components/Loading';
 import DisplayErrors from 'components/DisplayErrors';
 import { TweetModal } from 'components/Tweet';
 import isEmpty from 'utils/isEmpty';
 
-function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
+function ProfileContainer({ profile, getProfile, errors, match }) {
   const [loading, setLoading] = useState(true);
-  const { username } = match.params;
+  const { userId } = match.params;
 
   useEffect(() => {
-    getProfileByUsername(username);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
+    getProfile(userId);
+  }, [userId]);
 
   useEffect(() => {
     if (profile.profile !== null) {
@@ -25,7 +24,7 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
   }, [profile.profile]);
 
   if (!isEmpty(errors)) {
-    return <DisplayErrors errors={errors} />
+    return <DisplayErrors errors={errors} />;
   }
 
   return (
@@ -39,15 +38,12 @@ function ProfileContainer({ profile, getProfileByUsername, errors, match }) {
 ProfileContainer.propTypes = {
   profile: PropTypes.object.isRequired,
   errors: PropTypes.array.isRequired,
-  getProfileByUsername: PropTypes.func.isRequired
+  getProfile: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   profile: state.profile,
-  errors: state.errors
+  errors: state.errors,
 });
 
-export default connect(
-  mapStateToProps,
-  { getProfileByUsername }
-)(ProfileContainer);
+export default connect(mapStateToProps, { getProfile })(ProfileContainer);

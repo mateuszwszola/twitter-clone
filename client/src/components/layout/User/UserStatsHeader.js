@@ -1,31 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import ProfileStatGroup from './ProfileStatGroup';
 import { EditProfileButton, FollowProfileButton } from 'shared/components';
 import { ProfileHeaderMenu, HeaderMenuList } from './style';
-import { Link } from 'react-router-dom';
 
 const UserStatsHeader = ({
   profile,
   owner,
   isAuthenticated,
   followed,
-  handleFollowButtonClick
+  handleFollowButtonClick,
 }) => {
-  const { user, tweets, following, followers, likes } = profile;
+  const { user, following, followers, likes } = profile;
   return (
     <ProfileHeaderMenu>
       <HeaderMenuList>
-        <Link to={`/${user.username}`}>
-          <ProfileStatGroup label="Tweets" value={tweets.length} />
+        <Link to={`/${user._id}`}>
+          <ProfileStatGroup label="Tweets" />
         </Link>
-        <Link to={`/${user.username}/following`}>
+        <Link to={`/${user._id}/following`}>
           <ProfileStatGroup label="Following" value={following.length} />
         </Link>
-        <Link to={`/${user.username}/followers`}>
+        <Link to={`/${user._id}/followers`}>
           <ProfileStatGroup label="Followers" value={followers.length} />
         </Link>
-        <Link to={`/${user.username}/likes`}>
+        <Link to={`/${user._id}/likes`}>
           <ProfileStatGroup label="Likes" value={likes.length} />
         </Link>
       </HeaderMenuList>
@@ -55,7 +55,7 @@ UserStatsHeader.propTypes = {
   owner: PropTypes.bool.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   followed: PropTypes.bool.isRequired,
-  handleFollowButtonClick: PropTypes.func.isRequired
+  handleFollowButtonClick: PropTypes.func.isRequired,
 };
 
 export default UserStatsHeader;

@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { QueryClientProvider, QueryClient } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import ThemeProvider from 'shared/theme-provider';
 import GlobalStyle from 'shared/global-style';
@@ -20,12 +23,10 @@ import Alert from 'components/Alert';
 import ModalSwitch from './components/ModalSwitch';
 import NotFoundPage from 'components/NotFoundPage';
 
-import { Provider } from 'react-redux';
 import store from './store';
-import checkForToken from 'utils/checkForToken';
 import { loadUser } from 'actions/authActions';
 
-checkForToken();
+const queryClient = new QueryClient();
 
 function App() {
   useEffect(() => {
@@ -33,40 +34,50 @@ function App() {
   }, []);
 
   return (
-    <Provider store={store}>
-      <GlobalStyle />
-      <ThemeProvider>
-        <ErrorBoundary>
-          <Router>
-            <Wrapper>
-              <Content>
-                <Alert />
-                <Header />
-                <RenderCreateTweetModal />
-                <ModalSwitch>
-                  <PrivateRoute
-                    exact
-                    path="/edit-profile"
-                    component={EditProfileContainer}
-                  />
-                  <PrivateRoute
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <GlobalStyle />
+        <ThemeProvider>
+          <ErrorBoundary>
+            <Router>
+              <Wrapper>
+                <Content>
+                  <Alert />
+                  <Header />
+                  <RenderCreateTweetModal />
+                  <ModalSwitch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-profile"
+                      component={EditProfileContainer}
+                    />
+                    <PrivateRoute
                       exact
                       path="/settings"
                       component={SettingsContainer}
-                  />
-                  <Route exact path="/" component={PrivateHomepage} />
-                  <Route exact path="/signin" component={SignInContainer} />
-                  <Route exact path="/signup" component={SignUpContainer} />
-                  <Route exact path="/profiles" component={ProfilesContainer} />
-                  <Route path="/:username" component={ProfileContainer} />
-                  <Route component={NotFoundPage} />
-                </ModalSwitch>
-              </Content>
-            </Wrapper>
-          </Router>
-        </ErrorBoundary>
-      </ThemeProvider>
-    </Provider>
+                    />
+                    <Route exact path="/" component={PrivateHomepage} />
+                    <Route exact path="/signin" component={SignInContainer} />
+                    <Route exact path="/signup" component={SignUpContainer} />
+                    <Route
+                      exact
+                      path="/profiles"
+                      component={ProfilesContainer}
+                    />
+                    <Route
+                      path="/profile/:userId"
+                      component={ProfileContainer}
+                    />
+                    <Route component={NotFoundPage} />
+                  </ModalSwitch>
+                </Content>
+              </Wrapper>
+            </Router>
+          </ErrorBoundary>
+        </ThemeProvider>
+      </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

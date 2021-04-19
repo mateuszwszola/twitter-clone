@@ -3,19 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Homepage from 'components/Homepage';
 import Loading from 'components/Loading';
-import { getUserProfile } from 'actions/profileActions';
-import { getUserHomepageTweets } from 'actions/tweetActions';
+import { getProfile } from 'actions/profileActions';
 
 function HomepageContainer({
-  getUserProfile,
-  getUserHomepageTweets,
+  getProfile,
+  auth,
   profile: { profile, loading },
-  tweet
+  tweet,
 }) {
   useEffect(() => {
-    getUserProfile();
-    getUserHomepageTweets();
-  }, [getUserProfile, getUserHomepageTweets]);
+    getProfile(auth.user._id);
+  }, [getProfile]);
 
   if (profile === null || loading) {
     return <Loading />;
@@ -25,20 +23,19 @@ function HomepageContainer({
 }
 
 HomepageContainer.propTypes = {
-  getUserProfile: PropTypes.func.isRequired,
-  getUserHomepageTweets: PropTypes.func.isRequired,
+  getProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   tweet: PropTypes.object.isRequired,
-  errors: PropTypes.array.isRequired
+  errors: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = ({ profile, tweet, errors }) => ({
+const mapStateToProps = ({ auth, profile, tweet, errors }) => ({
+  auth,
   profile,
   tweet,
-  errors
+  errors,
 });
 
-export default connect(
-  mapStateToProps,
-  { getUserProfile, getUserHomepageTweets }
-)(HomepageContainer);
+export default connect(mapStateToProps, {
+  getProfile,
+})(HomepageContainer);

@@ -127,7 +127,7 @@ describe('Auth routes', () => {
       expect(res.body.token).toBeDefined();
     });
 
-    it('When there is no users with that email, should return 401', async () => {
+    it('When there is no users with that email, should return 400', async () => {
       const loginCredentials = {
         username: userOne.email,
         password: userOne.password,
@@ -135,10 +135,10 @@ describe('Auth routes', () => {
 
       const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
-      expect(res.statusCode).toBe(401);
+      expect(res.statusCode).toBe(400);
     });
 
-    it('When password is wrong, should return 401', async () => {
+    it('When password is wrong, should return 400', async () => {
       await insertUsers([userOne]);
 
       const loginCredentials = {
@@ -148,7 +148,7 @@ describe('Auth routes', () => {
 
       const res = await request(app).post('/api/auth/login').send(loginCredentials);
 
-      expect(res.statusCode).toBe(401);
+      expect(res.statusCode).toBe(400);
     });
   });
 });

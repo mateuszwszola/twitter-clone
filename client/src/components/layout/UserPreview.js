@@ -13,15 +13,20 @@ import UserPreviewCard from './UserPreviewCard';
 function UserPreview({ profile }) {
   return (
     <UserPreviewCard>
-      <UserPreviewCard.Background showColor={!(profile.backgroundPicture)}>
-        {profile.backgroundPicture ? (
-            <ProfileBackground src={profile.backgroundPicture} alt={`${profile.user.name || 'User'} background`} />
-        ) : ''}
+      <UserPreviewCard.Background showColor={!profile.backgroundImage}>
+        {profile.backgroundImage ? (
+          <ProfileBackground
+            src={profile.backgroundImage}
+            alt={`${profile.user.name || 'User'} background`}
+          />
+        ) : (
+          ''
+        )}
       </UserPreviewCard.Background>
       <UserPreviewCard.MidFlex>
         <UserAvatar
           className="user-preview-avatar"
-          src={profile.user.avatar || portretPlaceholder}
+          src={profile.avatar || portretPlaceholder}
           alt="User avatar"
           small
         />
@@ -36,7 +41,7 @@ function UserPreview({ profile }) {
       <UserPreviewCard.StatsContainer>
         <UserPreviewCard.HeaderMenu>
           <Link to={`${profile.user.username}`}>
-            <ProfileStatGroup label="Tweets" value={profile.tweets.length} />
+            {/* <ProfileStatGroup label="Tweets" value={profile.tweets.length} /> */}
           </Link>
           <Link to={`${profile.user.username}/following`}>
             <ProfileStatGroup
@@ -59,7 +64,7 @@ function UserPreview({ profile }) {
 }
 
 UserPreview.propTypes = {
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default UserPreview;

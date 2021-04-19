@@ -10,84 +10,82 @@ import isEmpty from 'utils/isEmpty';
 import useFormInput from 'hooks/useFormInput';
 
 function SignUpContainer(props) {
-    const name = useFormInput('');
-    const email = useFormInput('');
-    const username = useFormInput('');
-    const password = useFormInput('');
-    const password2 = useFormInput('');
+  const name = useFormInput('');
+  const email = useFormInput('');
+  const username = useFormInput('');
+  const password = useFormInput('');
+  const password2 = useFormInput('');
 
-    const [errors, setErrors] = useState([]);
-    const [redirect, setRedirect] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const [redirect, setRedirect] = useState(false);
 
-    const isAuthenticated = props.auth.isAuthenticated;
-    const reduxErrors = props.errors;
-    const { clearErrors } = props;
+  const isAuthenticated = props.auth.isAuthenticated;
+  const reduxErrors = props.errors;
+  const { clearErrors } = props;
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            setRedirect(isAuthenticated);
-        }
-
-        if (!isEmpty(reduxErrors)) {
-            setErrors(reduxErrors);
-        }
-    }, [isAuthenticated, reduxErrors]);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => () => clearErrors(), []);
-
-    const handleSubmit = e => {
-        e.preventDefault();
-
-        const newUser = {
-            name: name.value,
-            email: email.value,
-            username: username.value,
-            password: password.value,
-            password2: password2.value
-        };
-
-        const errors = validateForm(newUser);
-        if (errors) {
-            setErrors(errors);
-        } else {
-            props.registerUser(newUser);
-        }
-    };
-
-    if (redirect) {
-        return <Redirect to="/" />;
+  useEffect(() => {
+    if (isAuthenticated) {
+      setRedirect(isAuthenticated);
     }
 
-    return (
-        <SignUp
-            name={name}
-            email={email}
-            username={username}
-            password={password}
-            password2={password2}
-            onSubmit={handleSubmit}
-            errors={errors}
-        />
-    );
+    if (!isEmpty(reduxErrors)) {
+      setErrors(reduxErrors);
+    }
+  }, [isAuthenticated, reduxErrors]);
+
+  useEffect(() => () => clearErrors(), []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newUser = {
+      name: name.value,
+      email: email.value,
+      username: username.value,
+      password: password.value,
+      password2: password2.value,
+    };
+
+    const errors = validateForm(newUser);
+    if (errors) {
+      setErrors(errors);
+    } else {
+      props.registerUser(newUser);
+    }
+  };
+
+  if (redirect) {
+    return <Redirect to="/" />;
+  }
+
+  return (
+    <SignUp
+      name={name}
+      email={email}
+      username={username}
+      password={password}
+      password2={password2}
+      onSubmit={handleSubmit}
+      errors={errors}
+    />
+  );
 }
 
 SignUpContainer.propTypes = {
-    registerUser: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
-    errors: PropTypes.array.isRequired
+  registerUser: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = ({ auth, errors }) => ({
-    auth,
-    errors
+  auth,
+  errors,
 });
 
-export default connect(
-    mapStateToProps,
-    { registerUser, clearErrors }
-)(SignUpContainer);
+export default connect(mapStateToProps, { registerUser, clearErrors })(
+  SignUpContainer
+);
 
 /*
 class SignUpContainer extends Component {
