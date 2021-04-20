@@ -20,7 +20,7 @@ function SignIn({ username, password, onSubmit, errors }) {
             {...username}
             placeholder="Email or username"
             autocomplete="username"
-            error={Object.keys(errors).length > 0}
+            error={!!(errors?.username || errors.message)}
             errorMsg={errors?.username}
           />
           <InputGroup
@@ -30,7 +30,7 @@ function SignIn({ username, password, onSubmit, errors }) {
             {...password}
             placeholder="Password"
             autocomplete="current-password"
-            error={Object.keys(errors).length > 0}
+            error={!!(errors?.password || errors.message)}
             errorMsg={errors?.password}
           />
           <Button type="submit" primary>

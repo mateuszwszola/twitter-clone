@@ -1,26 +1,16 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getProfiles } from 'actions/profileActions';
+import React from 'react';
+import { useQuery } from 'react-query';
 import Profiles from 'components/Profiles';
+import { getProfiles } from 'api/profile';
 
-function ProfilesContainer({ profile, getProfiles }) {
-    useEffect(() => {
-        getProfiles();
-    }, []);
+function ProfilesContainer() {
+  const { isLoading, error, data } = useQuery('profiles', getProfiles);
 
-    return (
-        <Profiles profile={profile} />
-    )
+  if (error) {
+    return 'An error has occured: ' + error.message;
+  }
+
+  return <Profiles profiles={data?.results || []} loading={isLoading} />;
 }
 
-ProfilesContainer.propTypes = {
-    profile: PropTypes.object.isRequired,
-    getProfiles: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-    profile: state.profile
-});
-
-export default connect(mapStateToProps, { getProfiles })(ProfilesContainer);
+export default ProfilesContainer;

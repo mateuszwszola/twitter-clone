@@ -27,6 +27,7 @@ function SignInContainer({ location }) {
     } else {
       login(userData).catch((err) => {
         setErrors({ message: err.response.data.message });
+        console.log({ errors });
       });
     }
   };

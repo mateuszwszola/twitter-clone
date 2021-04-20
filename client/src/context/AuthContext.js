@@ -1,12 +1,10 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
-import jwtDecode from 'jwt-decode';
-import axios from 'axios';
-import setAuthToken from '../utils/setAuthToken';
+import * as auth from 'api/auth';
 
 const AuthContext = createContext();
 
 const initialState = {
-  token: null,
+  token: auth.getToken(),
   isAuthenticated: false,
   user: null,
   loading: true,
@@ -21,74 +19,47 @@ function AuthProvider(props) {
   const [state, setState] = useReducer(reducer, initialState);
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setAuthToken(null);
-    setState(initialState);
+    auth.logoutUser();
+    setState({ ...initialState, loading: false });
   };
 
   const login = async (userData) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const body = JSON.stringify(userData);
-
     try {
-      const res = await axios.post('/api/auth/login', body, config);
-      setState({ ...res.data });
-      return res.data;
+      const data = await auth.loginUser(userData);
+      setState({ ...data, isAuthenticated: true });
+      return data;
     } catch (error) {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   };
 
   const register = async (userData) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const body = JSON.stringify(userData);
-
     try {
-      const res = await axios.post('/api/auth/register', body, config);
-      setState({ ...res.data });
-      return res.data;
+      const data = auth.registerUser(userData);
+      setState({ ...data, isAuthenticated: true });
+      return data;
     } catch (error) {
-      console.error(error);
+      return Promise.reject(error);
     }
   };
 
   useEffect(() => {
-    async function loadUser() {
-      const token = localStorage.getItem('token');
-
-      if (!token) {
-        return logout();
-      }
-
-      setAuthToken(token);
-
-      const decoded = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-      if (decoded.exp < currentTime) {
-        logout();
-        window.location.href = '/signin';
-      } else {
-        try {
-          const res = await axios.get(`/api/users/${decoded.sub}`);
-
-          setState({ user: res.data.user });
-        } catch (error) {
-          console.error(error.message);
-        }
-      }
-    }
-
-    loadUser();
+    auth
+      .loadUser()
+      .then((data) => {
+        setState({
+          user: data.user,
+          loading: false,
+          isAuthenticated: !!data.user,
+        });
+      })
+      .catch((err) => {
+        console.error(err.response.message);
+        setState({
+          ...initialState,
+          loading: false,
+        });
+      });
   }, []);
 
   return (
