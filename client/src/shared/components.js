@@ -8,11 +8,17 @@ export const PrimaryHeading = styled.h1`
 
 export const SecondaryHeading = styled.h2``;
 
+export const DisplayError = styled.p`
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 30px;
+`;
+
 export const InfoText = styled.p`
   text-align: center;
   padding: 10px 15px;
   font-size: 1.15em;
-  color: ${props => props.theme.colors.darkGray};
+  color: ${(props) => props.theme.colors.darkGray};
 `;
 
 export const Input = styled.input`
@@ -23,7 +29,7 @@ export const Input = styled.input`
   margin: 10px 0;
   padding: 10px 5px;
   border: 1px solid
-    ${props => (props.error ? props.theme.colors.red : '#e6ecf0')};
+    ${(props) => (props.error ? props.theme.colors.red : '#e6ecf0')};
   border-radius: 3px;
 
   :focus {
@@ -39,7 +45,7 @@ export const Button = styled.button`
   border-radius: 3px;
   cursor: pointer;
 
-  ${props =>
+  ${(props) =>
     props.primary &&
     css`
       border-radius: 100px;
@@ -48,7 +54,7 @@ export const Button = styled.button`
       padding: 6px 16px;
       text-align: center;
       color: #fff;
-      background-color: ${props => props.theme.colors.primaryBlue};
+      background-color: ${(props) => props.theme.colors.primaryBlue};
     `}
 `;
 
@@ -105,7 +111,7 @@ export const DropdownLink = styled(StyledNavLink)`
 `;
 
 export const FeedbackMessage = styled.div`
-  color: ${props =>
+  color: ${(props) =>
     props.success ? props.theme.colors.green : props.theme.colors.red};
   padding: 5px;
   font-size: 0.8rem;
@@ -118,19 +124,19 @@ export const UserAvatar = styled.img`
   flex-shrink: 0;
   margin: 0.7rem;
 
-  ${props =>
+  ${(props) =>
     props.small &&
     css`
       width: 70px;
       height: 70px;
     `}
-  ${props =>
+  ${(props) =>
     props.tiny &&
     css`
       width: 50px;
       height: 50px;
     `}
-  ${props =>
+  ${(props) =>
     props.big &&
     css`
       width: 300px;

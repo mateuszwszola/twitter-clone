@@ -10,6 +10,7 @@ const getFeedsTweets = {
 
 const getTweets = {
   query: Joi.object().keys({
+    author: Joi.string().custom(objectId),
     likes: Joi.string().custom(objectId),
     retweets: Joi.string().custom(objectId),
     replyTo: Joi.string().custom(objectId),

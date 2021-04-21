@@ -1,36 +1,30 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import client from 'api/client';
 import TweetsBoard from 'components/layout/TweetsBoard';
-import { getTweets } from 'actions/tweetActions';
+import { DisplayError } from 'shared/components';
 import { ProfileTweetsBoard } from './style';
 
-function ProfileTweets({
-  profile: { profile },
-  tweet: { tweets, loading },
-  getUserTweets,
-}) {
-  useEffect(() => {
-    getUserTweets(profile.user._id);
-  }, [profile.user._id]);
+function ProfileTweets() {
+  const { userId } = useParams();
+  const { data: tweets, isLoading, error } = useQuery(['tweets', userId], () =>
+    client.get(`/tweets?author=${userId}`).then((res) => res.data.results)
+  );
+
+  if (error) {
+    return (
+      <DisplayError>
+        An error occurred: {error.response.data.message}
+      </DisplayError>
+    );
+  }
+
   return (
     <ProfileTweetsBoard>
-      <TweetsBoard loading={loading} tweets={tweets} />
+      <TweetsBoard loading={isLoading} tweets={tweets || []} />
     </ProfileTweetsBoard>
   );
 }
 
-ProfileTweets.propTypes = {
-  tweet: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
-  getUserTweets: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  tweet: state.tweet,
-  profile: state.profile,
-});
-
-export default connect(mapStateToProps, { getUserTweets: getTweets })(
-  ProfileTweets
-);
+export default ProfileTweets;

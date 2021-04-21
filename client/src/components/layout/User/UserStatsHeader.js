@@ -13,6 +13,7 @@ const UserStatsHeader = ({
   handleFollowButtonClick,
 }) => {
   const { user, following, followers, likes } = profile;
+
   return (
     <ProfileHeaderMenu>
       <HeaderMenuList>

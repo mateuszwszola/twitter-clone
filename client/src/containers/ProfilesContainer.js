@@ -7,7 +7,7 @@ function ProfilesContainer() {
   const { isLoading, error, data } = useQuery('profiles', getProfiles);
 
   if (error) {
-    return 'An error has occured: ' + error.message;
+    return <p>An error has occurred: {error.message}</p>;
   }
 
   return <Profiles profiles={data?.results || []} loading={isLoading} />;

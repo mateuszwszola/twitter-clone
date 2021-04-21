@@ -1,68 +1,71 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Route, Switch, Link } from 'react-router-dom';
-import { followProfile, unfollowProfile } from 'actions/profileActions';
-
+import { Route, Switch, Link, useRouteMatch } from 'react-router-dom';
 import ProfileTweets from './ProfileTweets';
 import Following from './Following';
 import Followers from './Followers';
 import Likes from './Likes';
-import NotFoundPage from 'components/NotFoundPage';
 import ProfileUserGroup from './ProfileUserGroup';
 import UserStatsHeader from 'components/layout/user/UserStatsHeader';
-import { Container, BackgroundContainer, Background, PagesContainer, AddBackground, AddBackgroundButton } from './style';
+import {
+  Container,
+  BackgroundContainer,
+  Background,
+  PagesContainer,
+  AddBackground,
+  AddBackgroundButton,
+} from './style';
+import { useUser } from 'context/UserContext';
+import { useMutation } from 'react-query';
+import { followUser, unfollowUser } from 'api/profile';
 
-function Profile({
-  profile: { profile },
-  auth,
-  followProfile,
-  unfollowProfile,
-  match
-}) {
-  const followed = !!(
-    auth.user && profile.followers.find(user => user === auth.user._id)
-  );
+function Profile({ profile }) {
+  const user = useUser();
+  const match = useRouteMatch();
+  const followMutation = useMutation((userId) => followUser(userId));
+  const unfollowMutation = useMutation((userId) => unfollowUser(userId));
 
-  const owner = !!(auth.user && auth.user._id === profile.user._id);
+  const isFollowing = user && profile.followers.includes(user._id);
+  const isProfileOwner = !!(user && user._id === profile.user._id);
 
   function handleFollowButtonClick() {
-    if (followed) {
-      unfollowProfile(auth.user._id, profile.user._id);
+    if (isFollowing) {
+      unfollowMutation.mutate(profile.user._id);
     } else {
-      followProfile(auth.user._id, profile.user._id);
+      followMutation.mutate(profile.user._id);
     }
   }
 
   return (
     <Container>
       <BackgroundContainer>
-        {(profile.backgroundPicture) ? (
+        {profile.backgroundImage ? (
           <Background
             alt={`${profile.user.name} background`}
-            src={profile.backgroundPicture}
+            src={profile.backgroundImage}
           />
         ) : (
           <AddBackground>
-            {owner ? (
+            {isProfileOwner ? (
               <>
-                <span>Add background picture</span>
-                {' '}
+                <span>Add background picture</span>{' '}
                 <AddBackgroundButton
-                    className="fas fa-plus-circle"
-                    as={Link}
-                    to="/edit-profile"
+                  className="fas fa-plus-circle"
+                  as={Link}
+                  to="/edit-profile"
                 />
               </>
-            ) : ''}
+            ) : (
+              ''
+            )}
           </AddBackground>
         )}
       </BackgroundContainer>
       <UserStatsHeader
         profile={profile}
-        owner={owner}
-        isAuthenticated={auth.isAuthenticated}
-        followed={followed}
+        owner={isProfileOwner}
+        isAuthenticated={!!user}
+        followed={isFollowing}
         handleFollowButtonClick={handleFollowButtonClick}
       />
       <div>
@@ -73,10 +76,8 @@ function Profile({
             <Route path={`${match.path}/following`} component={Following} />
             <Route path={`${match.path}/followers`} component={Followers} />
             <Route path={`${match.path}/likes`} component={Likes} />
-            <Route component={NotFoundPage} />
           </Switch>
         </PagesContainer>
-         {/*<Sidebar>Right sidebar</Sidebar>*/}
       </div>
     </Container>
   );
@@ -84,18 +85,6 @@ function Profile({
 
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
-  followProfile: PropTypes.func.isRequired,
-  unfollowProfile: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-  tweet: state.tweet,
-  auth: state.auth
-});
-
-export default connect(
-  mapStateToProps,
-  { followProfile, unfollowProfile }
-)(withRouter(Profile));
+export default Profile;

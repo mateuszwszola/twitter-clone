@@ -20,11 +20,13 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
+    "stop-runaway-react-effects": "^2.0.0",
     "styled-components": "^5.2.3"
   },
   "devDependencies": {
     "babel-plugin-macros": "^3.0.1",
     "cypress": "^7.1.0",
+    "eslint-plugin-cypress": "^2.11.2",
     "prettier": "^2.2.1"
   },
   "scripts": {
@@ -57,7 +59,11 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
-    ]
+      "react-app",
+      "plugin:cypress/recommended"
+    ],
+    "globals": {
+      "cy": true
+    }
   }
 }

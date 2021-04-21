@@ -10,13 +10,11 @@ const initialState = {
   loading: true,
 };
 
-const reducer = (state, newState) => ({
-  ...state,
-  ...newState,
-});
-
 function AuthProvider(props) {
-  const [state, setState] = useReducer(reducer, initialState);
+  const [state, setState] = useReducer(
+    (s, a) => ({ ...s, ...a }),
+    initialState
+  );
 
   const logout = () => {
     auth.logoutUser();
