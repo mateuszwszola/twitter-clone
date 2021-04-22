@@ -5,7 +5,7 @@ import validateForm from 'utils/validateForm';
 import useFormInput from 'hooks/useFormInput';
 import { useAuth } from 'context/AuthContext';
 
-function SignInContainer({ location }) {
+function SignInPage({ location }) {
   const username = useFormInput('');
   const password = useFormInput('');
   const [errors, setErrors] = useState({});
@@ -27,7 +27,6 @@ function SignInContainer({ location }) {
     } else {
       login(userData).catch((err) => {
         setErrors({ message: err.response.data.message });
-        console.log({ errors });
       });
     }
   };
@@ -47,4 +46,4 @@ function SignInContainer({ location }) {
   );
 }
 
-export default SignInContainer;
+export default SignInPage;

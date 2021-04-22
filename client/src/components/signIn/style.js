@@ -19,4 +19,9 @@ const Helper = styled.p`
   line-height: 20px;
 `;
 
-export { SignInContainer, Title, Form, Helper };
+const ErrorMessage = styled.p`
+  margin: 10px 0;
+  color: ${({ theme }) => theme.colors.red};
+`;
+
+export { SignInContainer, Title, Form, Helper, ErrorMessage };

@@ -4,15 +4,15 @@ import { Provider } from 'react-redux';
 import { Wrapper, Content } from 'shared/layout';
 
 import { Header } from './components/layout';
-import SignInContainer from './containers/SignInContainer';
+import SignInPage from './pages/SignIn';
 import SignUpContainer from './containers/SignUpContainer';
-import PrivateHomepage from './components/route/PrivateHomepage';
+import Home from './pages/Home';
 import RenderCreateTweetModal from './components/CreateTweetModal';
 import ProfileContainer from './containers/ProfileContainer';
 import ProfilesContainer from './containers/ProfilesContainer';
 import SettingsContainer from './containers/SettingsContainer';
 import EditProfileContainer from './containers/EditProfileContainer';
-import PrivateRoute from './components/route/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute';
 import Alert from 'components/Alert';
 import ModalSwitch from './components/ModalSwitch';
 import NotFoundPage from 'components/NotFoundPage';
@@ -39,8 +39,8 @@ function App() {
                 path="/settings"
                 component={SettingsContainer}
               />
-              <Route exact path="/" component={PrivateHomepage} />
-              <Route exact path="/signin" component={SignInContainer} />
+              <Route exact path="/" component={Home} />
+              <Route exact path="/signin" component={SignInPage} />
               <Route exact path="/signup" component={SignUpContainer} />
               <Route exact path="/profiles" component={ProfilesContainer} />
               <Route path="/profile/:userId" component={ProfileContainer} />

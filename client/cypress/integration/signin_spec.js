@@ -1,20 +1,16 @@
 /// <reference types="cypress" />
 
-describe('/signin', () => {
+describe('/Signin', () => {
   beforeEach(() => {
     cy.visit('/signin');
   });
 
-  it('greets with signin', () => {
+  it('contains h1 with Sign In', () => {
     cy.contains('h1', 'Sign In');
   });
 
-  it('has button with type submit', () => {
+  it('contains log in submit button', () => {
     cy.contains('Log In').should('have.attr', 'type', 'submit');
-  });
-
-  it('contains p helper', () => {
-    cy.contains('p', 'New?');
   });
 
   it('contains link which redirects to /signup', () => {
@@ -50,42 +46,38 @@ describe('/signin', () => {
     });
 
     it('requires username and password', () => {
-      cy.route({
-        url: '/api/auth/login',
-        method: 'POST',
-        body: {
-          username: '',
-          password: '',
-        },
-        status: 400,
-        response: {
-          errors: {
-            username: 'Username is required',
-            password: 'Password is required',
-          },
-        },
-      });
-
-      cy.get('[data-cy=signin-form]').contains('Log In').click();
+      cy.get('[data-cy=signin-form]').submit();
       cy.contains('username is required');
       cy.contains('password is required');
     });
 
     it('requires password', () => {
-      cy.route('POST', '/api/auth/login', {
-        password: 'password is required',
+      cy.route({
+        url: '/api/auth/login',
+        method: 'POST',
+        status: 400,
+        response: {
+          error: {
+            password: 'Password is required',
+          },
+        },
       });
       cy.get('[data-cy=signin-username-input]').type('fake@email.com');
-      cy.get('[data-cy=signin-form]').contains('Log In').click();
+      cy.get('[data-cy=signin-form]').submit();
       cy.contains('password is required');
     });
     it('requires valid username and password', () => {
-      cy.route('POST', '/api/auth/login', {
-        login: 'Incorrect username and password combination',
+      cy.route({
+        url: '/api/auth/login',
+        method: 'POST',
+        status: 400,
+        response: {
+          message: 'Incorrect username and password combination',
+        },
       });
       cy.get('[data-cy=signin-username-input]').type('fake@email.com');
       cy.get('[data-cy=signin-password-input]').type('password');
-      cy.get('[data-cy=signin-form]').contains('Log In').click();
+      cy.get('[data-cy=signin-form]').submit();
       cy.contains('Incorrect username and password combination');
     });
   });

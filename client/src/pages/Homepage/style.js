@@ -14,6 +14,7 @@ const Container = styled.main`
 `;
 
 const LeftSidebar = styled.div`
+  position: relative;
   flex: 290px;
   max-width: 500px;
   margin: 0 0.7rem;
