@@ -4,7 +4,7 @@
 const logger = require('./utils/logger');
 const app = require('./app');
 const config = require('./config/keys');
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 
 let server;
 

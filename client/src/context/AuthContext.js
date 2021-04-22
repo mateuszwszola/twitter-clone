@@ -24,7 +24,7 @@ function AuthProvider(props) {
   const login = async (userData) => {
     try {
       const data = await auth.loginUser(userData);
-      setState({ ...data, isAuthenticated: true });
+      setState({ ...data, isAuthenticated: !!data.user });
       return data;
     } catch (error) {
       return Promise.reject(error);
@@ -33,8 +33,8 @@ function AuthProvider(props) {
 
   const register = async (userData) => {
     try {
-      const data = auth.registerUser(userData);
-      setState({ ...data, isAuthenticated: true });
+      const data = await auth.registerUser(userData);
+      setState({ ...data, isAuthenticated: !!data.user });
       return data;
     } catch (error) {
       return Promise.reject(error);

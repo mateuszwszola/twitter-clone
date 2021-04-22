@@ -5,7 +5,7 @@ import { Wrapper, Content } from 'shared/layout';
 
 import { Header } from './components/layout';
 import SignInPage from './pages/SignIn';
-import SignUpContainer from './containers/SignUpContainer';
+import SignUpPage from './pages/SignUp';
 import Home from './pages/Home';
 import RenderCreateTweetModal from './components/CreateTweetModal';
 import ProfileContainer from './containers/ProfileContainer';
@@ -41,7 +41,7 @@ function App() {
               />
               <Route exact path="/" component={Home} />
               <Route exact path="/signin" component={SignInPage} />
-              <Route exact path="/signup" component={SignUpContainer} />
+              <Route exact path="/signup" component={SignUpPage} />
               <Route exact path="/profiles" component={ProfilesContainer} />
               <Route path="/profile/:userId" component={ProfileContainer} />
               <Route component={NotFoundPage} />

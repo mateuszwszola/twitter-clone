@@ -1,17 +1,5 @@
 const mongoose = require('mongoose');
-const _ = require('lodash');
-const connectDB = require('../../src/config/db');
-
-const remove = (collection) => {
-  return new Promise((resolve, reject) => {
-    collection
-      .deleteMany()
-      .then(resolve)
-      .catch((err) => {
-        return reject(err);
-      });
-  });
-};
+const { connectDB, removeCollections } = require('../../src/config/db');
 
 const setupTestDB = () => {
   beforeAll(async () => {
@@ -19,7 +7,7 @@ const setupTestDB = () => {
   });
 
   beforeEach(async () => {
-    await Promise.all(_.map(mongoose.connection.collections, (c) => remove(c)));
+    await removeCollections();
   });
 
   afterAll(async () => {

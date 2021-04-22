@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import InputGroup from 'components/InputGroup';
 import { Button } from 'shared/components';
 import { Container } from 'shared/layout';
-import { SignUpContainer, Title, Form, Helper, StyledLink } from './style';
+import {
+  SignUpContainer,
+  Title,
+  Form,
+  Helper,
+  StyledLink,
+  ErrorMessage,
+} from './style';
 
 function SignUp({
   name,
@@ -12,67 +19,63 @@ function SignUp({
   password,
   password2,
   onSubmit,
-  errors
+  errors,
 }) {
-
-  const findIfErrExists = (param) => {
-    const error = errors.find(err => err.param === param);
-    if (error) {
-      return error.msg;
-    } else {
-      return error;
-    }
-  };
-
   return (
     <Container>
       <SignUpContainer>
-        <Title>Sign Up to Twitter</Title>
-        <Form onSubmit={onSubmit}>
+        <Title data-cy="signup-title">Sign Up</Title>
+        {errors.message && <ErrorMessage>{errors.message}</ErrorMessage>}
+        <Form onSubmit={onSubmit} data-cy="signup-form">
           <InputGroup
+            data-cy="signup-name-input"
             type="text"
             name="name"
             {...name}
             placeholder="Name"
             autocomplete="name"
-            error={!!(findIfErrExists('name'))}
-            errorMsg={findIfErrExists('name')}
+            error={!!(errors?.name || errors.message)}
+            errorMsg={errors?.name}
           />
           <InputGroup
+            data-cy="signup-username-input"
             type="text"
             name="username"
             {...username}
             placeholder="Username"
             autocomplete="username"
-            error={!!(findIfErrExists('username'))}
-            errorMsg={findIfErrExists('username')}
+            error={!!(errors?.username || errors.message)}
+            errorMsg={errors?.username}
           />
           <InputGroup
+            data-cy="signup-email-input"
             type="email"
             name="email"
             {...email}
             placeholder="Email"
             autocomplete="new-password"
-            error={!!(findIfErrExists('email'))}
-            errorMsg={findIfErrExists('email')}
+            error={!!(errors?.email || errors.message)}
+            errorMsg={errors?.email}
           />
           <InputGroup
+            data-cy="signup-password-input"
             type="password"
             name="password"
             {...password}
             placeholder="Password"
-            error={!!(findIfErrExists('password'))}
-            errorMsg={findIfErrExists('password')}
+            error={!!(errors?.password || errors.message)}
+            errorMsg={errors?.password}
           />
           <InputGroup
+            data-cy="signup-password2-input"
             type="password"
             name="password2"
             {...password2}
-            placeholder="Repeat password"
-            error={!!(findIfErrExists('password2'))}
-            errorMsg={findIfErrExists('password2')}
+            placeholder="Confirmation password"
+            error={!!(errors?.password2 || errors.message)}
+            errorMsg={errors?.password2}
           />
-          <Button primary type="submit">
+          <Button data-cy="signup-submit" primary type="submit">
             Sign Up
           </Button>
         </Form>
@@ -94,7 +97,7 @@ SignUp.propTypes = {
   password: PropTypes.object.isRequired,
   password2: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.array.isRequired
+  errors: PropTypes.array.isRequired,
 };
 
 export default SignUp;

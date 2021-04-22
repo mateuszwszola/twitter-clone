@@ -23,8 +23,13 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-Cypress.Commands.add('login', () => {
-  cy.visit('/signin');
-  cy.get('[data-cy=signin-username-input').type('bobdoe@email.com');
-  cy.get('[data-cy=signin-password-input').type('123456{enter}');
-});
+
+Cypress.Commands.add(
+  'loginByApi',
+  (username, password = Cypress.env('defaultPassword')) => {
+    return cy.request('POST', `${Cypress.env('apiUrl')}/auth/login`, {
+      username,
+      password,
+    });
+  }
+);

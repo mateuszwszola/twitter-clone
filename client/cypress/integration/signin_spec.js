@@ -41,10 +41,6 @@ describe('/Signin', () => {
   });
 
   context('Form submission', () => {
-    beforeEach(() => {
-      cy.server();
-    });
-
     it('requires username and password', () => {
       cy.get('[data-cy=signin-form]').submit();
       cy.contains('username is required');
@@ -52,38 +48,24 @@ describe('/Signin', () => {
     });
 
     it('requires password', () => {
-      cy.route({
-        url: '/api/auth/login',
-        method: 'POST',
-        status: 400,
-        response: {
-          error: {
-            password: 'Password is required',
-          },
-        },
-      });
       cy.get('[data-cy=signin-username-input]').type('fake@email.com');
       cy.get('[data-cy=signin-form]').submit();
       cy.contains('password is required');
     });
+
     it('requires valid username and password', () => {
-      cy.route({
-        url: '/api/auth/login',
-        method: 'POST',
-        status: 400,
-        response: {
+      cy.intercept('POST', '/api/auth/login', {
+        statusCode: 400,
+        body: {
           message: 'Incorrect username and password combination',
         },
-      });
+      }).as('login');
+
       cy.get('[data-cy=signin-username-input]').type('fake@email.com');
       cy.get('[data-cy=signin-password-input]').type('password');
       cy.get('[data-cy=signin-form]').submit();
+      cy.wait('@login').its('response.statusCode').should('equal', 400);
       cy.contains('Incorrect username and password combination');
     });
   });
-
-  // it('navigates to / on successful signin', () => {
-  //   cy.login();
-  //   cy.hash().should('eq', '/');
-  // });
 });

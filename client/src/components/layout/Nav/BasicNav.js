@@ -15,10 +15,14 @@ export default function BasicNav() {
         </StyledNavLink>
       </NavItem>
       <NavItem>
-        <StyledNavLink to="/signin">Sign In</StyledNavLink>
+        <StyledNavLink data-cy="nav-signin-link" to="/signin">
+          Sign In
+        </StyledNavLink>
       </NavItem>
       <NavItem>
-        <StyledNavLink to="/signup">Sign Up</StyledNavLink>
+        <StyledNavLink data-cy="nav-signup-link" to="/signup">
+          Sign Up
+        </StyledNavLink>
       </NavItem>
     </MainNav>
   );

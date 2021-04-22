@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const faker = require('faker');
 const { User } = require('../../src/components/users');
 const { hashPassword } = require('../../src/utils/auth');
+const { formatUsername } = require('../../src/utils/helpers');
 
 const password = 'password123';
 
@@ -34,7 +35,9 @@ const admin = {
 
 const insertUsers = async (users) => {
   const hashedPassword = await hashPassword(password);
-  return await User.insertMany(users.map((user) => ({ ...user, password: hashedPassword })));
+  return await User.insertMany(
+    users.map((user) => ({ ...user, username: formatUsername(user.username), password: hashedPassword }))
+  );
 };
 
 module.exports = {

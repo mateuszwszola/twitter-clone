@@ -8,6 +8,7 @@ const passport = require('passport');
 const config = require('./config/keys');
 const { jwtStrategy } = require('./config/passport');
 const { getRoutes } = require('./routes');
+const testDataRoutes = require('./routes/testDataRoutes');
 const { handleNotFound, handleError } = require('./utils/error');
 
 const app = express();
@@ -30,6 +31,10 @@ passport.use('jwt', jwtStrategy);
 
 // Handle routes
 app.use('/api', getRoutes());
+
+if (config.env === 'development' || config.env === 'test') {
+  app.use('/testData', testDataRoutes);
+}
 
 // 404 error handler
 app.use(handleNotFound);
