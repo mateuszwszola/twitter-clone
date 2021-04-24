@@ -5,7 +5,7 @@ const { pick } = require('lodash');
 const { ErrorHandler } = require('../../utils/error');
 
 exports.registerUser = async (req, res) => {
-  const userBody = pick(req.body, ['name', 'email', 'password', 'username']);
+  const userBody = pick(req.body, ['name', 'email', 'password', 'username', 'avatar']);
 
   if (await User.isEmailTaken(userBody.email)) {
     throw new ErrorHandler(400, 'Email already taken');

@@ -30,14 +30,6 @@ const ProfileSchema = new Schema(
     birthday: {
       type: Date,
     },
-    avatar: {
-      type: String,
-      validate(value) {
-        if (!validator.isURL(value)) {
-          throw new ErrorHandler(400, 'Avatar must be a valid URL');
-        }
-      },
-    },
     backgroundImage: {
       type: String,
       validate(value) {

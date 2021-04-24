@@ -9,7 +9,7 @@ exports.getProfile = async (req, res) => {
 
   const profile = await Profile.findOne({
     user: userId,
-  }).populate('user', ['name', 'username']);
+  }).populate('user', ['name', 'username', 'avatar']);
 
   if (!profile) {
     throw new ErrorHandler(404, 'Profile not found');
@@ -40,7 +40,7 @@ exports.getProfiles = async (req, res) => {
 
   options.populate = {
     path: 'user',
-    select: ['name', 'username'],
+    select: ['name', 'username', 'avatar'],
   };
 
   const profiles = await Profile.paginate(filters, options);
@@ -51,7 +51,7 @@ exports.getProfiles = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   const { userId } = req.params;
 
-  const fields = ['bio', 'location', 'website', 'birthday', 'avatar', 'backgroundImage'];
+  const fields = ['bio', 'location', 'website', 'birthday', 'backgroundImage'];
 
   const newValues = pick(req.body, fields);
 

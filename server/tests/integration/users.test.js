@@ -21,6 +21,7 @@ describe('Users routes', () => {
         username: faker.internet.userName(),
         password: 'password123',
         role: 'user',
+        avatar: faker.image.avatar(),
       };
     });
 
@@ -40,6 +41,7 @@ describe('Users routes', () => {
         email: newUser.email.toLowerCase(),
         username: formatUsername(newUser.username),
         role: newUser.role,
+        avatar: newUser.avatar,
       });
 
       const { _id: userId } = res.body.user;
@@ -52,6 +54,7 @@ describe('Users routes', () => {
         email: newUser.email.toLowerCase(),
         username: formatUsername(newUser.username),
         role: newUser.role,
+        avatar: newUser.avatar,
       });
     });
 
@@ -343,6 +346,7 @@ describe('Users routes', () => {
         name: faker.name.findName(),
         email: faker.internet.email().toLowerCase(),
         password: 'newPassword1',
+        avatar: faker.image.avatar(),
       };
 
       const res = await request(app)
@@ -358,6 +362,7 @@ describe('Users routes', () => {
         name: updateBody.name,
         email: updateBody.email,
         role: 'user',
+        avatar: updateBody.avatar,
       });
 
       const dbUser = await User.findById(userOne._id);
@@ -367,6 +372,7 @@ describe('Users routes', () => {
         name: updateBody.name,
         email: updateBody.email,
         role: 'user',
+        avatar: updateBody.avatar,
       });
     });
 

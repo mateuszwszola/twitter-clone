@@ -9,7 +9,7 @@ const getFeedsTweets = async (req, res) => {
   const { _id: userId } = req.user;
   options.populate = {
     path: 'author',
-    select: ['name', 'username'],
+    select: ['name', 'username', 'avatar'],
   };
   options.sortBy = 'createdAt:desc';
 
@@ -54,7 +54,7 @@ const getTweets = async (req, res) => {
 
   options.populate = {
     path: 'author',
-    select: ['name', 'username'],
+    select: ['name', 'username', 'avatar'],
   };
   options.sortBy = options.sortBy || 'createdAt:desc';
 
@@ -66,7 +66,7 @@ const getTweets = async (req, res) => {
 const getTweet = async (req, res) => {
   const { tweetId } = req.params;
 
-  const tweet = await Tweet.findById(tweetId).populate('author', ['name', 'username']);
+  const tweet = await Tweet.findById(tweetId).populate('author', ['name', 'username', 'avatar']);
 
   if (!tweet) {
     throw new ErrorHandler(404, 'Tweet not found');

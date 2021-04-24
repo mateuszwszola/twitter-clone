@@ -13,6 +13,7 @@ const userOne = {
   username: faker.internet.userName(),
   password,
   role: 'user',
+  avatar: faker.image.avatar(),
 };
 
 const userTwo = {
@@ -22,6 +23,7 @@ const userTwo = {
   username: faker.internet.userName(),
   password,
   role: 'user',
+  avatar: faker.image.avatar(),
 };
 
 const admin = {
@@ -31,6 +33,7 @@ const admin = {
   username: faker.internet.userName(),
   password,
   role: 'admin',
+  avatar: faker.image.avatar(),
 };
 
 const insertUsers = async (users) => {

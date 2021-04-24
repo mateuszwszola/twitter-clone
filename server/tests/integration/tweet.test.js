@@ -42,6 +42,15 @@ describe('Tweets routes', () => {
         totalResults: 2,
       });
       expect(res.body.results).toHaveLength(2);
+      expect(res.body.results[0]).toMatchObject({
+        text: expect.any(String),
+        author: {
+          _id: expect.any(String),
+          name: expect.any(String),
+          username: expect.any(String),
+          avatar: expect.any(String),
+        },
+      });
     });
 
     it('When access token is missing, should return 401 error', async () => {
@@ -111,6 +120,7 @@ describe('Tweets routes', () => {
             _id: tweet.author.toString(),
             name: expect.any(String),
             username: expect.any(String),
+            avatar: expect.any(String),
           },
         });
       });
@@ -378,6 +388,7 @@ describe('Tweets routes', () => {
           _id: userOne._id.toString(),
           name: expect.any(String),
           username: expect.any(String),
+          avatar: expect.any(String),
         },
       });
     });

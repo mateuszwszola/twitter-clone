@@ -25,7 +25,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-  const userBody = pick(req.body, ['name', 'username', 'email', 'password', 'role']);
+  const userBody = pick(req.body, ['name', 'username', 'email', 'password', 'role', 'avatar']);
 
   if (await User.isEmailTaken(userBody.email)) {
     throw new ErrorHandler(400, 'Email already taken');
@@ -45,7 +45,7 @@ exports.createUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-  const newValues = pick(req.body, ['name', 'username', 'email', 'password', 'role']);
+  const newValues = pick(req.body, ['name', 'username', 'email', 'password', 'role', 'avatar']);
   const { userId } = req.params;
 
   if (newValues.email && (await User.isEmailTaken(newValues.email, userId))) {

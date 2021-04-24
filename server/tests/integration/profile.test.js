@@ -32,6 +32,7 @@ describe('Profiles routes', () => {
       expect(res.body.results[0]).toHaveProperty('user');
       expect(res.body.results[0].user).toHaveProperty('name');
       expect(res.body.results[0].user).toHaveProperty('username');
+      expect(res.body.results[0].user).toHaveProperty('avatar');
     });
 
     it('When limit param is specified, should limit returned array', async () => {
@@ -203,6 +204,7 @@ describe('Profiles routes', () => {
       expect(res.body.profile).toHaveProperty('user');
       expect(res.body.profile.user.name).toBe(userOne.name);
       expect(res.body.profile.user.username).toBe(userOne.username.toLowerCase());
+      expect(res.body.profile.user.avatar).toBe(userOne.avatar);
     });
 
     it('When invalid object id, should return 400 error', async () => {
@@ -226,7 +228,6 @@ describe('Profiles routes', () => {
         bio: faker.lorem.sentence(),
         location: faker.address.city() + ' ' + faker.address.country(),
         birthday: faker.date.past(30),
-        avatar: faker.image.avatar(),
         backgroundImage: faker.image.imageUrl(),
       };
     });
@@ -245,7 +246,6 @@ describe('Profiles routes', () => {
       expect(res.body.profile.user).toBe(userOne._id.toHexString());
       expect(res.body.profile.bio).toBe(newProfile.bio);
       expect(res.body.profile.location).toBe(newProfile.location);
-      expect(res.body.profile.avatar).toBe(newProfile.avatar);
       expect(res.body.profile.backgroundImage).toBe(newProfile.backgroundImage);
     });
 

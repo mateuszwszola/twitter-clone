@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { password } = require('../../utils/customValidation');
+const { password, url } = require('../../utils/customValidation');
 
 const register = {
   body: Joi.object().keys({
@@ -7,6 +7,7 @@ const register = {
     username: Joi.string().required().min(3).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
+    avatar: Joi.string().custom(url).max(255),
   }),
 };
 

@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { roles } = require('../../config/roles');
-const { objectId, password, username } = require('../../utils/customValidation');
+const { objectId, password, username, url } = require('../../utils/customValidation');
 const validate = require('../../middleware/validate');
 
 /* 
@@ -43,6 +43,7 @@ const createUser = (req, res, next) => {
       role: Joi.string()
         .required()
         .valid(...roles),
+      avatar: Joi.string().custom(url).max(255),
     }),
   };
 
@@ -59,6 +60,7 @@ const updateUser = (req, res, next) => {
       username: Joi.string().min(3).max(30).custom(username),
       email: Joi.string().email(),
       password: Joi.string().custom(password),
+      avatar: Joi.string().custom(url).max(255),
     },
   };
 

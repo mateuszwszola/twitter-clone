@@ -55,6 +55,14 @@ const UserSchema = new Schema(
       enum: roles,
       default: 'user',
     },
+    avatar: {
+      type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new ErrorHandler(400, 'Avatar must be a valid URL');
+        }
+      },
+    },
   },
   { timestamps: true }
 );
