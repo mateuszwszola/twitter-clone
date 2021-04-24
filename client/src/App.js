@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { Wrapper, Content } from 'shared/layout';
 
-import { Header } from './components/layout';
+import Header from 'components/Header';
 import SignInPage from './pages/SignIn';
 import SignUpPage from './pages/SignUp';
 import Home from './pages/Home';

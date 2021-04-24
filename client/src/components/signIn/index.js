@@ -33,7 +33,7 @@ function SignIn({ username, password, onSubmit, errors }) {
             error={!!(errors?.password || errors.message)}
             errorMsg={errors?.password}
           />
-          <Button type="submit" primary>
+          <Button data-cy="signin-button" type="submit" primary>
             Log In
           </Button>
         </Form>

@@ -2,6 +2,8 @@
   "name": "client",
   "version": "1.0.0",
   "dependencies": {
+    "@reach/menu-button": "^0.15.1",
+    "@reach/visually-hidden": "^0.15.0",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
     "date-fns": "^2.21.1",
@@ -12,6 +14,7 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
     "react-moment": "^1.1.1",
     "react-query": "^3.13.10",
     "react-redux": "^7.2.3",

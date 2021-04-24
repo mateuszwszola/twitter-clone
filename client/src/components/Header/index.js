@@ -1,6 +1,6 @@
 import React from 'react';
-import AuthNav from '../nav/AuthNav';
-import BasicNav from '../nav/BasicNav';
+import AuthNav from 'components/nav/AuthNav';
+import BasicNav from 'components/nav/BasicNav';
 import { StyledHeader, Container, Logo, LeftFlex, ProfilesLink } from './style';
 import { useUser } from 'context/UserContext';
 

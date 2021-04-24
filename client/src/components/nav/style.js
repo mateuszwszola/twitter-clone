@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { FaUserCircle } from 'react-icons/fa';
 
 export const MainNav = styled.nav`
   list-style: none;
@@ -19,9 +20,8 @@ export const StyledDropdown = styled.div`
   display: inline-block;
 `;
 
-export const NavAvatar = styled.i`
+export const NavAvatar = styled(FaUserCircle)`
   font-size: 2rem;
-  margin: 10px;
-  color: #67757f;
+  color: ${(props) => props.theme.colors.gray};
   cursor: pointer;
 `;

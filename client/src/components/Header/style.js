@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 export const StyledHeader = styled.header`
   background-color: #fff;
-  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
 `;
 
@@ -32,17 +30,17 @@ export const LeftFlex = styled.div`
 `;
 
 export const ProfilesLink = styled(Link)`
-  color: ${props => props.theme.colors.gray};
+  color: ${(props) => props.theme.colors.gray};
   font-weight: bold;
   margin: 0 10px;
   &:hover {
-    color: ${props => props.theme.colors.darkGray};
+    color: ${(props) => props.theme.colors.darkGray};
   }
 `;
 
 export const Logo = styled.i`
   font-size: 1.5rem;
-  color: ${props => props.theme.colors.blue};
+  color: ${(props) => props.theme.colors.blue};
   padding: 7px 12px;
   display: block;
 `;

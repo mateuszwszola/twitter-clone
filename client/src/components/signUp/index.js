@@ -97,7 +97,7 @@ SignUp.propTypes = {
   password: PropTypes.object.isRequired,
   password2: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  errors: PropTypes.array.isRequired,
+  errors: PropTypes.object.isRequired,
 };
 
 export default SignUp;

@@ -10,9 +10,7 @@ export default function BasicNav() {
         <Search />
       </NavItem>
       <NavItem>
-        <StyledNavLink to="/">
-          <i className="fas fa-home" /> Home
-        </StyledNavLink>
+        <StyledNavLink to="/">Home</StyledNavLink>
       </NavItem>
       <NavItem>
         <StyledNavLink data-cy="nav-signin-link" to="/signin">

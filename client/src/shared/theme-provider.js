@@ -13,4 +13,8 @@ const theme = {
   },
 };
 
-export default (props) => <ThemeProvider theme={theme} {...props} />;
+const CustomThemeProvider = (props) => (
+  <ThemeProvider theme={theme} {...props} />
+);
+
+export default CustomThemeProvider;
