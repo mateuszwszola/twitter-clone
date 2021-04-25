@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { CommentContainer, CommentForm, CommentInput } from 'components/Tweet/Comment/AddCommentForm/style';
+import {
+  CommentContainer,
+  CommentForm,
+  CommentInput,
+} from 'components/Tweet/Comment/AddCommentForm/style';
 import { UserAvatar } from 'shared/components';
-import portretPlaceholder from 'img/portret-placeholder.png';
+import portraitPlaceholder from 'img/portrait-placeholder.png';
 
-function AddCommentForm({ handleSubmit, handleChange, userAvatar, commentText }) {
+function AddCommentForm({
+  handleSubmit,
+  handleChange,
+  userAvatar,
+  commentText,
+}) {
   return (
     <CommentContainer>
       <UserAvatar
         tiny
-        src={userAvatar || portretPlaceholder}
+        src={userAvatar || portraitPlaceholder}
         alt="User Avatar"
       />
       <CommentForm onSubmit={handleSubmit}>
@@ -21,7 +30,6 @@ function AddCommentForm({ handleSubmit, handleChange, userAvatar, commentText })
         />
       </CommentForm>
     </CommentContainer>
-
   );
 }
 

@@ -4,12 +4,11 @@ import { Provider } from 'react-redux';
 import { Wrapper, Content } from 'shared/layout';
 
 import Header from 'components/Header';
-import SignInPage from './pages/SignIn';
-import SignUpPage from './pages/SignUp';
-import Home from './pages/Home';
-import RenderCreateTweetModal from './components/CreateTweetModal';
-import ProfileContainer from './containers/ProfileContainer';
-import ProfilesContainer from './containers/ProfilesContainer';
+import SignInPage from 'pages/SignIn';
+import SignUpPage from 'pages/SignUp';
+import Home from 'pages/Home';
+import ProfilesPage from 'pages/Profiles';
+import ProfilePage from 'pages/Profile';
 import SettingsContainer from './containers/SettingsContainer';
 import EditProfileContainer from './containers/EditProfileContainer';
 import PrivateRoute from './components/PrivateRoute';
@@ -27,24 +26,31 @@ function App() {
           <Content>
             <Alert />
             <Header />
-            <RenderCreateTweetModal />
             <ModalSwitch>
-              <PrivateRoute
-                exact
-                path="/edit-profile"
-                component={EditProfileContainer}
-              />
-              <PrivateRoute
-                exact
-                path="/settings"
-                component={SettingsContainer}
-              />
-              <Route exact path="/" component={Home} />
-              <Route exact path="/signin" component={SignInPage} />
-              <Route exact path="/signup" component={SignUpPage} />
-              <Route exact path="/profiles" component={ProfilesContainer} />
-              <Route path="/profile/:userId" component={ProfileContainer} />
-              <Route component={NotFoundPage} />
+              <PrivateRoute exact path="/edit-profile">
+                <EditProfileContainer />
+              </PrivateRoute>
+              <PrivateRoute exact path="/settings">
+                <SettingsContainer />
+              </PrivateRoute>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route exact path="/signin">
+                <SignInPage />
+              </Route>
+              <Route exact path="/signup">
+                <SignUpPage />
+              </Route>
+              <Route exact path="/profiles">
+                <ProfilesPage />
+              </Route>
+              <Route path="/profile/:userId">
+                <ProfilePage />
+              </Route>
+              <Route>
+                <NotFoundPage />
+              </Route>
             </ModalSwitch>
           </Content>
         </Wrapper>

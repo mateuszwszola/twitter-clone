@@ -5,8 +5,7 @@ import ProfileTweets from './ProfileTweets';
 import Following from './Following';
 import Followers from './Followers';
 import Likes from './Likes';
-import ProfileUserGroup from './ProfileUserGroup';
-import UserStatsHeader from 'components/layout/user/UserStatsHeader';
+import portraitPlaceholder from 'img/portrait-placeholder.png';
 import {
   Container,
   BackgroundContainer,
@@ -14,10 +13,60 @@ import {
   PagesContainer,
   AddBackground,
   AddBackgroundButton,
+  ProfileHeaderMenu,
+  HeaderMenuList,
+  ListItem,
+  Key,
+  Value,
+  StyledUserName,
+  UserInfoLink,
+  UserInfoJoined,
 } from './style';
 import { useUser } from 'context/UserContext';
 import { useMutation } from 'react-query';
 import { followUser, unfollowUser } from 'api/profile';
+import { FaCalendarAlt } from 'react-icons/fa';
+import {
+  EditProfileButton,
+  FollowProfileButton,
+  UserAvatar,
+} from 'shared/components';
+import { format } from 'date-fns';
+
+function ProfilePreview({ profile }) {
+  const {
+    user: { _id: profileId, name, username, avatar },
+    location,
+    bio,
+    website,
+    createdAt,
+  } = profile;
+
+  return (
+    <div>
+      <UserAvatar
+        src={avatar || portraitPlaceholder}
+        alt={`${name}'s avatar`}
+      />
+      <StyledUserName>
+        <UserInfoLink to={`/profile/${profileId}`}>{name}</UserInfoLink>
+      </StyledUserName>
+      <StyledUserName>
+        <UserInfoLink to={`/profile/${profileId}`}>{username}</UserInfoLink>
+      </StyledUserName>
+      {location && <p>Location: {location}</p>}
+      {bio && <p>Bio: {bio}</p>}
+      {website && <p>Website: {website}</p>}
+      <UserInfoJoined>
+        <FaCalendarAlt /> Joined {format(new Date(createdAt), 'MMMM yyyy')}
+      </UserInfoJoined>
+    </div>
+  );
+}
+
+ProfilePreview.propTypes = {
+  profile: PropTypes.object.isRequired,
+};
 
 function Profile({ profile }) {
   const user = useUser();
@@ -61,15 +110,45 @@ function Profile({ profile }) {
           </AddBackground>
         )}
       </BackgroundContainer>
-      <UserStatsHeader
-        profile={profile}
-        owner={isProfileOwner}
-        isAuthenticated={!!user}
-        followed={isFollowing}
-        handleFollowButtonClick={handleFollowButtonClick}
-      />
+
+      <ProfileHeaderMenu>
+        <HeaderMenuList>
+          <ListItem as={Link} to={`/profile/${profile.user._id}/following`}>
+            <Key>Following</Key>
+            <Value>{profile.following.length}</Value>
+          </ListItem>
+
+          <ListItem as={Link} to={`/profile/${profile.user._id}/followers`}>
+            <Key>Followers</Key>
+            <Value>{profile.followers.length}</Value>
+          </ListItem>
+
+          <ListItem as={Link} to={`/profile/${profile.user._id}/likes`}>
+            <Key>Likes</Key>
+            <Value>{profile.likes.length}</Value>
+          </ListItem>
+        </HeaderMenuList>
+        {isProfileOwner ? (
+          <div>
+            <EditProfileButton as={Link} primary="true" to="/edit-profile">
+              Edit Profile
+            </EditProfileButton>
+          </div>
+        ) : (
+          <div>
+            {user ? (
+              <FollowProfileButton primary onClick={handleFollowButtonClick}>
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </FollowProfileButton>
+            ) : (
+              ''
+            )}
+          </div>
+        )}
+      </ProfileHeaderMenu>
+
       <div>
-        <ProfileUserGroup profile={profile} />
+        <ProfilePreview profile={profile} />
         <PagesContainer>
           <Switch>
             <Route exact path={`${match.path}`} component={ProfileTweets} />

@@ -1,32 +1,38 @@
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import { TweetModal } from './Tweet';
+import { Switch, Route, useLocation, useRouteMatch } from 'react-router-dom';
 import usePrevious from 'hooks/usePrevious';
+import { CreateTweetModal } from './CreateTweet';
+import { TweetModal } from './Tweet';
 
-// My refactored to hook implementation of ModalSwitch component
-function ModalSwitch(props) {
-  const { location } = props;
-  let previousLocation = usePrevious(location);
+function ModalSwitch({ children }) {
+  const location = useLocation();
+  const previousLocation = usePrevious(location);
+  const tweetModalMatch = useRouteMatch('/:userId/status/:tweetId');
+  const createTweetMatch = useRouteMatch('/compose/tweet');
 
-  let isModal = !!(
-      location.state &&
-      location.state.modal &&
-      previousLocation !== location
-  );
+  const isModal =
+    !!tweetModalMatch ||
+    !!createTweetMatch ||
+    !!(location.state?.modal && previousLocation !== location);
 
   return (
-      <>
-        <Switch location={isModal ? previousLocation : location}>
-          {props.children}
+    <>
+      <Switch location={isModal ? previousLocation : location}>
+        {children}
+      </Switch>
+      {isModal ? (
+        <Switch>
+          <Route path="/:username/status/:status_id" component={TweetModal} />
+          <Route path="/compose/tweet">
+            <CreateTweetModal />
+          </Route>
         </Switch>
-        {isModal ? (
-            <Route path="/:username/status/:status_id" component={TweetModal} />
-        ) : null}
-      </>
+      ) : null}
+    </>
   );
 }
 
-export default withRouter(ModalSwitch);
+export default ModalSwitch;
 
 /*
 class ModalSwitch extends Component {

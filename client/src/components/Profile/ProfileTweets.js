@@ -1,28 +1,21 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import client from 'api/client';
-import TweetsBoard from 'components/layout/TweetsBoard';
+import TweetsBoard from 'components/TweetsBoard';
 import { DisplayError } from 'shared/components';
 import { ProfileTweetsBoard } from './style';
+import { useTweets } from 'utils/tweets';
 
 function ProfileTweets() {
   const { userId } = useParams();
-  const { data: tweets, isLoading, error } = useQuery(['tweets', userId], () =>
-    client.get(`/tweets?author=${userId}`).then((res) => res.data.results)
-  );
+  const { data, isLoading, error } = useTweets({ author: userId });
 
   if (error) {
-    return (
-      <DisplayError>
-        An error occurred: {error.response.data.message}
-      </DisplayError>
-    );
+    return <DisplayError error={error} />;
   }
 
   return (
     <ProfileTweetsBoard>
-      <TweetsBoard loading={isLoading} tweets={tweets || []} />
+      <TweetsBoard loading={isLoading} tweets={data?.results || []} />
     </ProfileTweetsBoard>
   );
 }

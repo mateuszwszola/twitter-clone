@@ -2,6 +2,8 @@
   "name": "client",
   "version": "1.0.0",
   "dependencies": {
+    "@reach/alert": "^0.15.0",
+    "@reach/dialog": "^0.15.0",
     "@reach/menu-button": "^0.15.1",
     "@reach/visually-hidden": "^0.15.0",
     "axios": "^0.21.1",
@@ -10,6 +12,7 @@
     "husky": "^6.0.0",
     "jwt-decode": "^3.1.2",
     "lint-staged": "^10.5.4",
+    "lodash.pick": "^4.4.0",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",

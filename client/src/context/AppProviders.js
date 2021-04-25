@@ -5,23 +5,26 @@ import ThemeProvider from 'shared/theme-provider';
 import ErrorBoundary from 'components/ErrorBoundary';
 import AuthProvider from './AuthContext';
 import UserProvider from './UserContext';
+import { AlertProvider } from './AlertContext';
 
 const queryClient = new QueryClient();
 
 function AppProviders({ children }) {
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <UserProvider>
-            <GlobalStyle />
-            <ThemeProvider>{children}</ThemeProvider>
-          </UserProvider>
-        </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <ThemeProvider>
+          <AuthProvider>
+            <UserProvider>
+              <GlobalStyle />
+              <AlertProvider>{children}</AlertProvider>
+            </UserProvider>
+          </AuthProvider>
+        </ThemeProvider>
 
         <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
 
