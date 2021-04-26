@@ -14,7 +14,7 @@ const TextareaGroup = ({
   handleEnterPress,
   placeholder,
   error,
-  errorMsg
+  errorMsg,
 }) => (
   <React.Fragment>
     <Textarea
@@ -34,7 +34,7 @@ TextareaGroup.propTypes = {
   handleEnterPress: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
   error: PropTypes.bool,
-  errorMsg: PropTypes.string.isRequired
+  errorMsg: PropTypes.string,
 };
 
 export default TextareaGroup;

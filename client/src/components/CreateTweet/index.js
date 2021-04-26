@@ -26,7 +26,7 @@ export function CreateTweetModal() {
 
   return (
     <DialogOverlay onDismiss={close}>
-      <DialogContent>
+      <DialogContent aria-label="Compose new tweet">
         <Header>
           <Title>Compose new Tweet</Title>
           <CloseButton as="i" className="fas fa-times" onClick={close} />
@@ -83,7 +83,7 @@ function CreateTweetForm(props) {
         handleEnterPress={handleEnterPress}
         placeholder="What's happening?"
         error={Object.keys(errors).length > 0}
-        errorMsg={errors.message}
+        errorMsg={errors.message || ''}
       />
       <Button
         primary

@@ -1,5 +1,5 @@
 import client from 'api/client';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import pick from 'lodash.pick';
 import { getFilteredQuery, objToQueryString } from './queryHelpers';
 
@@ -44,5 +44,15 @@ function useTweet(id) {
     client.get(`/tweets/${id}`).then((res) => res.data)
   );
 }
+
+// function useTweetLike() {
+//   const queryClient = useQueryClient();
+
+//   return useMutation((tweetId) => client.post(`/like/${tweetId}`), {
+//     onMutate: async (tweetUd) => {
+//       await queryClient.cancelQueries('tweets');
+//     },
+//   });
+// }
 
 export { useFeedTweets, useTweets, useTweet };

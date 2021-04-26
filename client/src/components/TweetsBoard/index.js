@@ -109,10 +109,7 @@ function TweetsBoard({ loading, tweets }) {
                             handleActionClick(e, 'like', tweet._id)
                           }
                         >
-                          <LikeIcon
-                            as={liked ? FaHeart : FaRegHeart}
-                            liked={liked}
-                          />{' '}
+                          <LikeIcon as={liked ? FaHeart : FaRegHeart} />{' '}
                           {tweet.likes.length}
                         </LikeItemGroup>
                       </TweetBottomGroup>

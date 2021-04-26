@@ -22,7 +22,9 @@ function ModalSwitch({ children }) {
       </Switch>
       {isModal ? (
         <Switch>
-          <Route path="/:username/status/:status_id" component={TweetModal} />
+          <Route path="/:userId/status/:tweetId">
+            <TweetModal />
+          </Route>
           <Route path="/compose/tweet">
             <CreateTweetModal />
           </Route>

@@ -6,6 +6,7 @@
       "name": "Andres Wunsch",
       "email": "lawrence66@gmail.com",
       "username": "terence_jast",
+      "avatar": "https://cdn.fakercloud.com/avatars/ccinojasso1_128.jpg",
       "password": "$2a$10$HaK9HroNq1429ckGePQFNeL9O1fYU7EbMFVDKHZC9/xT.7f4mjApm",
       "updatedAt": "2021-04-22T16:56:53.152Z",
       "createdAt": "2021-04-22T16:56:53.152Z"
@@ -16,6 +17,7 @@
       "name": "Fernando O'Connell",
       "email": "orie.bode@yahoo.com",
       "username": "piper_schowalter",
+      "avatar": "https://cdn.fakercloud.com/avatars/adhamdannaway_128.jpg",
       "password": "$2a$10$HaK9HroNq1429ckGePQFNeL9O1fYU7EbMFVDKHZC9/xT.7f4mjApm",
       "updatedAt": "2021-04-22T16:56:53.153Z",
       "createdAt": "2021-04-22T16:56:53.153Z"
@@ -26,6 +28,7 @@
       "name": "Mattie Hills",
       "email": "liana.hauck@gmail.com",
       "username": "jeff48",
+      "avatar": "https://cdn.fakercloud.com/avatars/lonesomelemon_128.jpg",
       "password": "$2a$10$HaK9HroNq1429ckGePQFNeL9O1fYU7EbMFVDKHZC9/xT.7f4mjApm",
       "updatedAt": "2021-04-22T16:56:53.153Z",
       "createdAt": "2021-04-22T16:56:53.153Z"
@@ -42,7 +45,6 @@
       "bio": "Chief Creative Developer",
       "location": "Newark, Virgin Islands, British",
       "website": "https://miracle.org",
-      "avatar": "https://cdn.fakercloud.com/avatars/ccinojasso1_128.jpg",
       "birthday": "2004-06-07T10:42:24.829Z",
       "backgroundImage": "http://placeimg.com/640/480",
       "updatedAt": "2021-04-22T16:56:53.164Z",
@@ -58,7 +60,6 @@
       "bio": "District Security Representative",
       "location": "Cupertino, Guatemala",
       "website": "https://martin.org",
-      "avatar": "https://cdn.fakercloud.com/avatars/adhamdannaway_128.jpg",
       "birthday": "1996-11-10T03:08:12.704Z",
       "backgroundImage": "http://placeimg.com/640/480",
       "updatedAt": "2021-04-22T16:56:53.164Z",
@@ -74,7 +75,6 @@
       "bio": "Global Marketing Engineer",
       "location": "North Karley, Timor-Leste",
       "website": "http://alana.com",
-      "avatar": "https://cdn.fakercloud.com/avatars/lonesomelemon_128.jpg",
       "birthday": "2016-01-21T09:34:59.328Z",
       "backgroundImage": "http://placeimg.com/640/480",
       "updatedAt": "2021-04-22T16:56:53.164Z",

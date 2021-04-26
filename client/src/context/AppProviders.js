@@ -21,9 +21,9 @@ function AppProviders({ children }) {
             </UserProvider>
           </AuthProvider>
         </ThemeProvider>
-
-        <ReactQueryDevtools initialIsOpen={false} />
       </ErrorBoundary>
+
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

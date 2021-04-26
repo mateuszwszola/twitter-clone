@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import SignIn from 'components/SignIn';
 import validateForm from 'utils/validateForm';
 import useFormInput from 'hooks/useFormInput';
 import { useAuth } from 'context/AuthContext';
 
-function SignInPage({ location }) {
+function SignInPage() {
+  const location = useLocation();
   const username = useFormInput('');
   const password = useFormInput('');
   const [errors, setErrors] = useState({});
