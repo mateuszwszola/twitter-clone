@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { DialogOverlay, DialogContent } from '@reach/dialog';
 import '@reach/dialog/styles.css';
@@ -12,6 +13,7 @@ import {
   Button,
 } from './style';
 import TextareaGroup from 'components/TextareaGroup';
+import { useCreateTweet } from 'utils/tweets';
 
 export function CreateTweetModal() {
   const history = useHistory();
@@ -32,16 +34,17 @@ export function CreateTweetModal() {
           <CloseButton as="i" className="fas fa-times" onClick={close} />
         </Header>
         <Content>
-          <CreateTweetForm />
+          <CreateTweetForm onCreate={close} />
         </Content>
       </DialogContent>
     </DialogOverlay>
   );
 }
 
-function CreateTweetForm(props) {
+function CreateTweetForm({ onCreate }) {
   const [text, setText] = useState('');
   const [errors, setErrors] = useState({});
+  const createTweetMutation = useCreateTweet();
 
   function handleChange(e) {
     setText(e.target.value);
@@ -63,7 +66,14 @@ function CreateTweetForm(props) {
     const tweet = { text };
 
     if (validateTweet(tweet)) {
-      // TODO: Create Tweet
+      createTweetMutation.mutate(tweet, {
+        onSuccess: () => {
+          onCreate();
+        },
+        onError: (err) => {
+          setErrors(err.response.data);
+        },
+      });
     }
   }
 
@@ -88,12 +98,18 @@ function CreateTweetForm(props) {
       <Button
         primary
         type="submit"
-        disabled={text.length < 1 || text.length > 280}
+        disabled={
+          text.length < 1 || text.length > 280 || createTweetMutation.isLoading
+        }
       >
-        Tweet
+        {createTweetMutation.isLoading ? 'Loading...' : 'Tweet'}
       </Button>
     </Form>
   );
 }
+
+CreateTweetForm.propTypes = {
+  onCreate: PropTypes.func.isRequired,
+};
 
 export default CreateTweetForm;

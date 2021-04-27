@@ -13,7 +13,7 @@ function useFeedTweets(query = {}) {
   const queryString = objToQueryString(filteredQuery);
 
   return useQuery(['tweets', 'feed', filteredQuery], () =>
-    client.get(`/tweets/feed?${queryString}`)
+    client.get(`/tweets/feed?${queryString}`).then((res) => res.data)
   );
 }
 
@@ -45,6 +45,15 @@ function useTweet(id) {
   );
 }
 
+function useCreateTweet() {
+  const queryClient = useQueryClient();
+  return useMutation((newTweet) => client.post('tweets', newTweet), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('tweets');
+    },
+  });
+}
+
 // function useTweetLike() {
 //   const queryClient = useQueryClient();
 
@@ -55,4 +64,4 @@ function useTweet(id) {
 //   });
 // }
 
-export { useFeedTweets, useTweets, useTweet };
+export { useFeedTweets, useTweets, useTweet, useCreateTweet };

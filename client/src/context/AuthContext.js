@@ -52,7 +52,7 @@ function AuthProvider(props) {
         });
       })
       .catch((err) => {
-        console.error(err.response.message);
+        console.error(err.response?.message);
         setState({
           ...initialState,
           loading: false,
