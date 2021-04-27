@@ -47,21 +47,52 @@ function useTweet(id) {
 
 function useCreateTweet() {
   const queryClient = useQueryClient();
-  return useMutation((newTweet) => client.post('tweets', newTweet), {
+  return useMutation((newTweet) => client.post('/tweets', newTweet), {
+    onSuccess: () => {
+      const data = queryClient.getQueryData(['tweets', 'feed'], {
+        active: true,
+      });
+      console.log({ data });
+      queryClient.invalidateQueries('tweets');
+    },
+  });
+}
+
+function useRemoveTweet() {
+  const queryClient = useQueryClient();
+  return useMutation((tweetId) => client.delete(`/tweets/${tweetId}`), {
     onSuccess: () => {
       queryClient.invalidateQueries('tweets');
     },
   });
 }
 
-// function useTweetLike() {
-//   const queryClient = useQueryClient();
+function useTweetLike() {
+  const queryClient = useQueryClient();
 
-//   return useMutation((tweetId) => client.post(`/like/${tweetId}`), {
-//     onMutate: async (tweetUd) => {
-//       await queryClient.cancelQueries('tweets');
-//     },
-//   });
-// }
+  return useMutation((tweetId) => client.post(`/tweets/like/${tweetId}`), {
+    onSettled: () => {
+      queryClient.invalidateQueries('tweets');
+    },
+  });
+}
 
-export { useFeedTweets, useTweets, useTweet, useCreateTweet };
+function useTweetUnlike() {
+  const queryClient = useQueryClient();
+
+  return useMutation((tweetId) => client.delete(`/tweets/like/${tweetId}`), {
+    onSettled: () => {
+      queryClient.invalidateQueries('tweets');
+    },
+  });
+}
+
+export {
+  useFeedTweets,
+  useTweets,
+  useTweet,
+  useCreateTweet,
+  useRemoveTweet,
+  useTweetLike,
+  useTweetUnlike,
+};

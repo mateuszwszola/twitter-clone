@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { likeTweet, removeTweet } from 'actions/tweetActions';
 import { format } from 'date-fns';
 import { FaRegComment, FaHeart, FaRegHeart } from 'react-icons/fa';
+import { IoMdClose } from 'react-icons/io';
 import {
   Container,
   Board,
@@ -27,33 +27,39 @@ import { InfoText, UserAvatar } from 'shared/components';
 import Loading from 'components/Loading';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
 import { useUser } from 'context/UserContext';
+import { useRemoveTweet, useTweetLike, useTweetUnlike } from 'utils/tweets';
 
 function TweetsBoard({ loading, tweets }) {
   const user = useUser();
   const history = useHistory();
+  const removeTweetMutation = useRemoveTweet();
+  const likeTweetMutation = useTweetLike();
+  const unlikeTweetMutation = useTweetUnlike();
 
-  function handleTweetClick(tweet) {
+  const handleTweetClick = (tweet) => {
     const { author, _id: tweetId } = tweet;
     history.push({
       pathname: `/${author._id}/status/${tweetId}`,
       state: { modal: true },
     });
-  }
+  };
 
-  function handleActionClick(e, action, tweet_id) {
+  const handleActionClick = (action, tweetId) => (e) => {
     e.stopPropagation();
     if (user) {
       if (action === 'like') {
-        likeTweet(tweet_id, user._id);
+        likeTweetMutation.mutate(tweetId);
+      } else if (action === 'unlike') {
+        unlikeTweetMutation.mutate(tweetId);
       } else if (action === 'remove') {
-        removeTweet(tweet_id);
+        removeTweetMutation.mutate(tweetId);
       }
     } else {
       history.push({
         pathname: '/signin',
       });
     }
-  }
+  };
 
   return (
     <Container>
@@ -105,9 +111,10 @@ function TweetsBoard({ loading, tweets }) {
                           <span>{tweet.repliesCount}</span>
                         </ItemGroup>
                         <LikeItemGroup
-                          onClick={(e) =>
-                            handleActionClick(e, 'like', tweet._id)
-                          }
+                          onClick={handleActionClick(
+                            liked ? 'unlike' : 'like',
+                            tweet._id
+                          )}
                         >
                           <LikeIcon as={liked ? FaHeart : FaRegHeart} />{' '}
                           {tweet.likes.length}
@@ -116,11 +123,10 @@ function TweetsBoard({ loading, tweets }) {
                     </ListItemContent>
                     {owner ? (
                       <DeleteButton
-                        onClick={(e) =>
-                          handleActionClick(e, 'remove', tweet._id)
-                        }
+                        onClick={handleActionClick('remove', tweet._id)}
+                        disabled={removeTweetMutation.isLoading}
                       >
-                        Delete
+                        <IoMdClose />
                       </DeleteButton>
                     ) : null}
                   </ListItem>

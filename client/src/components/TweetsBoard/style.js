@@ -92,10 +92,11 @@ export const LikeIcon = styled(Icon)`
 `;
 
 export const DeleteButton = styled(Button)`
-  background-color: ${(props) => props.theme.colors.red};
-  color: #fff;
   position: absolute;
-  right: 10px;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
 `;
 
 export const InfoText = styled.p`
