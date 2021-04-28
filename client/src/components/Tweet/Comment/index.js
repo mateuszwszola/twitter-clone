@@ -1,62 +1,71 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import {
-  getComments,
-  addComment,
-  toggleCommentLike,
-  removeComment,
-} from 'actions/commentActions';
-import AddCommentForm from './AddCommentForm';
-import CommentsList from './CommentsList';
-import Loading from 'components/Loading';
+import { useUser } from 'context/UserContext';
+import { useCreateTweet, useTweets } from 'utils/tweets';
+import DisplayError from 'components/DisplayError';
+import TweetsBoard from 'components/TweetsBoard';
+import { CommentContainer, CommentForm, CommentInput } from './style';
+import { UserAvatar } from 'shared/components';
+import portraitPlaceholder from 'img/portrait-placeholder.png';
 
-function Comment({
-  tweetId,
-  comment: { comments, loading },
-  getComments,
-  addComment,
-  toggleCommentLike,
-  removeComment,
-  auth,
-  errors,
-  history,
-}) {
-  useEffect(() => {
-    getComments(tweetId);
-  }, [tweetId]);
-
-  function handleAddComment(comment, clearInput) {
-    addComment(tweetId, comment);
-    clearInput();
+function validateComment(comment) {
+  if (comment.text.length < 1 || comment.text.length > 280) {
+    return false;
   }
+  return true;
+}
 
-  function handleActionClick(e, action, commentId) {
-    e.stopPropagation();
-    if (!auth.isAuthenticated) {
-      history.push('/signin');
+function Comment({ tweetId }) {
+  const { isLoading, error, data } = useTweets({ replyTo: tweetId });
+  const [errors, setErrors] = useState({});
+  const user = useUser();
+  const createTweetMutation = useCreateTweet();
+  const [comment, setComment] = useState('');
+
+  const handleAddComment = (e) => {
+    e.preventDefault();
+
+    if (!validateComment({ text: comment })) {
+      setErrors({
+        message: 'Text length must be between 1 and 280 characters',
+      });
     } else {
-      if (action === 'like') {
-        toggleCommentLike(commentId, auth.user._id);
-      } else if (action === 'remove') {
-        removeComment(commentId);
-      }
+      createTweetMutation.mutate(
+        { text: comment, replyTo: tweetId },
+        {
+          onSuccess: () => {
+            setComment('');
+          },
+          onError: (err) => {
+            setErrors(err.response?.data || { message: 'An error occurred' });
+          },
+        }
+      );
     }
-  }
+  };
 
   return (
     <>
-      <AddCommentForm
-        handleAddComment={handleAddComment}
-        errors={errors}
-        userAvatar={auth.user && auth.user.avatar}
-      />
-      <CommentsList
-        loading={loading}
-        comments={comments}
-        auth={auth}
-        handleActionClick={handleActionClick}
+      <DisplayError error={error || errors} />
+      <CommentContainer>
+        <UserAvatar
+          tiny
+          src={user?.avatar || portraitPlaceholder}
+          alt="User Avatar"
+        />
+        <CommentForm onSubmit={handleAddComment}>
+          <CommentInput
+            placeholder="Tweet your reply"
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </CommentForm>
+      </CommentContainer>
+      <TweetsBoard
+        loading={isLoading}
+        tweets={data?.results || []}
+        headerText="Replies"
       />
     </>
   );
@@ -64,24 +73,6 @@ function Comment({
 
 Comment.propTypes = {
   tweetId: PropTypes.string.isRequired,
-  getComments: PropTypes.func.isRequired,
-  addComment: PropTypes.func.isRequired,
-  toggleCommentLike: PropTypes.func.isRequired,
-  removeComment: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  errors: PropTypes.array.isRequired,
-  auth: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  comment: state.comment,
-  errors: state.errors,
-  auth: state.auth,
-});
-
-export default connect(mapStateToProps, {
-  getComments,
-  addComment,
-  toggleCommentLike,
-  removeComment,
-})(withRouter(Comment));
+export default Comment;

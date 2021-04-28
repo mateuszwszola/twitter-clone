@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/macro';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
@@ -101,7 +100,7 @@ function DisplayTweet({ tweet, handleActionClick }) {
         </TweetContent>
       </Main>
 
-      {/* <Comment tweetId={tweet._id} /> */}
+      <Comment tweetId={tweet._id} />
     </StyledTweet>
   );
 }

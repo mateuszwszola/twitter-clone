@@ -49,10 +49,6 @@ function useCreateTweet() {
   const queryClient = useQueryClient();
   return useMutation((newTweet) => client.post('/tweets', newTweet), {
     onSuccess: () => {
-      const data = queryClient.getQueryData(['tweets', 'feed'], {
-        active: true,
-      });
-      console.log({ data });
       queryClient.invalidateQueries('tweets');
     },
   });

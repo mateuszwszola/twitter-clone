@@ -33,7 +33,7 @@ export const Input = styled.input`
   border-radius: 3px;
 
   :focus {
-    border-color: #cadae4;
+    border-color: ${(props) => props.theme.colors.darkGray};
   }
 `;
 
@@ -53,7 +53,7 @@ export const Button = styled.button`
       line-height: 20px;
       padding: 6px 16px;
       text-align: center;
-      color: #fff;
+      color: ${(props) => props.theme.colors.white};
       background-color: ${(props) => props.theme.colors.primaryBlue};
     `}
 `;
@@ -68,9 +68,9 @@ export const SignoutButton = styled.button`
 `;
 
 export const EditProfileButton = styled(Button)`
-  border: 1px solid #67757f;
-  color: #67757f;
-  background-color: #fff;
+  border: 1px solid ${(props) => props.theme.colors.gray};
+  color: ${(props) => props.theme.colors.gray};
+  background-color: ${(props) => props.theme.colors.white};
   align-self: flex-end;
 `;
 
@@ -82,8 +82,8 @@ export const BackButton = styled(Button)`
 `;
 
 export const FollowProfileButton = styled(EditProfileButton)`
-  background-color: #f34c79;
-  color: #fff;
+  background-color: ${(props) => props.theme.colors.red};
+  color: ${(props) => props.theme.colors.white};
   border: none;
 
   &:hover {
@@ -97,8 +97,8 @@ export const StyledNavLink = styled(NavLink)`
   font-weight: bold;
 
   &:hover {
-    border-color: #29a3ef;
-    color: #29a3ef;
+    border-color: ${(props) => props.theme.colors.blue};
+    color: ${(props) => props.theme.colors.blue};
   }
 `;
 

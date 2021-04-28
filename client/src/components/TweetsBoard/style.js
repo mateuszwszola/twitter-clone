@@ -4,18 +4,13 @@ import { Button } from 'shared/components';
 export const Container = styled.div`
   position: relative;
   height: 100%;
+  width: 100%;
   max-width: 800px;
   margin: 0 auto;
 `;
 
-export const Board = styled.div`
-  background-color: #fff;
-  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
-`;
-
 export const HeaderWrapper = styled.div`
   padding: 5px;
-  border-bottom: 1px solid #eee;
 `;
 
 export const Header = styled.h3`
@@ -29,6 +24,7 @@ export const List = styled.ul`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px solid #eee;
 `;
 
 export const ListItem = styled.li`
@@ -44,6 +40,10 @@ export const ListItem = styled.li`
   &:hover {
     background-color: #eee;
   }
+
+  &:last-child {
+    border: none;
+  }
 `;
 
 export const ListItemContent = styled.div`
@@ -57,12 +57,20 @@ export const TweetUserGroup = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
 `;
+
 export const TweetText = styled.p`
   margin: 5px;
 `;
 
 export const TweetBottomGroup = styled.div`
   margin-top: 10px;
+
+  button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    margin-left: 10px;
+  }
 `;
 
 export const TweetUserName = styled.span`
@@ -77,18 +85,21 @@ export const ItemGroup = styled.span`
   padding: 0 5px;
 `;
 
-export const LikeItemGroup = styled(ItemGroup)`
-  &:hover i {
-    color: ${(props) => props.theme.colors.red};
+export const Icon = styled.i`
+  font-size: 1.25em;
+  color: ${(props) => props.theme.colors.gray};
+  &:hover {
+    color: ${(props) => props.theme.colors.darkGray};
   }
 `;
 
-export const Icon = styled.i`
-  font-size: 1.25em;
-`;
-
 export const LikeIcon = styled(Icon)`
-  color: ${(props) => props.theme.colors.red};
+  color: ${(props) =>
+    props.liked ? props.theme.colors.red : props.theme.colors.gray};
+
+  &:hover {
+    color: ${(props) => props.theme.colors.red};
+  }
 `;
 
 export const DeleteButton = styled(Button)`

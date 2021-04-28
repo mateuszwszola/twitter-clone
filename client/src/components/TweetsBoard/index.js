@@ -6,7 +6,6 @@ import { FaRegComment, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import {
   Container,
-  Board,
   HeaderWrapper,
   Header,
   List,
@@ -20,7 +19,6 @@ import {
   Icon,
   LikeIcon,
   ItemGroup,
-  LikeItemGroup,
   DeleteButton,
 } from './style';
 import { InfoText, UserAvatar } from 'shared/components';
@@ -29,7 +27,7 @@ import portraitPlaceholder from 'img/portrait-placeholder.png';
 import { useUser } from 'context/UserContext';
 import { useRemoveTweet, useTweetLike, useTweetUnlike } from 'utils/tweets';
 
-function TweetsBoard({ loading, tweets }) {
+function TweetsBoard({ loading, tweets, headerText }) {
   const user = useUser();
   const history = useHistory();
   const removeTweetMutation = useRemoveTweet();
@@ -63,88 +61,93 @@ function TweetsBoard({ loading, tweets }) {
 
   return (
     <Container>
+      <HeaderWrapper>
+        <Header>{headerText}</Header>
+      </HeaderWrapper>
       {tweets === null || loading ? (
         <Loading />
       ) : (
-        <Board>
-          <HeaderWrapper>
-            <Header>Tweets</Header>
-          </HeaderWrapper>
-          <List>
-            {tweets.length > 0 ? (
-              tweets.map((tweet) => {
-                const owner = user && user._id === tweet.author._id;
-                const liked = !!(user && tweet.likes.includes(user._id));
-                return (
-                  <ListItem
-                    key={tweet._id}
-                    onClick={() => handleTweetClick(tweet)}
-                  >
-                    <UserAvatar
-                      small
-                      src={tweet.author.avatar || portraitPlaceholder}
-                      alt="User Avatar"
-                    />
-                    <ListItemContent>
-                      <TweetUserGroup>
-                        <ItemGroup>
-                          <TweetUserName>{tweet.author.name}</TweetUserName>
-                        </ItemGroup>
-                        <ItemGroup>
-                          @
-                          <TweetUserUsername>
-                            {tweet.author.username}
-                          </TweetUserUsername>
-                        </ItemGroup>
-                        <ItemGroup>
-                          <span>
-                            {format(new Date(tweet.createdAt), 'MMMM yyyy')}
-                          </span>
-                        </ItemGroup>
-                      </TweetUserGroup>
-                      <div>
-                        <TweetText>{tweet.text}</TweetText>
-                      </div>
-                      <TweetBottomGroup>
-                        <ItemGroup>
-                          <Icon as={FaRegComment} />{' '}
-                          <span>{tweet.repliesCount}</span>
-                        </ItemGroup>
-                        <LikeItemGroup
-                          onClick={handleActionClick(
-                            liked ? 'unlike' : 'like',
-                            tweet._id
-                          )}
-                        >
-                          <LikeIcon as={liked ? FaHeart : FaRegHeart} />{' '}
-                          {tweet.likes.length}
-                        </LikeItemGroup>
-                      </TweetBottomGroup>
-                    </ListItemContent>
-                    {owner ? (
-                      <DeleteButton
-                        onClick={handleActionClick('remove', tweet._id)}
-                        disabled={removeTweetMutation.isLoading}
+        <List>
+          {tweets.length > 0 ? (
+            tweets.map((tweet) => {
+              const owner = user && user._id === tweet.author._id;
+              const liked = !!(user && tweet.likes.includes(user._id));
+              return (
+                <ListItem
+                  key={tweet._id}
+                  onClick={() => handleTweetClick(tweet)}
+                >
+                  <UserAvatar
+                    small
+                    src={tweet.author.avatar || portraitPlaceholder}
+                    alt="User Avatar"
+                  />
+                  <ListItemContent>
+                    <TweetUserGroup>
+                      <ItemGroup>
+                        <TweetUserName>{tweet.author.name}</TweetUserName>
+                      </ItemGroup>
+                      <ItemGroup>
+                        @
+                        <TweetUserUsername>
+                          {tweet.author.username}
+                        </TweetUserUsername>
+                      </ItemGroup>
+                      <ItemGroup>
+                        <span>
+                          {format(new Date(tweet.createdAt), 'MMMM yyyy')}
+                        </span>
+                      </ItemGroup>
+                    </TweetUserGroup>
+                    <div>
+                      <TweetText>{tweet.text}</TweetText>
+                    </div>
+                    <TweetBottomGroup>
+                      <button>
+                        <Icon as={FaRegComment} />{' '}
+                        <span>{tweet.repliesCount}</span>
+                      </button>
+                      <button
+                        onClick={handleActionClick(
+                          liked ? 'unlike' : 'like',
+                          tweet._id
+                        )}
                       >
-                        <IoMdClose />
-                      </DeleteButton>
-                    ) : null}
-                  </ListItem>
-                );
-              })
-            ) : (
-              <InfoText>There are no tweets to display</InfoText>
-            )}
-          </List>
-        </Board>
+                        <LikeIcon liked={liked}>
+                          {liked ? <FaHeart /> : <FaRegHeart />}
+                        </LikeIcon>{' '}
+                        {tweet.likes.length}
+                      </button>
+                    </TweetBottomGroup>
+                  </ListItemContent>
+                  {owner ? (
+                    <DeleteButton
+                      onClick={handleActionClick('remove', tweet._id)}
+                      disabled={removeTweetMutation.isLoading}
+                    >
+                      <IoMdClose />
+                    </DeleteButton>
+                  ) : null}
+                </ListItem>
+              );
+            })
+          ) : (
+            <InfoText>There are no tweets to display</InfoText>
+          )}
+        </List>
       )}
     </Container>
   );
 }
 
+TweetsBoard.defaultProps = {
+  headerText: 'Tweets',
+};
+
 TweetsBoard.propTypes = {
   loading: PropTypes.bool.isRequired,
   tweets: PropTypes.array.isRequired,
+  headerText: PropTypes.string.isRequired,
 };
 
 export default TweetsBoard;

@@ -71,7 +71,9 @@ function CreateTweetForm({ onCreate }) {
           onCreate();
         },
         onError: (err) => {
-          setErrors(err.response.data);
+          setErrors(
+            err.response?.data || { message: 'An error has occurred!' }
+          );
         },
       });
     }
