@@ -125,6 +125,21 @@ describe('Tweets routes', () => {
         });
       });
 
+      it('When replyTo filter is not specified, by default, should not return tweets replies', async () => {
+        const tweetId = mongoose.Types.ObjectId();
+        const tweets = [
+          { _id: tweetId, author: userOne._id, text: faker.lorem.words(10) },
+          { author: userTwo._id, text: faker.lorem.words(10), replyTo: tweetId },
+        ];
+        await Promise.all([insertUsers([userOne, userTwo]), Tweet.create(tweets)]);
+
+        const res = await request(app).get('/api/tweets');
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.results).toHaveLength(1);
+        expect(res.body.results[0]._id).toBe(tweetId.toString());
+      });
+
       it('When limit param is specified, should limit returned tweets', async () => {
         const tweets = [
           { author: userOne._id, text: faker.lorem.words(10) },

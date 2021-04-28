@@ -17,12 +17,17 @@ const getFeedsTweets = async (req, res) => {
 
   const tweets = await Tweet.paginate(
     {
-      $or: [
-        { author: userId },
+      $and: [
+        { replyTo: null },
         {
-          author: {
-            $in: profile.following,
-          },
+          $or: [
+            { author: userId },
+            {
+              author: {
+                $in: profile.following,
+              },
+            },
+          ],
         },
       ],
     },
@@ -35,6 +40,11 @@ const getFeedsTweets = async (req, res) => {
 const getTweets = async (req, res) => {
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const filters = pick(req.query, ['author', 'likes', 'retweets', 'replyTo']);
+
+  // By default, do not include tweets replies
+  if (!filters.replyTo) {
+    filters.replyTo = null;
+  }
 
   if (filters.author && !(await User.exists({ _id: filters.author }))) {
     throw new ErrorHandler(404, 'User does not exists');
@@ -134,6 +144,13 @@ const deleteTweet = async (req, res) => {
   await tweet.remove();
 
   res.json({ tweet });
+
+  if (tweet.replyTo) {
+    const originalTweet = await Tweet.findById(tweet.replyTo);
+    if (originalTweet) {
+      await originalTweet.updateRepliesCount();
+    }
+  }
 };
 
 const likeTweet = async (req, res) => {
