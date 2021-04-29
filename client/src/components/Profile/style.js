@@ -11,7 +11,7 @@ export const Container = styled.div`
 `;
 
 export const BackgroundContainer = styled.div`
-  height: 250px;
+  height: 200px;
   background: #29a3ef;
   overflow: hidden;
   position: relative;
@@ -26,10 +26,16 @@ export const AddBackground = styled.div`
   font-size: 1.5rem;
   font-weight: 200;
   color: #fff;
+  display: flex;
+  align-items: center;
 `;
 
-export const AddBackgroundButton = styled.i`
-  cursor: pointer;
+export const AddBackgroundButton = styled.button`
+  background: none;
+  border: 0;
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
 `;
 
 export const Background = styled.img`
@@ -40,27 +46,17 @@ export const Background = styled.img`
 `;
 
 export const ProfileTweetsBoard = styled.div`
-  padding: 7px 12px;
   margin-bottom: 10px;
 `;
 
-export const PagesContainer = styled.div`
-  background-color: #fff;
-  width: 100%;
-  padding: 30px 15px;
-`;
-
 export const ProfileHeaderMenu = styled.div`
-  background-color: #fff;
   color: #67757f;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid #eee;
 `;
 
 export const HeaderMenuList = styled.ul`

@@ -17,7 +17,6 @@ function validateComment(comment) {
 
 function Comment({ tweetId }) {
   const { isLoading, error, data } = useTweets({ replyTo: tweetId });
-  const [errors, setErrors] = useState({});
   const user = useUser();
   const createTweetMutation = useCreateTweet();
   const [comment, setComment] = useState('');
@@ -25,28 +24,27 @@ function Comment({ tweetId }) {
   const handleAddComment = (e) => {
     e.preventDefault();
 
-    if (!validateComment({ text: comment })) {
-      setErrors({
-        message: 'Text length must be between 1 and 280 characters',
-      });
-    } else {
+    if (validateComment({ text: comment })) {
       createTweetMutation.mutate(
         { text: comment, replyTo: tweetId },
         {
           onSuccess: () => {
             setComment('');
           },
-          onError: (err) => {
-            setErrors(err.response?.data || { message: 'An error occurred' });
-          },
         }
       );
     }
   };
 
+  if (error) {
+    return <DisplayError error={error} />;
+  }
+
   return (
     <>
-      <DisplayError error={error || errors} />
+      {createTweetMutation.isError && (
+        <DisplayError error={createTweetMutation.error} />
+      )}
       <CommentContainer>
         <UserAvatar
           tiny

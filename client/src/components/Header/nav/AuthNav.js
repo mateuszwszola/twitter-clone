@@ -10,7 +10,6 @@ import {
   MenuItems,
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
-import Search from 'components/Search';
 import { useAuth } from 'context/AuthContext';
 import { Button, StyledNavLink } from 'shared/components';
 import { MainNav, NavAvatar, NavItem } from './style';
@@ -33,9 +32,6 @@ function AuthNav() {
 
   return (
     <MainNav>
-      <NavItem>
-        <Search />
-      </NavItem>
       <NavItem>
         <StyledNavLink to="/">Home</StyledNavLink>
       </NavItem>

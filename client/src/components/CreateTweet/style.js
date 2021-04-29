@@ -1,24 +1,37 @@
 import styled, { css } from 'styled-components/macro';
 import { Button as UIButton } from 'shared/components';
+import { DialogContent } from '@reach/dialog';
 
 export const Header = styled.div`
   text-align: center;
-  position: relative;
 `;
 
 export const Title = styled.h3`
   padding: 15px 0;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+`;
+
+export const StyledDialogContent = styled(DialogContent)`
+  border-radius: 5px;
+  max-width: 650px;
+  position: relative;
 `;
 
 export const CloseButton = styled.button`
-  color: gray;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: ${(props) => props.theme.colors.gray};
   position: absolute;
   right: 0;
   top: 0;
   cursor: pointer;
   padding: 15px;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+
+  &:hover {
+    color: ${(props) => props.theme.colors.darkGray};
+  }
 `;
 
 export const Content = styled.div`
@@ -35,16 +48,18 @@ export const Form = styled.form`
 export const Textarea = styled.textarea`
   border-radius: 5px;
   font-size: 15px;
-  padding: 5px;
+  padding: 10px;
   width: 100%;
   border: 2px solid;
-  border-color: ${(props) => (props.error ? 'red' : 'lightblue')};
+  border-color: ${(props) =>
+    props.error ? props.theme.colors.red : 'lightblue'};
   min-height: 70px;
   resize: none;
   margin-top: 10px;
 `;
 
 export const Button = styled(UIButton)`
+  margin-top: 10px;
   ${(props) =>
     props.disabled &&
     css`

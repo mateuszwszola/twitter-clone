@@ -9,13 +9,12 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const StyledAlert = styled.div`
+const StyledAlert = styled(ReachAlert)`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   width: 100%;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   background-color: ${(props) =>
     props.alertType === 'success'
       ? 'rgba(0, 255, 0, 0.2)'
@@ -48,7 +47,7 @@ function DisplayAlerts() {
   return (
     <Container>
       {alerts.map((alert) => (
-        <ReachAlert as={StyledAlert} key={alert.id} alertType={alert.type}>
+        <StyledAlert key={alert.id} alertType={alert.type}>
           {alert.msg}
           <CloseButton onClick={() => removeAlert(alert.id)} aria-label="Close">
             <IoMdClose
@@ -57,7 +56,7 @@ function DisplayAlerts() {
               `}
             />
           </CloseButton>
-        </ReachAlert>
+        </StyledAlert>
       ))}
     </Container>
   );

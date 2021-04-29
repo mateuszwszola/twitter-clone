@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // eslint-disable-next-line no-unused-vars
 import styled from 'styled-components/macro';
-import isEmpty from 'utils/isEmpty';
 
 function Error({ error }) {
-  if (!error || isEmpty(error)) {
+  if (!error) {
     return null;
   }
 

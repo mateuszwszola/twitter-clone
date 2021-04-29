@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
+import Alert from '@reach/alert';
 
 export const PrimaryHeading = styled.h1`
   text-align: center;
@@ -42,6 +43,7 @@ export const Button = styled.button`
   padding: 0.7em 1em;
   margin: 5px;
   outline: 0;
+  border: 0;
   border-radius: 3px;
   cursor: pointer;
 
@@ -53,8 +55,12 @@ export const Button = styled.button`
       line-height: 20px;
       padding: 6px 16px;
       text-align: center;
-      color: ${(props) => props.theme.colors.white};
-      background-color: ${(props) => props.theme.colors.primaryBlue};
+      color: ${({ theme }) => theme.colors.white};
+      background-color: ${({ theme }) => theme.colors.primaryBlue};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.darkerBlue};
+      }
     `}
 `;
 
@@ -68,9 +74,9 @@ export const SignoutButton = styled.button`
 `;
 
 export const EditProfileButton = styled(Button)`
-  border: 1px solid ${(props) => props.theme.colors.gray};
-  color: ${(props) => props.theme.colors.gray};
-  background-color: ${(props) => props.theme.colors.white};
+  border: 1px solid ${({ theme }) => theme.colors.gray};
+  color: ${({ theme }) => theme.colors.gray};
+  background-color: ${({ theme }) => theme.colors.white};
   align-self: flex-end;
 `;
 
@@ -78,13 +84,12 @@ export const BackButton = styled(Button)`
   border: 2px solid black;
   border-radius: 5px;
   color: black;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
-export const FollowProfileButton = styled(EditProfileButton)`
+export const FollowProfileButton = styled(Button)`
   background-color: ${(props) => props.theme.colors.red};
   color: ${(props) => props.theme.colors.white};
-  border: none;
 
   &:hover {
     background-color: #e23d69;
@@ -110,11 +115,15 @@ export const DropdownLink = styled(StyledNavLink)`
   border-radius: 0px;
 `;
 
-export const FeedbackMessage = styled.div`
+export const FeedbackMessage = styled(Alert)`
   color: ${(props) =>
     props.success ? props.theme.colors.green : props.theme.colors.red};
-  padding: 5px;
+  padding: 10px;
   font-size: 0.8rem;
+
+  &:empty {
+    display: none;
+  }
 `;
 
 export const UserAvatar = styled.img`
@@ -142,13 +151,6 @@ export const UserAvatar = styled.img`
       width: 300px;
       height: 300px;
     `}
-`;
-
-export const ProfileBackground = styled.img`
-  object-fit: cover;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
 `;
 
 export const CloseButton = styled.a`

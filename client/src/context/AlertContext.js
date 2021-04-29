@@ -1,4 +1,9 @@
-import React, { useReducer, createContext, useCallback } from 'react';
+import React, {
+  useReducer,
+  createContext,
+  useCallback,
+  useContext,
+} from 'react';
 
 const SET_ALERT = 'SET_ALERT';
 const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -22,7 +27,7 @@ function AlertProvider(props) {
   const [state, dispatch] = useReducer(reducer, []);
 
   const setAlert = useCallback(
-    (type, msg, time = 3000) => {
+    ({ type, msg, time = 3000 }) => {
       const alert = { id: Date.now(), type, msg };
 
       dispatch({
@@ -57,7 +62,7 @@ function AlertProvider(props) {
 }
 
 function useAlert() {
-  const context = React.useContext(AlertContext);
+  const context = useContext(AlertContext);
   if (context === undefined) {
     throw new Error('useAlert must be used withing a AlertProvider');
   }

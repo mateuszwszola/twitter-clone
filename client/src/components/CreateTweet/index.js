@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { DialogOverlay, DialogContent } from '@reach/dialog';
+import { DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import {
   Header,
@@ -11,9 +11,11 @@ import {
   Form,
   Textarea,
   Button,
+  StyledDialogContent,
 } from './style';
 import TextareaGroup from 'components/TextareaGroup';
 import { useCreateTweet } from 'utils/tweets';
+import { IoMdClose } from 'react-icons/io';
 
 export function CreateTweetModal() {
   const history = useHistory();
@@ -28,15 +30,17 @@ export function CreateTweetModal() {
 
   return (
     <DialogOverlay onDismiss={close}>
-      <DialogContent aria-label="Compose new tweet">
+      <StyledDialogContent aria-label="Compose new tweet">
         <Header>
           <Title>Compose new Tweet</Title>
-          <CloseButton as="i" className="fas fa-times" onClick={close} />
+          <CloseButton onClick={close}>
+            <IoMdClose />
+          </CloseButton>
         </Header>
         <Content>
           <CreateTweetForm onCreate={close} />
         </Content>
-      </DialogContent>
+      </StyledDialogContent>
     </DialogOverlay>
   );
 }

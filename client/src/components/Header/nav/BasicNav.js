@@ -1,14 +1,10 @@
 import React from 'react';
 import { StyledNavLink } from 'shared/components';
 import { MainNav, NavItem } from './style';
-import Search from 'components/Search';
 
 export default function BasicNav() {
   return (
     <MainNav>
-      <NavItem>
-        <Search />
-      </NavItem>
       <NavItem>
         <StyledNavLink to="/">Home</StyledNavLink>
       </NavItem>

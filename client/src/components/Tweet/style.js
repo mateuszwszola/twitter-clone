@@ -7,6 +7,7 @@ export const StyledTweet = styled.div`
   background-color: #fff;
   width: 100%;
   max-width: 650px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   padding: 0 15px 30px;

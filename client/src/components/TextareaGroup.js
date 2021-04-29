@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/macro';
-
-const Feedback = styled.div`
-  color: red;
-  padding: 5px 0;
-`;
+import { FeedbackMessage } from 'shared/components';
 
 const TextareaGroup = ({
   textarea: Textarea,
@@ -24,7 +19,7 @@ const TextareaGroup = ({
       placeholder={placeholder}
       error={error}
     />
-    {errorMsg ? <Feedback>{errorMsg}</Feedback> : ''}
+    {errorMsg ? <FeedbackMessage>{errorMsg}</FeedbackMessage> : ''}
   </React.Fragment>
 );
 

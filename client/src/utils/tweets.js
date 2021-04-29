@@ -67,7 +67,7 @@ function useTweetLike() {
   const queryClient = useQueryClient();
 
   return useMutation((tweetId) => client.post(`/tweets/like/${tweetId}`), {
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries('tweets');
     },
   });
@@ -77,7 +77,7 @@ function useTweetUnlike() {
   const queryClient = useQueryClient();
 
   return useMutation((tweetId) => client.delete(`/tweets/like/${tweetId}`), {
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries('tweets');
     },
   });
