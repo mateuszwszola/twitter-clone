@@ -1,6 +1,6 @@
 import client from 'api/client';
 import { useQuery } from 'react-query';
-import pick from 'lodash.pick';
+import pick from 'lodash/pick';
 import { getFilteredQuery, objToQueryString } from './queryHelpers';
 
 function useProfiles(query = {}) {
@@ -27,7 +27,7 @@ function useProfiles(query = {}) {
 
 function useProfile(id) {
   return useQuery(['profiles', id], () =>
-    client.get(`/profiles/${id}`).then((res) => res.data)
+    client.get(`/profiles/${id}`).then((res) => res.data.profile)
   );
 }
 

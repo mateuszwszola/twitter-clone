@@ -8,7 +8,7 @@ import { useProfile } from 'utils/profiles';
 function ProfilePage() {
   const { userId } = useParams();
 
-  const { isLoading, isError, error, data } = useProfile(userId);
+  const { isLoading, isError, error, data: profile } = useProfile(userId);
 
   if (isError) {
     return (
@@ -22,7 +22,7 @@ function ProfilePage() {
     return <Loading />;
   }
 
-  return <Profile profile={data.profile} />;
+  return <Profile profile={profile} />;
 }
 
 export default ProfilePage;

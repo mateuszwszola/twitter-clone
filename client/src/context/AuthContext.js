@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import * as auth from 'api/auth';
+import Loading from 'components/Loading';
 
 const AuthContext = createContext();
 
@@ -7,7 +8,7 @@ const initialState = {
   token: auth.getToken(),
   isAuthenticated: false,
   user: null,
-  loading: true,
+  isLoading: true,
 };
 
 function AuthProvider(props) {
@@ -18,7 +19,7 @@ function AuthProvider(props) {
 
   const logout = () => {
     auth.logoutUser();
-    setState({ ...initialState, loading: false });
+    setState({ ...initialState, isLoading: false });
   };
 
   const login = async (userData) => {
@@ -44,21 +45,25 @@ function AuthProvider(props) {
   useEffect(() => {
     auth
       .loadUser()
-      .then((data) => {
+      .then(({ user }) => {
         setState({
-          user: data.user,
-          loading: false,
-          isAuthenticated: !!data.user,
+          user,
+          isLoading: false,
+          isAuthenticated: !!user,
         });
       })
       .catch((err) => {
         console.error(err.response?.message);
         setState({
           ...initialState,
-          loading: false,
+          isLoading: false,
         });
       });
   }, []);
+
+  if (state.isLoading) {
+    return <Loading />;
+  }
 
   return (
     <AuthContext.Provider

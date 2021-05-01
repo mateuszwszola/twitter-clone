@@ -23,7 +23,7 @@ function Error({ error }) {
           font-size: 1em;
         `}
       >
-        An error has occurred: {errorMessage || 'Something went wrong...'}
+        An error has occurred: {errorMessage}
       </p>
     </div>
   );

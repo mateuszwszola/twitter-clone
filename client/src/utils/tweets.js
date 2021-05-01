@@ -1,6 +1,6 @@
 import client from 'api/client';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import pick from 'lodash.pick';
+import pick from 'lodash/pick';
 import { getFilteredQuery, objToQueryString } from './queryHelpers';
 
 function useFeedTweets(query = {}) {

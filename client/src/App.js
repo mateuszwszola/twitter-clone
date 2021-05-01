@@ -10,7 +10,7 @@ import Home from 'pages/Home';
 import ProfilesPage from 'pages/Profiles';
 import ProfilePage from 'pages/Profile';
 import SettingsContainer from './containers/SettingsContainer';
-import EditProfileContainer from './containers/EditProfileContainer';
+import EditProfilePage from 'pages/EditProfile';
 import PrivateRoute from './components/PrivateRoute';
 import Alert from 'components/Alert';
 import ModalSwitch from './components/ModalSwitch';
@@ -28,7 +28,7 @@ function App() {
             <Header />
             <ModalSwitch>
               <PrivateRoute exact path="/edit-profile">
-                <EditProfileContainer />
+                <EditProfilePage />
               </PrivateRoute>
               <PrivateRoute exact path="/settings">
                 <SettingsContainer />

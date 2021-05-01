@@ -1,46 +1,42 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {
-  Route,
-  Switch,
-  Link,
-  useRouteMatch,
-  useHistory,
-} from 'react-router-dom';
-import ProfileTweets from './ProfileTweets';
-import Following from './Following';
-import Followers from './Followers';
-import Likes from './Likes';
+import { followUser, unfollowUser } from 'api/profile';
+import { useAlert } from 'context/AlertContext';
+import { useUser } from 'context/UserContext';
+import { format } from 'date-fns';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
-import { FiMapPin, FiPlusCircle, FiCalendar, FiLink } from 'react-icons/fi';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { FiCalendar, FiLink, FiMapPin, FiPlusCircle } from 'react-icons/fi';
+import { useMutation, useQueryClient } from 'react-query';
+// eslint-disable-next-line no-unused-vars
 import styled from 'styled-components/macro';
 import {
-  Container,
-  BackgroundContainer,
-  Background,
-  PagesContainer,
-  AddBackground,
-  AddBackgroundButton,
-  ProfileHeaderMenu,
-  HeaderMenuList,
-  ListItem,
-  Key,
-  Value,
-  StyledUserName,
-  UserInfoLink,
-  UserInfoJoined,
-} from './style';
-import { useUser } from 'context/UserContext';
-import { useMutation, useQueryClient } from 'react-query';
-import { followUser, unfollowUser } from 'api/profile';
-import { FaCalendarAlt } from 'react-icons/fa';
+  Link,
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch,
+} from 'react-router-dom';
 import {
   EditProfileButton,
   FollowProfileButton,
   UserAvatar,
 } from 'shared/components';
-import { format } from 'date-fns';
-import { useAlert } from 'context/AlertContext';
+import Followers from './Followers';
+import Following from './Following';
+import Likes from './Likes';
+import ProfileTweets from './ProfileTweets';
+import {
+  AddBackground,
+  AddBackgroundButton,
+  Background,
+  BackgroundContainer,
+  Container,
+  HeaderMenuList,
+  Key,
+  ListItem,
+  ProfileHeaderMenu,
+  Value,
+} from './style';
 
 function Profile({ profile }) {
   const user = useUser();

@@ -30,7 +30,7 @@ export const Input = styled.input`
   margin: 10px 0;
   padding: 10px 5px;
   border: 1px solid
-    ${(props) => (props.error ? props.theme.colors.red : '#e6ecf0')};
+    ${(props) => (props.isError ? props.theme.colors.red : '#e6ecf0')};
   border-radius: 3px;
 
   :focus {
@@ -117,7 +117,7 @@ export const DropdownLink = styled(StyledNavLink)`
 
 export const FeedbackMessage = styled(Alert)`
   color: ${(props) =>
-    props.success ? props.theme.colors.green : props.theme.colors.red};
+    props.isSuccess ? props.theme.colors.green : props.theme.colors.red};
   padding: 10px;
   font-size: 0.8rem;
 

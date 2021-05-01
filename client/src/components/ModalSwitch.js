@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import {
   Switch,
   Route,
@@ -21,10 +21,9 @@ function ModalSwitch({ children }) {
   const tweetModalMatch = useRouteMatch('/:userId/status/:tweetId');
   const createTweetModalMatch = useRouteMatch('/compose/tweet');
 
-  const isModal = !!(
-    location.state?.modal ||
-    tweetModalMatch ||
-    createTweetModalMatch
+  const isModal = useMemo(
+    () => !!(location.state?.modal || tweetModalMatch || createTweetModalMatch),
+    [createTweetModalMatch, location, tweetModalMatch]
   );
 
   useEffect(() => {
