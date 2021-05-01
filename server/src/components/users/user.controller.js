@@ -78,7 +78,7 @@ exports.deleteUser = async (req, res) => {
     throw new ErrorHandler(404, 'User not found');
   }
 
-  await Promise.all([user.remove(), Profile.findByIdAndRemove(user.id)]);
+  await Promise.all([user.remove(), Profile.findOneAndRemove({ user: user._id })]);
 
   res.json({ user });
 };

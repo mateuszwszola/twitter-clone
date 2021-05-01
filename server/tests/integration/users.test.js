@@ -548,6 +548,7 @@ describe('Users routes', () => {
   describe('DELETE /api/users/:userId', () => {
     it('When owner is deleting, should delete user, profile and return 200', async () => {
       await insertUsers([userOne]);
+      await Profile.create({ user: userOne._id });
 
       const res = await request(app)
         .delete(`/api/users/${userOne._id}`)
