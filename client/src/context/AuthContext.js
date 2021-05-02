@@ -53,7 +53,7 @@ function AuthProvider(props) {
         });
       })
       .catch((err) => {
-        console.error(err.response?.message);
+        console.error(err.response?.data?.message);
         setState({
           ...initialState,
           isLoading: false,

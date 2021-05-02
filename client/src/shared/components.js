@@ -180,3 +180,21 @@ export const CloseButton = styled.a`
     transform: rotate(-45deg);
   }
 `;
+
+export const Icon = styled.span`
+  font-size: 1.25em;
+  color: ${(props) => props.theme.colors.gray};
+  &:hover {
+    color: ${(props) => props.theme.colors.darkGray};
+  }
+`;
+
+export const LikeIcon = styled(Icon)`
+  color: ${(props) =>
+    props.liked ? props.theme.colors.red : props.theme.colors.gray};
+
+  &:hover {
+    color: ${(props) =>
+      props.liked ? props.theme.colors.gray : props.theme.colors.red};
+  }
+`;

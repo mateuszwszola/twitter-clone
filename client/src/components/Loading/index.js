@@ -4,7 +4,11 @@ import { Spinner, Wrapper } from './style';
 function Loading() {
   return (
     <Wrapper>
-      <Spinner />
+      <Spinner>
+        <div />
+        <div />
+        <div />
+      </Spinner>
     </Wrapper>
   );
 }

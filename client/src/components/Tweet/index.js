@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-// eslint-disable-next-line no-unused-vars
-import styled from 'styled-components/macro';
+import 'styled-components/macro';
 import { DialogContent, DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
 import DisplayError from 'components/DisplayError';
@@ -10,14 +9,11 @@ import { format } from 'date-fns';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
 import React from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { CloseButton, UserAvatar } from 'shared/components';
+import { CloseButton, UserAvatar, Icon, LikeIcon } from 'shared/components';
 import { useTweet, useTweetLike, useTweetUnlike } from 'utils/tweets';
 import Comment from './Comment';
 import {
-  Icon,
   ItemGroup,
-  LikeIcon,
-  LikeTweetAction,
   Main,
   SocialGroup,
   StyledTweet,
@@ -32,6 +28,7 @@ import {
   UserGroup,
   UserInfo,
 } from './style';
+import { FaHeart, FaRegComment, FaRegHeart } from 'react-icons/fa';
 
 function DisplayTweet({ tweetId }) {
   const history = useHistory();
@@ -119,15 +116,20 @@ function DisplayTweet({ tweetId }) {
 
           <TweetActionGroup>
             <TweetAction>
-              <Icon className="far fa-comment" />{' '}
-              <strong>{repliesCount}</strong>
+              <Icon>
+                <FaRegComment />
+              </Icon>{' '}
+              <span>{repliesCount}</span>
             </TweetAction>
-            <LikeTweetAction
+            <TweetAction
+              as="button"
               onClick={handleActionClick(liked ? 'unlike' : 'like')}
             >
-              <LikeIcon className="far fa-heart" liked={liked} />{' '}
-              <strong>{likes.length}</strong>
-            </LikeTweetAction>
+              <LikeIcon liked={liked}>
+                {liked ? <FaHeart /> : <FaRegHeart />}
+              </LikeIcon>{' '}
+              <span>{likes.length}</span>
+            </TweetAction>
           </TweetActionGroup>
         </TweetContent>
       </Main>

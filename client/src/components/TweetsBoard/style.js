@@ -85,23 +85,6 @@ export const ItemGroup = styled.span`
   padding: 0 5px;
 `;
 
-export const Icon = styled.i`
-  font-size: 1.25em;
-  color: ${(props) => props.theme.colors.gray};
-  &:hover {
-    color: ${(props) => props.theme.colors.darkGray};
-  }
-`;
-
-export const LikeIcon = styled(Icon)`
-  color: ${(props) =>
-    props.liked ? props.theme.colors.red : props.theme.colors.gray};
-
-  &:hover {
-    color: ${(props) => props.theme.colors.red};
-  }
-`;
-
 export const DeleteButton = styled(Button)`
   position: absolute;
   top: 0;

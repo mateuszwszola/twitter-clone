@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// eslint-disable-next-line no-unused-vars
-import styled from 'styled-components/macro';
+import 'styled-components/macro';
 
 function Error({ error }) {
   if (!error) {

@@ -7,8 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { FiCalendar, FiLink, FiMapPin, FiPlusCircle } from 'react-icons/fi';
 import { useMutation, useQueryClient } from 'react-query';
-// eslint-disable-next-line no-unused-vars
-import styled from 'styled-components/macro';
+import 'styled-components/macro';
 import {
   Link,
   Route,

@@ -27,6 +27,14 @@ const TweetSchema = new Schema(
     },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     retweets: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    // retweetedBy: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'User',
+    // },
+    // likedBy: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'User',
+    // },
   },
   { timestamps: true }
 );

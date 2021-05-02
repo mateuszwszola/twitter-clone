@@ -1,20 +1,15 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
-  Switch,
   Route,
+  Switch,
   useLocation,
-  useRouteMatch,
   useHistory,
+  useRouteMatch,
 } from 'react-router-dom';
 import { CreateTweetModal } from './CreateTweet';
 import { TweetModal } from './Tweet';
 
-/* 
-  ModalSwitch component allows to have a modal displayed with a new url, 
-  keeping previous (not modal) location route component in the background
-*/
-
-function ModalSwitch({ children }) {
+function useModalSwitch() {
   const location = useLocation();
   const history = useHistory();
   const previousLocationRef = useRef(location);
@@ -33,9 +28,19 @@ function ModalSwitch({ children }) {
     }
   }, [history.action, isModal, location]);
 
+  return { isModal, previousLocation: previousLocationRef.current, location };
+}
+
+/* 
+  ModalSwitch component allows to have a modal displayed with a new url, 
+  keeping previous (not modal) location route component in the background
+*/
+function ModalSwitch({ children }) {
+  const { isModal, previousLocation, location } = useModalSwitch();
+
   return (
     <>
-      <Switch location={isModal ? previousLocationRef.current : location}>
+      <Switch location={isModal ? previousLocation : location}>
         {children}
       </Switch>
       {isModal ? (

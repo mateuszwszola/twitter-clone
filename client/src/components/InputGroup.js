@@ -15,7 +15,7 @@ export default function InputGroup({
   return (
     <div>
       <Input
-        error={!!error}
+        isError={!!error}
         type={type}
         name={name}
         value={value}
@@ -34,10 +34,10 @@ InputGroup.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
-  error: PropTypes.bool
+  error: PropTypes.bool,
 };
 
 InputGroup.defaultProps = {
   type: 'text',
-  placeholder: 'Type here.'
+  placeholder: 'Type here.',
 };

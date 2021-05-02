@@ -12,16 +12,16 @@ const queryClient = new QueryClient();
 function AppProviders({ children }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
-        <ThemeProvider>
+      <ThemeProvider>
+        <ErrorBoundary>
           <AuthProvider>
             <UserProvider>
               <GlobalStyle />
               <AlertProvider>{children}</AlertProvider>
             </UserProvider>
           </AuthProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </ThemeProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

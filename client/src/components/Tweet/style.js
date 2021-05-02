@@ -72,6 +72,12 @@ export const SocialGroup = styled.div`
 
 export const TweetActionGroup = styled.div`
   margin: 10px 0 20px;
+
+  button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
 `;
 
 export const TweetAction = styled.span`
@@ -81,13 +87,6 @@ export const TweetAction = styled.span`
     margin-right: 0;
   }
   font-size: 1.25em;
-  cursor: pointer;
-`;
-
-export const LikeTweetAction = styled(TweetAction)`
-  &:hover i {
-    color: ${(props) => props.theme.colors.red};
-  }
 `;
 
 export const TweetBottomGroup = styled.div`
@@ -115,11 +114,4 @@ export const LikeItemGroup = styled(ItemGroup)`
   &:hover i {
     color: ${(props) => props.theme.colors.red};
   }
-`;
-
-export const Icon = styled.i``;
-
-export const LikeIcon = styled(Icon)`
-  color: ${(props) =>
-    props.liked === true ? props.theme.colors.red : 'inherit'};
 `;

@@ -16,12 +16,10 @@ import {
   TweetBottomGroup,
   TweetUserName,
   TweetUserUsername,
-  Icon,
-  LikeIcon,
   ItemGroup,
   DeleteButton,
 } from './style';
-import { InfoText, UserAvatar } from 'shared/components';
+import { InfoText, UserAvatar, Icon, LikeIcon } from 'shared/components';
 import Loading from 'components/Loading';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
 import { useUser } from 'context/UserContext';

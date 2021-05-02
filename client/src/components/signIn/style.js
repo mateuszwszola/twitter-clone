@@ -14,7 +14,9 @@ const Form = styled.form`
   font-size: 16px;
 `;
 
-const Helper = styled.p`
+const Helper = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 14px;
   line-height: 20px;
 `;

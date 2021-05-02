@@ -1,7 +1,7 @@
 import React from 'react';
 import AuthNav from './nav/AuthNav';
 import BasicNav from './nav/BasicNav';
-import { StyledHeader, Container, Logo, LeftFlex, ProfilesLink } from './style';
+import { StyledHeader, Container, LeftFlex, ProfilesLink } from './style';
 import { useUser } from 'context/UserContext';
 
 const Header = () => {
@@ -11,7 +11,6 @@ const Header = () => {
     <StyledHeader>
       <Container>
         <LeftFlex>
-          <Logo className="fab fa-twitter" />
           <ProfilesLink to="/profiles">All profiles</ProfilesLink>
         </LeftFlex>
         {user ? <AuthNav /> : <BasicNav />}
