@@ -7,7 +7,7 @@ import DisplayError from 'components/DisplayError';
 
 function Likes() {
   const { userId } = useParams();
-  const { isLoading, error, data } = useTweets({ likes: userId });
+  const { data, error, status } = useTweets({ likes: userId });
 
   if (error) {
     return <DisplayError error={error} />;
@@ -15,7 +15,11 @@ function Likes() {
 
   return (
     <ProfileTweetsBoard>
-      <TweetsBoard loading={isLoading} tweets={data?.results || []} />
+      <TweetsBoard
+        loading={status === 'loading'}
+        pages={data?.pages || []}
+        headerText="Likes"
+      />
     </ProfileTweetsBoard>
   );
 }

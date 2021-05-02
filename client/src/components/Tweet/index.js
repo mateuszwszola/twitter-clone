@@ -161,8 +161,9 @@ export function TweetModal() {
       <DialogContent
         aria-label="Tweet"
         css={`
+          width: 100%;
+          max-width: 600px;
           border-radius: 5px;
-          max-width: 650px;
         `}
       >
         <DisplayTweet tweetId={tweetId} />

@@ -13,6 +13,7 @@ export const Title = styled.h3`
 
 export const StyledDialogContent = styled(DialogContent)`
   border-radius: 5px;
+  width: 100%;
   max-width: 650px;
   position: relative;
 `;

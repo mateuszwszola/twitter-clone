@@ -16,7 +16,7 @@ function validateComment(comment) {
 }
 
 function Comment({ tweetId }) {
-  const { isLoading, error, data } = useTweets({ replyTo: tweetId });
+  const { status, error, data } = useTweets({ replyTo: tweetId });
   const user = useUser();
   const createTweetMutation = useCreateTweet();
   const [comment, setComment] = useState('');
@@ -61,8 +61,8 @@ function Comment({ tweetId }) {
         </CommentForm>
       </CommentContainer>
       <TweetsBoard
-        loading={isLoading}
-        tweets={data?.results || []}
+        loading={status === 'loading'}
+        pages={data?.pages || []}
         headerText="Replies"
       />
     </>

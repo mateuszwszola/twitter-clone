@@ -23,7 +23,7 @@ const Container = styled.div`
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 10px 15px;
+  padding: 10px 15px 30px;
 `;
 
 const Content = styled.div`

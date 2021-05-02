@@ -1,42 +1,45 @@
 import client from 'api/client';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import pick from 'lodash/pick';
 import { getFilteredQuery, objToQueryString } from './queryHelpers';
 
-function useFeedTweets(query = {}) {
-  const pickedQuery = pick(query, ['sortBy', 'limit', 'page']);
+function useFeedTweets() {
+  const fetchFeedTweets = ({ pageParam = 1 }) =>
+    client.get(`/tweets/feed?page=${pageParam}`).then((res) => res.data);
 
-  const filteredQuery = getFilteredQuery({
-    ...pickedQuery,
-    page: query.page || 1,
+  return useInfiniteQuery(['tweets', 'feed'], fetchFeedTweets, {
+    getNextPageParam: ({ page, totalPages }) =>
+      page < totalPages ? page + 1 : undefined,
   });
-  const queryString = objToQueryString(filteredQuery);
-
-  return useQuery(['tweets', 'feed', filteredQuery], () =>
-    client.get(`/tweets/feed?${queryString}`).then((res) => res.data)
-  );
 }
 
 function useTweets(query = {}) {
   const pickedQuery = pick(query, [
     'sortBy',
     'limit',
-    'page',
     'author',
     'likes',
     'retweets',
     'replyTo',
   ]);
 
-  const filteredQuery = getFilteredQuery({
-    ...pickedQuery,
-    page: query.page || 1,
-  });
-  const queryString = objToQueryString(filteredQuery);
+  const filteredQuery = getFilteredQuery(pickedQuery);
 
-  return useQuery(['tweets', filteredQuery], () =>
-    client.get(`/tweets?${queryString}`).then((res) => res.data)
-  );
+  const fetchTweets = ({ pageParam = 1 }) => {
+    const queryString = objToQueryString({ ...filteredQuery, page: pageParam });
+
+    return client.get(`/tweets?${queryString}`).then((res) => res.data);
+  };
+
+  return useInfiniteQuery(['tweets', filteredQuery], fetchTweets, {
+    getNextPageParam: ({ page, totalPages }) =>
+      page < totalPages ? page + 1 : undefined,
+  });
 }
 
 function useTweet(id) {

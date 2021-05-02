@@ -6,11 +6,10 @@ export const StyledTweet = styled.div`
   overflow: auto;
   background-color: #fff;
   width: 100%;
-  max-width: 650px;
+  max-width: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  padding: 0 15px 30px;
 `;
 
 export const Main = styled.div`
@@ -71,7 +70,7 @@ export const SocialGroup = styled.div`
 `;
 
 export const TweetActionGroup = styled.div`
-  margin: 10px 0 20px;
+  margin: 10px 0 10px 10px;
 
   button {
     background: none;
