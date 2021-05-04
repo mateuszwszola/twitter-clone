@@ -1,53 +1,40 @@
-import React, { Component } from 'react';
+import { createContext, useContext } from 'react';
+import { useQuery } from 'react-query';
+import { useAuth } from './AuthContext';
+import client from 'api/client';
+import Loading from 'components/Loading';
+import DisplayError from 'components/DisplayError';
 
-import checkForToken from 'utils/checkForToken';
-import isEmpty from 'utils/isEmpty';
+const UserContext = createContext();
 
-let UserContext;
-const { Provider, Consumer } = (UserContext = React.createContext());
+function UserProvider(props) {
+  const { user } = useAuth();
+  const { isLoading, data, error } = useQuery(
+    ['users', user?._id],
+    () => client.get(`/users/${user?._id}`).then((res) => res.data),
+    {
+      enabled: !!user?._id,
+    }
+  );
 
-class UserProvider extends Component {
-  state = {
-    isAuthenticated: false,
-    user: {}
-  };
-
-  handleAuthentication = () => {
-    const decoded = checkForToken();
-
-    this.setState(() => ({
-      isAuthenticated: !isEmpty(decoded),
-      user: decoded
-    }));
-  };
-
-  // Check authentication when app loads
-  componentDidMount() {
-    this.handleAuthentication();
+  if (error) {
+    return <DisplayError error={error} />;
   }
 
-  render() {
-    return (
-      <Provider
-        value={{
-          ...this.state,
-          authenticateUser: this.handleAuthentication
-        }}
-      >
-        {this.props.children}
-      </Provider>
-    );
+  if (isLoading) {
+    return <Loading />;
   }
+
+  return <UserContext.Provider value={data?.user || null} {...props} />;
 }
 
-function withUserContext(Component) {
-  return function(props) {
-    return (
-      <Consumer>
-        {authProps => <Component {...props} {...authProps} />}
-      </Consumer>
-    );
-  };
+export function useUser() {
+  const context = useContext(UserContext);
+
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
 }
 
-export { UserProvider, Consumer as UserConsumer, withUserContext, UserContext };
+export default UserProvider;

@@ -1,22 +1,34 @@
 {
   "name": "client",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dependencies": {
-    "axios": "^0.19.0",
-    "classnames": "^2.2.6",
-    "jwt-decode": "^2.2.0",
-    "moment": "^2.24.0",
+    "@reach/alert": "^0.15.0",
+    "@reach/alert-dialog": "^0.15.0",
+    "@reach/dialog": "^0.15.0",
+    "@reach/menu-button": "^0.15.1",
+    "@reach/visually-hidden": "^0.15.0",
+    "axios": "^0.21.1",
+    "date-fns": "^2.21.1",
+    "husky": "^6.0.0",
+    "jwt-decode": "^3.1.2",
+    "lint-staged": "^10.5.4",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
-    "react": "^16.10.2",
-    "react-dom": "^16.10.2",
-    "react-moment": "^0.9.6",
-    "react-redux": "^7.1.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0",
-    "redux": "^4.0.4",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-thunk": "^2.3.0",
-    "styled-components": "^4.4.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-query": "^3.15.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.3",
+    "stop-runaway-react-effects": "^2.0.0",
+    "styled-components": "^5.2.3"
+  },
+  "devDependencies": {
+    "babel-plugin-macros": "^3.0.1",
+    "cypress": "^7.2.0",
+    "dotenv": "^8.2.0",
+    "eslint-plugin-cypress": "^2.11.3",
+    "prettier": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,20 +37,34 @@
     "eject": "react-scripts eject",
     "cypress:open": "cypress open"
   },
-  "proxy": "http://localhost:3001",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {
-    "babel-plugin-macros": "^2.6.1",
-    "cypress": "^3.4.1"
-  },
   "babelMacros": {
     "styledComponents": {
       "pure": true
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "plugin:cypress/recommended"
+    ],
+    "globals": {
+      "cy": true
     }
   }
 }

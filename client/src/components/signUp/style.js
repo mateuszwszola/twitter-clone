@@ -24,4 +24,9 @@ const StyledLink = styled(Link)`
   margin: 0 10px;
 `;
 
-export { SignUpContainer, Title, Form, Helper, StyledLink };
+const ErrorMessage = styled.p`
+  margin: 10px 0;
+  color: ${({ theme }) => theme.colors.red};
+`;
+
+export { SignUpContainer, Title, Form, Helper, StyledLink, ErrorMessage };

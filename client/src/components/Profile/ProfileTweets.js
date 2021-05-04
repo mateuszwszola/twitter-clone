@@ -1,38 +1,38 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import TweetsBoard from 'components/layout/TweetsBoard';
-import { getUserTweets } from 'actions/tweetActions';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import TweetsBoard from 'components/TweetsBoard';
+import { DisplayError } from 'shared/components';
 import { ProfileTweetsBoard } from './style';
+import { useTweets } from 'utils/tweets';
 
-function ProfileTweets({
-  profile: { profile },
-  tweet: { tweets, loading },
-  getUserTweets
-}) {
-  useEffect(() => {
-    getUserTweets(profile.user._id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile.user._id]);
+function ProfileTweets() {
+  const { userId } = useParams();
+  const {
+    data,
+    status,
+    error,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTweets({ author: userId });
+
+  if (error) {
+    return <DisplayError error={error} />;
+  }
+
   return (
     <ProfileTweetsBoard>
-        <TweetsBoard loading={loading} tweets={tweets} />
+      <TweetsBoard
+        loading={status === 'loading'}
+        pages={data?.pages || []}
+        isFetching={isFetching}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </ProfileTweetsBoard>
   );
 }
 
-ProfileTweets.propTypes = {
-  tweet: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
-  getUserTweets: PropTypes.func.isRequired
-};
-
-const mapStateToProps = state => ({
-  tweet: state.tweet,
-  profile: state.profile
-});
-
-export default connect(
-  mapStateToProps,
-  { getUserTweets }
-)(ProfileTweets);
+export default ProfileTweets;

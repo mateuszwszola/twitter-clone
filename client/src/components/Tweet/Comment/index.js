@@ -1,63 +1,88 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getComments, addComment, toggleCommentLike, removeComment } from 'actions/commentActions';
-import AddCommentForm from './AddCommentForm';
-import CommentsList from './CommentsList';
-import Loading from 'components/Loading';
+import { useUser } from 'context/UserContext';
+import { useCreateTweet, useTweets } from 'utils/tweets';
+import DisplayError from 'components/DisplayError';
+import TweetsBoard from 'components/TweetsBoard';
+import { CommentContainer, CommentForm, CommentInput } from './style';
+import { UserAvatar } from 'shared/components';
+import portraitPlaceholder from 'img/portrait-placeholder.png';
 
-function Comment({ tweetId, comment: { comments, loading }, getComments, addComment, toggleCommentLike, removeComment, auth, errors, history }) {
-    useEffect(() => {
-        getComments(tweetId);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tweetId]);
+function validateComment(comment) {
+  if (comment.text.length < 1 || comment.text.length > 280) {
+    return false;
+  }
+  return true;
+}
 
-    function handleAddComment(comment, clearInput) {
-        addComment(tweetId, comment);
-        clearInput();
-    }
+function Comment({ tweetId }) {
+  const {
+    status,
+    error,
+    data,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTweets({ replyTo: tweetId });
+  const user = useUser();
+  const createTweetMutation = useCreateTweet();
+  const [comment, setComment] = useState('');
 
-    function handleActionClick(e, action, commentId) {
-        e.stopPropagation();
-        if (!auth.isAuthenticated) {
-            history.push('/signin');
-        } else {
-            if (action === 'like') {
-                toggleCommentLike(commentId, auth.user._id);
-            } else if (action === 'remove') {
-                removeComment(commentId);
-            }
+  const handleAddComment = (e) => {
+    e.preventDefault();
+
+    if (validateComment({ text: comment })) {
+      createTweetMutation.mutate(
+        { text: comment, replyTo: tweetId },
+        {
+          onSuccess: () => {
+            setComment('');
+          },
         }
+      );
     }
+  };
 
-    return (
-        <>
-            <AddCommentForm
-                handleAddComment={handleAddComment}
-                errors={errors}
-                userAvatar={auth.user && auth.user.avatar}
-            />
-            <CommentsList loading={loading} comments={comments} auth={auth} handleActionClick={handleActionClick} />
-        </>
-    )
+  if (error) {
+    return <DisplayError error={error} />;
+  }
+
+  return (
+    <>
+      {createTweetMutation.isError && (
+        <DisplayError error={createTweetMutation.error} />
+      )}
+      <CommentContainer>
+        <UserAvatar
+          tiny
+          src={user?.avatar || portraitPlaceholder}
+          alt="User Avatar"
+        />
+        <CommentForm onSubmit={handleAddComment}>
+          <CommentInput
+            placeholder="Tweet your reply"
+            type="text"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+        </CommentForm>
+      </CommentContainer>
+      <TweetsBoard
+        loading={status === 'loading'}
+        pages={data?.pages || []}
+        headerText="Replies"
+        isFetching={isFetching}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+      />
+    </>
+  );
 }
 
 Comment.propTypes = {
-    tweetId: PropTypes.string.isRequired,
-    getComments: PropTypes.func.isRequired,
-    addComment: PropTypes.func.isRequired,
-    toggleCommentLike: PropTypes.func.isRequired,
-    removeComment: PropTypes.func.isRequired,
-    comment: PropTypes.object.isRequired,
-    errors: PropTypes.array.isRequired,
-    auth: PropTypes.object.isRequired,
+  tweetId: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-    comment: state.comment,
-    errors: state.errors,
-    auth: state.auth
-});
-
-export default connect(mapStateToProps, { getComments, addComment, toggleCommentLike, removeComment })(withRouter(Comment));
+export default Comment;

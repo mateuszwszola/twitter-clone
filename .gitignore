@@ -1,13 +1,2 @@
-/node_modules
-package-lock.json
 .DS_Store
-.env
-.idea
-.vscode
-dist
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
-.ebextensions
+node_modules

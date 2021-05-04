@@ -14,9 +14,16 @@ const Form = styled.form`
   font-size: 16px;
 `;
 
-const Helper = styled.p`
+const Helper = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 14px;
   line-height: 20px;
 `;
 
-export { SignInContainer, Title, Form, Helper };
+const ErrorMessage = styled.p`
+  margin: 10px 0;
+  color: ${({ theme }) => theme.colors.red};
+`;
+
+export { SignInContainer, Title, Form, Helper, ErrorMessage };

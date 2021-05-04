@@ -1,17 +1,25 @@
-// ***********************************************************
-// This example plugins/index.js can be used to load plugins
-//
-// You can change the location of this file or turn off loading
-// the plugins file with the 'pluginsFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/plugins-guide
-// ***********************************************************
+const axios = require('axios').default;
+const dotenv = require('dotenv');
 
-// This function is called when a project is opened or re-opened (e.g. due to
-// the project's config changing)
+dotenv.config({ path: '.env.local' });
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-}
+
+  config.env.defaultPassword = process.env.SEED_DEFAULT_USER_PASSWORD;
+
+  const testDataApiEndpoint = `${config.env.apiUrl}/testData`;
+
+  on('task', {
+    async 'db:seed'() {
+      // seed database with test data
+      const { data } = await axios.post(`${testDataApiEndpoint}/seed`);
+      return data;
+    },
+    async 'db:getEntityData'(entity) {
+      const data = await axios.get(`${testDataApiEndpoint}/${entity}`);
+      return data;
+    },
+  });
+};

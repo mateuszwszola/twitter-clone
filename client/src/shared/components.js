@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components/macro';
 import { NavLink } from 'react-router-dom';
+import Alert from '@reach/alert';
 
 export const PrimaryHeading = styled.h1`
   text-align: center;
@@ -8,11 +9,17 @@ export const PrimaryHeading = styled.h1`
 
 export const SecondaryHeading = styled.h2``;
 
+export const DisplayError = styled.p`
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 30px;
+`;
+
 export const InfoText = styled.p`
   text-align: center;
   padding: 10px 15px;
   font-size: 1.15em;
-  color: ${props => props.theme.colors.darkGray};
+  color: ${(props) => props.theme.colors.darkGray};
 `;
 
 export const Input = styled.input`
@@ -23,11 +30,11 @@ export const Input = styled.input`
   margin: 10px 0;
   padding: 10px 5px;
   border: 1px solid
-    ${props => (props.error ? props.theme.colors.red : '#e6ecf0')};
+    ${(props) => (props.isError ? props.theme.colors.red : '#e6ecf0')};
   border-radius: 3px;
 
   :focus {
-    border-color: #cadae4;
+    border-color: ${(props) => props.theme.colors.darkGray};
   }
 `;
 
@@ -36,10 +43,11 @@ export const Button = styled.button`
   padding: 0.7em 1em;
   margin: 5px;
   outline: 0;
+  border: 0;
   border-radius: 3px;
   cursor: pointer;
 
-  ${props =>
+  ${(props) =>
     props.primary &&
     css`
       border-radius: 100px;
@@ -47,8 +55,12 @@ export const Button = styled.button`
       line-height: 20px;
       padding: 6px 16px;
       text-align: center;
-      color: #fff;
-      background-color: ${props => props.theme.colors.primaryBlue};
+      color: ${({ theme }) => theme.colors.white};
+      background-color: ${({ theme }) => theme.colors.primaryBlue};
+
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.darkerBlue};
+      }
     `}
 `;
 
@@ -62,9 +74,9 @@ export const SignoutButton = styled.button`
 `;
 
 export const EditProfileButton = styled(Button)`
-  border: 1px solid #67757f;
-  color: #67757f;
-  background-color: #fff;
+  border: 1px solid ${({ theme }) => theme.colors.gray};
+  color: ${({ theme }) => theme.colors.gray};
+  background-color: ${({ theme }) => theme.colors.white};
   align-self: flex-end;
 `;
 
@@ -72,13 +84,12 @@ export const BackButton = styled(Button)`
   border: 2px solid black;
   border-radius: 5px;
   color: black;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.colors.white};
 `;
 
-export const FollowProfileButton = styled(EditProfileButton)`
-  background-color: #f34c79;
-  color: #fff;
-  border: none;
+export const FollowProfileButton = styled(Button)`
+  background-color: ${(props) => props.theme.colors.red};
+  color: ${(props) => props.theme.colors.white};
 
   &:hover {
     background-color: #e23d69;
@@ -91,8 +102,8 @@ export const StyledNavLink = styled(NavLink)`
   font-weight: bold;
 
   &:hover {
-    border-color: #29a3ef;
-    color: #29a3ef;
+    border-color: ${(props) => props.theme.colors.blue};
+    color: ${(props) => props.theme.colors.blue};
   }
 `;
 
@@ -104,11 +115,15 @@ export const DropdownLink = styled(StyledNavLink)`
   border-radius: 0px;
 `;
 
-export const FeedbackMessage = styled.div`
-  color: ${props =>
-    props.success ? props.theme.colors.green : props.theme.colors.red};
-  padding: 5px;
+export const FeedbackMessage = styled(Alert)`
+  color: ${(props) =>
+    props.isSuccess ? props.theme.colors.green : props.theme.colors.red};
+  padding: 10px;
   font-size: 0.8rem;
+
+  &:empty {
+    display: none;
+  }
 `;
 
 export const UserAvatar = styled.img`
@@ -118,31 +133,24 @@ export const UserAvatar = styled.img`
   flex-shrink: 0;
   margin: 0.7rem;
 
-  ${props =>
+  ${(props) =>
     props.small &&
     css`
       width: 70px;
       height: 70px;
     `}
-  ${props =>
+  ${(props) =>
     props.tiny &&
     css`
       width: 50px;
       height: 50px;
     `}
-  ${props =>
+  ${(props) =>
     props.big &&
     css`
       width: 300px;
       height: 300px;
     `}
-`;
-
-export const ProfileBackground = styled.img`
-  object-fit: cover;
-  width: 100%;
-  max-width: 100%;
-  height: 100%;
 `;
 
 export const CloseButton = styled.a`
@@ -170,5 +178,23 @@ export const CloseButton = styled.a`
   }
   &:after {
     transform: rotate(-45deg);
+  }
+`;
+
+export const Icon = styled.span`
+  font-size: 1.25em;
+  color: ${(props) => props.theme.colors.gray};
+  &:hover {
+    color: ${(props) => props.theme.colors.darkGray};
+  }
+`;
+
+export const LikeIcon = styled(Icon)`
+  color: ${(props) =>
+    props.liked ? props.theme.colors.red : props.theme.colors.gray};
+
+  &:hover {
+    color: ${(props) =>
+      props.liked ? props.theme.colors.gray : props.theme.colors.red};
   }
 `;

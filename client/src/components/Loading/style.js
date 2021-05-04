@@ -1,62 +1,50 @@
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Spinner = styled.div`
-  @keyframes lds-heart {
-      0% {
-        transform: scale(0.95);
-      }
-      5% {
-        transform: scale(1.1);
-      }
-      39% {
-        transform: scale(0.85);
-      }
-      45% {
-        transform: scale(1);
-      }
-      60% {
-        transform: scale(0.95);
-      }
-      100% {
-        transform: scale(0.9);
-      }
-  }
-  
-  top: 23px;
-  left: 19px;
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  background: ${props => props.theme.colors.red};
-  animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-  
-  &:after,
-  &:before {
-      content: " ";
-      position: absolute;
-      display: block;
-      width: 26px;
-      height: 26px;
-      background: ${props => props.theme.colors.red};
-  }
-  
-  &:before {
-      left: -17px;
-      border-radius: 50% 0 0 50%;
-  }
-   &:after {
-      top: -17px;
-      border-radius: 50% 50% 0 0;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+
+  transform: ${(props) => (props.isSmall ? 'scale(0.5)' : 'scale(1)')};
+
+  & div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid ${({ theme }) => theme.colors.primaryBlue};
+    border-radius: 50%;
+    animation: ${rotate} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: ${({ theme }) => theme.colors.primaryBlue} transparent
+      transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
   }
 `;
 
 export const Wrapper = styled.div`
-  display: inline-block;
-  position: absolute;
+  position: ${(props) => (props.isFixed ? 'fixed' : 'absolute')};
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-  width: 64px;
-  height: 64px;
-  transform-origin: 32px 32px;
+  transform: translate(-50%, -50%);
 `;

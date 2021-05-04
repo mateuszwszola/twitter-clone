@@ -1,72 +1,56 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-
-import ThemeProvider from 'shared/theme-provider';
-import GlobalStyle from 'shared/global-style';
 import { Wrapper, Content } from 'shared/layout';
 
-import { Header } from './components/layout';
-import SignInContainer from './containers/SignInContainer';
-import SignUpContainer from './containers/SignUpContainer';
-import PrivateHomepage from './components/route/PrivateHomepage';
-import RenderCreateTweetModal from './components/CreateTweetModal';
-import ProfileContainer from './containers/ProfileContainer';
-import ProfilesContainer from './containers/ProfilesContainer';
-import SettingsContainer from './containers/SettingsContainer';
-import EditProfileContainer from './containers/EditProfileContainer';
-import PrivateRoute from './components/route/PrivateRoute';
-import ErrorBoundary from './components/ErrorBoundary';
+import SignInPage from 'pages/SignIn';
+import SignUpPage from 'pages/SignUp';
+import Home from 'pages/Home';
+import ProfilesPage from 'pages/Profiles';
+import ProfilePage from 'pages/Profile';
+import SettingsPage from 'pages/Settings';
+import EditProfilePage from 'pages/EditProfile';
+import Header from 'components/Header';
+import PrivateRoute from 'components/PrivateRoute';
 import Alert from 'components/Alert';
-import ModalSwitch from './components/ModalSwitch';
+import ModalSwitch from 'components/ModalSwitch';
 import NotFoundPage from 'components/NotFoundPage';
 
-import { Provider } from 'react-redux';
-import store from './store';
-import checkForToken from 'utils/checkForToken';
-import { loadUser } from 'actions/authActions';
-
-checkForToken();
-
 function App() {
-  useEffect(() => {
-    store.dispatch(loadUser());
-  }, []);
-
   return (
-    <Provider store={store}>
-      <GlobalStyle />
-      <ThemeProvider>
-        <ErrorBoundary>
-          <Router>
-            <Wrapper>
-              <Content>
-                <Alert />
-                <Header />
-                <RenderCreateTweetModal />
-                <ModalSwitch>
-                  <PrivateRoute
-                    exact
-                    path="/edit-profile"
-                    component={EditProfileContainer}
-                  />
-                  <PrivateRoute
-                      exact
-                      path="/settings"
-                      component={SettingsContainer}
-                  />
-                  <Route exact path="/" component={PrivateHomepage} />
-                  <Route exact path="/signin" component={SignInContainer} />
-                  <Route exact path="/signup" component={SignUpContainer} />
-                  <Route exact path="/profiles" component={ProfilesContainer} />
-                  <Route path="/:username" component={ProfileContainer} />
-                  <Route component={NotFoundPage} />
-                </ModalSwitch>
-              </Content>
-            </Wrapper>
-          </Router>
-        </ErrorBoundary>
-      </ThemeProvider>
-    </Provider>
+    <Router>
+      <Wrapper>
+        <Content>
+          <Alert />
+          <Header />
+          <ModalSwitch>
+            <PrivateRoute exact path="/edit-profile">
+              <EditProfilePage />
+            </PrivateRoute>
+            <PrivateRoute exact path="/settings">
+              <SettingsPage />
+            </PrivateRoute>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/signin">
+              <SignInPage />
+            </Route>
+            <Route exact path="/signup">
+              <SignUpPage />
+            </Route>
+            <Route exact path="/profiles">
+              <ProfilesPage />
+            </Route>
+            <Route path="/profile/:userId">
+              <ProfilePage />
+            </Route>
+            <Route>
+              <NotFoundPage />
+            </Route>
+          </ModalSwitch>
+        </Content>
+      </Wrapper>
+    </Router>
   );
 }
 
