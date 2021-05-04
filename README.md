@@ -1,54 +1,79 @@
 # twitter-clone
-This project is built using Node, Express, React and MongoDB. The goal is learning MERN stack by putting these technologies together and building a full-stack web application,
-that mimics the basic design and functionality of the official Twitter app.
 
-## Deployed version
-The project is hosted on AWS using elastic beanstalk, you can see the deployed version here: link
+## Description
+
+A full-stack Twitter clone app built using Node.js, Express.js, React.js, and MongoDB.
+
+### Background
+
+The project was originally created a few years ago and as I have learned a lot since then I recently decided to update it and create the base for developing new features.
 
 ## Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
-Create a .env file in the root directory. The example of key/value pairs to include:
-```
-NODE_ENV=development
-MONGO_URI_DEV=mongodb://localhost/twitter-clone-db
-MONGO_URI_TEST=mongodb://localhost/twitter-clone-test-db
-JWT_SECRET=jwt-secret
-```
+
+Make sure you have a running MongoDB instance.
+
+### Configuration
+
+Copy the `server/.env.example` file to `server/.env` and update the values if your configuration is different than the default.
+
 ### Installing
-To install the project dependencies run these commands in the root directory
+
+Install server dependencies
+
+```bash
+$ cd server
+$ npm install
 ```
-npm install
-npm run client:install
+
+Install client dependencies
+
+```bash
+$ cd client
+$ npm install
 ```
+
+### Start the server in development mode
+
+```bash
+$ cd server
+$ npm run dev
+```
+
+If everything was successful, you should see the messages being displayed in the terminal, telling that the server has successfully connected to a MongoDB and runs on a given port.
+
+### Start the client
+
+```bash
+$ cd client
+$ npm start
+```
+
+Now, the app should be running on `http://localhost:3000`.
 
 ## Running the tests
-### Backend API tests
-To run tests which check if API routes work properly, first include MONGO_URI_TEST in .env file, then run:
+
+### Server
+
+To test API routes
+
+```bash
+# run all tests
+$ npm test
+
+# or
+
+# run all tests in watch mode
+$ npm test:watch
 ```
-npm test
+
+### Client
+
+To run tests with Cypress first, copy the `client/.env` file to a `client/.env.local`. There is a default password for test users. You do not need to change that. Then simply run:
+
+```bash
+$ npm run cypress:open
 ```
-
-### Client tests
-To test client reducers run:
-```
-npm run client:test
-```
-
-## Built With
-
-* [Express](http://expressjs.com/) - web framework for Node.js
-* [Mongoose](https://mongoosejs.com/) - mongodb object modeling for Node.js
-* [React](https://reactjs.org/) - a JavaScript library for building user interfaces
-* [Redux](https://redux.js.org/) - a predictable state container for JavaScript apps
-
-
-## Authors
-* **Mateusz Wszoła** - [mateuszwszola](https://github.com/mateuszwszola)
-
-> All right of picture and sign is reserved for [Twitter](https://twitter.com).
->
-> If you see the code mistakes, bugs or have any tips on how I can improve the app, please let me know, thank you!
-
-
