@@ -15,6 +15,8 @@ export const Spinner = styled.div`
   width: 80px;
   height: 80px;
 
+  transform: ${(props) => (props.isSmall ? 'scale(0.5)' : 'scale(1)')};
+
   & div {
     box-sizing: border-box;
     display: block;
@@ -41,7 +43,7 @@ export const Spinner = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  position: absolute;
+  position: ${(props) => (props.isFixed ? 'fixed' : 'absolute')};
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

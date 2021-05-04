@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -19,11 +19,19 @@ import {
   ItemGroup,
   DeleteButton,
 } from './style';
-import { InfoText, UserAvatar, Icon, LikeIcon } from 'shared/components';
+import {
+  InfoText,
+  UserAvatar,
+  Icon,
+  LikeIcon,
+  Button,
+} from 'shared/components';
 import Loading from 'components/Loading';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
 import { useUser } from 'context/UserContext';
 import { useRemoveTweet, useTweetLike, useTweetUnlike } from 'utils/tweets';
+import useIntersectionObserver from 'hooks/useIntersectionObserver';
+import 'styled-components/macro';
 
 function SingleTweet({ tweet }) {
   const user = useUser();
@@ -111,7 +119,25 @@ SingleTweet.propTypes = {
   tweet: PropTypes.object.isRequired,
 };
 
-function TweetsBoard({ loading, pages, headerText }) {
+function TweetsBoard({
+  loading,
+  pages,
+  headerText,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  isFetching,
+}) {
+  const loadMoreRef = useRef();
+
+  console.log({ hasNextPage });
+
+  useIntersectionObserver({
+    target: loadMoreRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+  });
+
   const numberOfTweets =
     pages?.reduce((acc, page) => acc + page.results.length, 0) ?? 0;
 
@@ -123,21 +149,45 @@ function TweetsBoard({ loading, pages, headerText }) {
       {loading ? (
         <Loading />
       ) : (
-        <List>
-          {numberOfTweets > 0 ? (
-            <>
-              {pages.map((group, i) => (
-                <React.Fragment key={i}>
-                  {group.results.map((tweet) => (
-                    <SingleTweet key={tweet._id} tweet={tweet} />
-                  ))}
-                </React.Fragment>
-              ))}
-            </>
-          ) : (
-            <InfoText>There are no tweets to display</InfoText>
-          )}
-        </List>
+        <>
+          <List>
+            {numberOfTweets > 0 ? (
+              <>
+                {pages.map((group, i) => (
+                  <React.Fragment key={i}>
+                    {group.results.map((tweet) => (
+                      <SingleTweet key={tweet._id} tweet={tweet} />
+                    ))}
+                  </React.Fragment>
+                ))}
+              </>
+            ) : (
+              <InfoText>There are no tweets to display</InfoText>
+            )}
+          </List>
+          <div
+            css={`
+              margin-top: 15px;
+              display: flex;
+              justify-content: center;
+            `}
+          >
+            <Button
+              ref={loadMoreRef}
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+            >
+              {isFetchingNextPage
+                ? 'Loading more...'
+                : hasNextPage
+                ? 'Load More'
+                : 'Nothing more to load'}
+            </Button>
+          </div>
+          <InfoText>
+            {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
+          </InfoText>
+        </>
       )}
     </Container>
   );
@@ -151,6 +201,10 @@ TweetsBoard.propTypes = {
   loading: PropTypes.bool.isRequired,
   pages: PropTypes.array.isRequired,
   headerText: PropTypes.string.isRequired,
+  fetchNextPage: PropTypes.func.isRequired,
+  hasNextPage: PropTypes.bool,
+  isFetchingNextPage: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired,
 };
 
 export default TweetsBoard;

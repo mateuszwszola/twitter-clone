@@ -16,7 +16,15 @@ function validateComment(comment) {
 }
 
 function Comment({ tweetId }) {
-  const { status, error, data } = useTweets({ replyTo: tweetId });
+  const {
+    status,
+    error,
+    data,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTweets({ replyTo: tweetId });
   const user = useUser();
   const createTweetMutation = useCreateTweet();
   const [comment, setComment] = useState('');
@@ -64,6 +72,10 @@ function Comment({ tweetId }) {
         loading={status === 'loading'}
         pages={data?.pages || []}
         headerText="Replies"
+        isFetching={isFetching}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
       />
     </>
   );

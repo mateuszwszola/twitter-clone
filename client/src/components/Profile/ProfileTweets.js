@@ -7,7 +7,15 @@ import { useTweets } from 'utils/tweets';
 
 function ProfileTweets() {
   const { userId } = useParams();
-  const { data, status, error } = useTweets({ author: userId });
+  const {
+    data,
+    status,
+    error,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useTweets({ author: userId });
 
   if (error) {
     return <DisplayError error={error} />;
@@ -15,7 +23,14 @@ function ProfileTweets() {
 
   return (
     <ProfileTweetsBoard>
-      <TweetsBoard loading={status === 'loading'} pages={data?.pages || []} />
+      <TweetsBoard
+        loading={status === 'loading'}
+        pages={data?.pages || []}
+        isFetching={isFetching}
+        isFetchingNextPage={isFetchingNextPage}
+        hasNextPage={hasNextPage}
+        fetchNextPage={fetchNextPage}
+      />
     </ProfileTweetsBoard>
   );
 }
