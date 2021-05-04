@@ -67,7 +67,7 @@ $ npm test
 # or
 
 # run all tests in watch mode
-$ npm test:watch
+$ npm run test:watch
 ```
 
 ### Client
