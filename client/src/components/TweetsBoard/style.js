@@ -24,7 +24,10 @@ export const List = styled.ul`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid #eee;
+  border-top: 1px solid #eee;
+  &:first-child {
+    border-top: none;
+  }
 `;
 
 export const ListItem = styled.li`

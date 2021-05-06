@@ -34,8 +34,8 @@ import {
   Key,
   ListItem,
   ProfileHeaderMenu,
-  Value,
 } from './style';
+import { queries } from 'shared/layout';
 
 function Profile({ profile }) {
   const user = useUser();
@@ -86,32 +86,32 @@ function Profile({ profile }) {
 
   return (
     <Container>
-      <div>
-        <BackgroundContainer>
-          {profile.backgroundImage ? (
-            <Background
-              alt={`${profile.user.name}'s background`}
-              src={profile.backgroundImage}
-            />
-          ) : (
-            <>
-              {isProfileOwner && (
-                <AddBackground>
-                  <span>Add background picture</span>{' '}
-                  <AddBackgroundButton as={Link} to="/edit-profile">
-                    <FiPlusCircle />
-                  </AddBackgroundButton>
-                </AddBackground>
-              )}
-            </>
-          )}
-        </BackgroundContainer>
+      <BackgroundContainer>
+        {profile.backgroundImage ? (
+          <Background
+            alt={`${profile.user.name}'s background`}
+            src={profile.backgroundImage}
+          />
+        ) : (
+          <>
+            {isProfileOwner && (
+              <AddBackground>
+                <span>Add background picture</span>{' '}
+                <AddBackgroundButton as={Link} to="/edit-profile">
+                  <FiPlusCircle />
+                </AddBackgroundButton>
+              </AddBackground>
+            )}
+          </>
+        )}
+      </BackgroundContainer>
 
-        <div
-          css={`
-            padding: 0 15px;
-          `}
-        >
+      <div
+        css={`
+          padding: 0 15px;
+        `}
+      >
+        <div>
           <div
             css={`
               display: flex;
@@ -152,11 +152,7 @@ function Profile({ profile }) {
               </span>
             </div>
 
-            <div
-              css={`
-                margin-top: 15px;
-              `}
-            >
+            <div>
               {isProfileOwner ? (
                 <EditProfileButton as={Link} primary="true" to="/edit-profile">
                   Edit Profile
@@ -169,34 +165,43 @@ function Profile({ profile }) {
             </div>
           </div>
 
-          <div>
-            {bio && (
-              <div
-                css={`
-                  margin: 15px 0;
-                `}
-              >
-                {bio}
-              </div>
-            )}
+          <div
+            css={`
+              margin-top: -60px;
+            `}
+          >
+            {bio && <div>{bio}</div>}
 
             <div
               css={`
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                margin: 15px 0;
+                margin: 30px 0;
+
                 div {
-                  margin-left: 20px;
+                  margin-top: 15px;
                   &:first-child {
-                    margin-left: 0;
+                    margin-top: 0;
+                  }
+                }
+
+                ${queries.phone} {
+                  flex-direction: row;
+
+                  div {
+                    margin-top: 0;
+                    margin-left: 20px;
+                    &:first-child {
+                      margin-left: 0;
+                    }
                   }
                 }
               `}
             >
               {location && (
                 <div>
-                  <FiMapPin />
-                  {location}
+                  <FiMapPin /> {location}
                 </div>
               )}
               {website && (
@@ -209,33 +214,64 @@ function Profile({ profile }) {
               </div>
             </div>
 
-            <ProfileHeaderMenu>
-              <HeaderMenuList>
-                <ListItem
-                  as={Link}
-                  to={`/profile/${profile.user._id}/following`}
-                >
-                  <Key>Following</Key>
-                  <Value>{profile.following.length}</Value>
-                </ListItem>
+            <div
+              css={`
+                color: ${(props) => props.theme.colors.darkGray};
+                display: flex;
+                justify-content: center;
+                margin: 30px 0;
 
-                <ListItem
-                  as={Link}
-                  to={`/profile/${profile.user._id}/followers`}
-                >
-                  <Key>Followers</Key>
-                  <Value>{profile.followers.length}</Value>
-                </ListItem>
+                a {
+                  margin-left: 10px;
+                  &:first-child {
+                    margin-left: 0;
+                  }
+                }
 
-                <ListItem as={Link} to={`/profile/${profile.user._id}/likes`}>
-                  <Key>Likes</Key>
-                  <Value>{profile.likes.length}</Value>
-                </ListItem>
-              </HeaderMenuList>
-            </ProfileHeaderMenu>
+                ${queries.phone} {
+                  justify-content: flex-start;
+                  margin-left: 15px;
+                }
+              `}
+            >
+              <Link to={`/profile/${profile.user._id}/following`}>
+                <span
+                  css={`
+                    color: black;
+                    font-weight: bold;
+                  `}
+                >
+                  {profile.following.length}
+                </span>
+                <span> Following</span>
+              </Link>
+              <Link to={`/profile/${profile.user._id}/followers`}>
+                <span
+                  css={`
+                    color: black;
+                    font-weight: bold;
+                  `}
+                >
+                  {profile.followers.length}
+                </span>
+                <span> Followers</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
+
+      <ProfileHeaderMenu>
+        <HeaderMenuList>
+          <ListItem as={Link} to={`/profile/${profile.user._id}`}>
+            <Key>Tweets</Key>
+          </ListItem>
+
+          <ListItem as={Link} to={`/profile/${profile.user._id}/likes`}>
+            <Key>Likes</Key>
+          </ListItem>
+        </HeaderMenuList>
+      </ProfileHeaderMenu>
 
       <div>
         <Switch>

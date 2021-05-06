@@ -145,7 +145,7 @@ function TweetsBoard({
         <Header>{headerText}</Header>
       </HeaderWrapper>
       {loading ? (
-        <Loading />
+        <Loading isFixed={false} />
       ) : (
         <>
           <List>
