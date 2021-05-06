@@ -4,15 +4,18 @@ import styled from 'styled-components/macro';
 import { InfoText } from 'shared/components';
 import ProfileCard from 'components/ProfileCard';
 import Loading from 'components/Loading';
+import { queries } from 'shared/layout';
 
 export const ProfilesList = styled.ul`
   list-style: none;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 1rem;
+  flex-direction: column;
+
+  ${queries.phone} {
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
 `;
 
 function Profiles({ loading, profiles }) {

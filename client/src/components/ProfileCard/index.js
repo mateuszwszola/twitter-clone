@@ -10,6 +10,7 @@ import {
 } from './style';
 import { UserAvatar } from 'shared/components';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
+import 'styled-components/macro';
 
 function ProfileCard({ profile }) {
   const {
@@ -29,7 +30,15 @@ function ProfileCard({ profile }) {
           <TextContainer>
             <StyledName>{name}</StyledName>
             <StyledUsername>@{username}</StyledUsername>
-            {bio && <p>{bio}</p>}
+            {bio && (
+              <p
+                css={`
+                  margin-top: 10px;
+                `}
+              >
+                {bio}
+              </p>
+            )}
           </TextContainer>
         </FlexContainer>
       </Link>

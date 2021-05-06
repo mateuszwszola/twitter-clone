@@ -130,8 +130,6 @@ function TweetsBoard({
 }) {
   const loadMoreRef = useRef();
 
-  console.log({ hasNextPage });
-
   useIntersectionObserver({
     target: loadMoreRef,
     onIntersect: fetchNextPage,
@@ -160,30 +158,32 @@ function TweetsBoard({
                     ))}
                   </React.Fragment>
                 ))}
+
+                <div
+                  css={`
+                    margin-top: 15px;
+                    display: flex;
+                    justify-content: center;
+                  `}
+                >
+                  <Button
+                    ref={loadMoreRef}
+                    onClick={() => fetchNextPage()}
+                    disabled={!hasNextPage || isFetchingNextPage}
+                  >
+                    {isFetchingNextPage
+                      ? 'Loading more...'
+                      : hasNextPage
+                      ? 'Load More'
+                      : 'Nothing more to load'}
+                  </Button>
+                </div>
               </>
             ) : (
               <InfoText>There are no tweets to display</InfoText>
             )}
           </List>
-          <div
-            css={`
-              margin-top: 15px;
-              display: flex;
-              justify-content: center;
-            `}
-          >
-            <Button
-              ref={loadMoreRef}
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage
-                ? 'Loading more...'
-                : hasNextPage
-                ? 'Load More'
-                : 'Nothing more to load'}
-            </Button>
-          </div>
+
           <InfoText>
             {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
           </InfoText>
