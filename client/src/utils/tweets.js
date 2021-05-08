@@ -7,6 +7,8 @@ import {
 } from 'react-query';
 import pick from 'lodash/pick';
 import { getFilteredQuery, objToQueryString } from './queryHelpers';
+import { useAlert } from 'context/AlertContext';
+import { useUser } from 'context/UserContext';
 
 function useFeedTweets() {
   const fetchFeedTweets = ({ pageParam = 1 }) =>
@@ -57,30 +59,139 @@ function useCreateTweet() {
   });
 }
 
-function useRemoveTweet() {
+function useRemoveTweet(queryKey = ['tweets', {}]) {
   const queryClient = useQueryClient();
+  const { setAlert } = useAlert();
+
   return useMutation((tweetId) => client.delete(`/tweets/${tweetId}`), {
-    onSuccess: () => {
+    onMutate: async (tweetId) => {
+      if (typeof queryKey[1] === 'string') {
+        // Single tweet
+        return;
+      }
+
+      await queryClient.cancelQueries(queryKey);
+
+      const previousTweets = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (old) => ({
+        ...old,
+        pages: old.pages.map((page) => ({
+          ...page,
+          results: page.results.filter((tweet) => tweet._id !== tweetId),
+        })),
+      }));
+
+      return { previousTweets };
+    },
+    onError: (_err, _tweetId, context) => {
+      setAlert({ type: 'error', msg: 'Something went wrong...' });
+      if (context.previousTweets) {
+        queryClient.setQueryData(queryKey, context.previousTweets);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries('tweets');
     },
   });
 }
 
-function useTweetLike() {
+function useTweetLike(queryKey = ['tweets', {}]) {
   const queryClient = useQueryClient();
+  const authUser = useUser();
+  const { setAlert } = useAlert();
 
   return useMutation((tweetId) => client.post(`/tweets/like/${tweetId}`), {
-    onSuccess: () => {
+    onMutate: async (tweetId) => {
+      await queryClient.cancelQueries(queryKey);
+
+      const previousData = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (old) => {
+        if (old.tweet) {
+          // Single tweet
+          return {
+            ...old,
+            tweet: {
+              ...old.tweet,
+              likes: [...old.tweet.likes, authUser._id],
+            },
+          };
+        } else {
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              results: page.results.map((tweet) => {
+                if (tweet._id !== tweetId) return tweet;
+
+                return {
+                  ...tweet,
+                  likes: [...tweet.likes, authUser._id],
+                };
+              }),
+            })),
+          };
+        }
+      });
+
+      return { previousData };
+    },
+    onError: (_err, _tweetId, context) => {
+      setAlert({ type: 'error', msg: 'Something went wrong...' });
+      queryClient.setQueryData(queryKey, context.previousData);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries('tweets');
     },
   });
 }
 
-function useTweetUnlike() {
+function useTweetUnlike(queryKey = ['tweets', {}]) {
   const queryClient = useQueryClient();
+  const authUser = useUser();
+  const { setAlert } = useAlert();
 
   return useMutation((tweetId) => client.delete(`/tweets/like/${tweetId}`), {
-    onSuccess: () => {
+    onMutate: async (tweetId) => {
+      await queryClient.cancelQueries(queryKey);
+
+      const previousData = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (old) => {
+        if (old.tweet) {
+          return {
+            ...old,
+            tweet: {
+              ...old.tweet,
+              likes: old.tweet.likes.filter((id) => id !== authUser._id),
+            },
+          };
+        } else {
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              results: page.results.map((tweet) => {
+                if (tweet._id !== tweetId) return tweet;
+
+                return {
+                  ...tweet,
+                  likes: tweet.likes.filter((id) => id !== authUser._id),
+                };
+              }),
+            })),
+          };
+        }
+      });
+
+      return { previousData };
+    },
+    onError: (_err, _tweetId, context) => {
+      setAlert({ type: 'error', msg: 'Something went wrong...' });
+      queryClient.setQueryData(queryKey, context.previousData);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries('tweets');
     },
   });

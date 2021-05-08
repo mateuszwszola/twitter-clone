@@ -138,7 +138,14 @@ function Profile({ profile }) {
 
             <div>
               {isProfileOwner ? (
-                <EditProfileButton as={Link} primary="true" to="/edit-profile">
+                <EditProfileButton
+                  css={`
+                    display: block;
+                  `}
+                  as={Link}
+                  primary="true"
+                  to="/edit-profile"
+                >
                   Edit Profile
                 </EditProfileButton>
               ) : (

@@ -77,7 +77,6 @@ export const EditProfileButton = styled(Button)`
   border: 1px solid ${({ theme }) => theme.colors.gray};
   color: ${({ theme }) => theme.colors.gray};
   background-color: ${({ theme }) => theme.colors.white};
-  align-self: flex-end;
 `;
 
 export const BackButton = styled(Button)`

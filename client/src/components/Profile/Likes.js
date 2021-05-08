@@ -24,6 +24,7 @@ function Likes() {
   return (
     <ProfileTweetsBoard>
       <TweetsBoard
+        queryKey={['tweets', { likes: userId }]}
         loading={status === 'loading'}
         pages={data?.pages || []}
         headerText="Likes"

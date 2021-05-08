@@ -33,12 +33,12 @@ import { useRemoveTweet, useTweetLike, useTweetUnlike } from 'utils/tweets';
 import useIntersectionObserver from 'hooks/useIntersectionObserver';
 import 'styled-components/macro';
 
-function SingleTweet({ tweet }) {
+function SingleTweet({ tweet, queryKey }) {
   const user = useUser();
   const history = useHistory();
-  const removeTweetMutation = useRemoveTweet();
-  const likeTweetMutation = useTweetLike();
-  const unlikeTweetMutation = useTweetUnlike();
+  const removeTweetMutation = useRemoveTweet(queryKey);
+  const likeTweetMutation = useTweetLike(queryKey);
+  const unlikeTweetMutation = useTweetUnlike(queryKey);
 
   const handleTweetClick = (tweet) => {
     const { author, _id: tweetId } = tweet;
@@ -50,18 +50,18 @@ function SingleTweet({ tweet }) {
 
   const handleActionClick = (action, tweetId) => (e) => {
     e.stopPropagation();
-    if (user) {
-      if (action === 'like') {
-        likeTweetMutation.mutate(tweetId);
-      } else if (action === 'unlike') {
-        unlikeTweetMutation.mutate(tweetId);
-      } else if (action === 'remove') {
-        removeTweetMutation.mutate(tweetId);
-      }
-    } else {
-      history.push({
+    if (!user) {
+      return history.push({
         pathname: '/signin',
       });
+    }
+
+    if (action === 'like') {
+      likeTweetMutation.mutate(tweetId);
+    } else if (action === 'unlike') {
+      unlikeTweetMutation.mutate(tweetId);
+    } else if (action === 'remove') {
+      removeTweetMutation.mutate(tweetId);
     }
   };
   const owner = user && user._id === tweet.author._id;
@@ -115,8 +115,13 @@ function SingleTweet({ tweet }) {
   );
 }
 
+SingleTweet.defaultProps = {
+  queryKey: ['tweets', {}],
+};
+
 SingleTweet.propTypes = {
   tweet: PropTypes.object.isRequired,
+  queryKey: PropTypes.array,
 };
 
 function TweetsBoard({
@@ -126,7 +131,7 @@ function TweetsBoard({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
-  isFetching,
+  queryKey,
 }) {
   const loadMoreRef = useRef();
 
@@ -154,7 +159,11 @@ function TweetsBoard({
                 {pages.map((group, i) => (
                   <React.Fragment key={i}>
                     {group.results.map((tweet) => (
-                      <SingleTweet key={tweet._id} tweet={tweet} />
+                      <SingleTweet
+                        key={tweet._id}
+                        tweet={tweet}
+                        queryKey={queryKey}
+                      />
                     ))}
                   </React.Fragment>
                 ))}
@@ -183,10 +192,6 @@ function TweetsBoard({
               <InfoText>There are no tweets to display</InfoText>
             )}
           </List>
-
-          <InfoText>
-            {isFetching && !isFetchingNextPage ? 'Fetching...' : null}
-          </InfoText>
         </>
       )}
     </Container>
@@ -195,16 +200,17 @@ function TweetsBoard({
 
 TweetsBoard.defaultProps = {
   headerText: 'Tweets',
+  queryKey: ['tweets', {}],
 };
 
 TweetsBoard.propTypes = {
+  queryKey: PropTypes.array,
   loading: PropTypes.bool.isRequired,
   pages: PropTypes.array.isRequired,
   headerText: PropTypes.string.isRequired,
   fetchNextPage: PropTypes.func.isRequired,
   hasNextPage: PropTypes.bool,
   isFetchingNextPage: PropTypes.bool.isRequired,
-  isFetching: PropTypes.bool.isRequired,
 };
 
 export default TweetsBoard;

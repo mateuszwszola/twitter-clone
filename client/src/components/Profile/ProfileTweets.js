@@ -24,6 +24,7 @@ function ProfileTweets() {
   return (
     <ProfileTweetsBoard>
       <TweetsBoard
+        queryKey={['tweets', { author: userId }]}
         loading={status === 'loading'}
         pages={data?.pages || []}
         isFetching={isFetching}

@@ -34,19 +34,19 @@ function DisplayTweet({ tweetId }) {
   const history = useHistory();
   const user = useUser();
   const { isLoading, data, error } = useTweet(tweetId);
-  const tweetLikeMutation = useTweetLike();
-  const unlikeTweetMutation = useTweetUnlike();
+  const tweetLikeMutation = useTweetLike(['tweets', tweetId]);
+  const unlikeTweetMutation = useTweetUnlike(['tweets', tweetId]);
 
   const handleActionClick = (action) => (e) => {
     e.stopPropagation();
     if (!user) {
-      history.push('/signin');
-    } else {
-      if (action === 'like') {
-        tweetLikeMutation.mutate(tweetId);
-      } else if (action === 'unlike') {
-        unlikeTweetMutation.mutate(tweetId);
-      }
+      return history.push('/signin');
+    }
+
+    if (action === 'like') {
+      tweetLikeMutation.mutate(tweetId);
+    } else if (action === 'unlike') {
+      unlikeTweetMutation.mutate(tweetId);
     }
   };
 

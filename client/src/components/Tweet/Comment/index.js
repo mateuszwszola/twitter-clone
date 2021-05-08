@@ -69,6 +69,7 @@ function Comment({ tweetId }) {
         </CommentForm>
       </CommentContainer>
       <TweetsBoard
+        queryKey={['tweets', { replyTo: tweetId }]}
         loading={status === 'loading'}
         pages={data?.pages || []}
         headerText="Replies"
