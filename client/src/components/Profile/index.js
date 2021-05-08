@@ -1,13 +1,9 @@
-import { followUser, unfollowUser } from 'api/profile';
-import { useAlert } from 'context/AlertContext';
 import { useUser } from 'context/UserContext';
 import { format } from 'date-fns';
 import portraitPlaceholder from 'img/portrait-placeholder.png';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { FiCalendar, FiLink, FiMapPin, FiPlusCircle } from 'react-icons/fi';
-import { useMutation, useQueryClient } from 'react-query';
-import 'styled-components/macro';
 import {
   Link,
   Route,
@@ -20,6 +16,12 @@ import {
   FollowProfileButton,
   UserAvatar,
 } from 'shared/components';
+import { queries } from 'shared/layout';
+import 'styled-components/macro';
+import {
+  useProfileFollowMutation,
+  useProfileUnfollowMutation,
+} from 'utils/profiles';
 import Followers from './Followers';
 import Following from './Following';
 import Likes from './Likes';
@@ -35,46 +37,28 @@ import {
   ListItem,
   ProfileHeaderMenu,
 } from './style';
-import { queries } from 'shared/layout';
 
 function Profile({ profile }) {
   const user = useUser();
   const match = useRouteMatch();
   const history = useHistory();
-  const queryClient = useQueryClient();
-  const { setAlert } = useAlert();
-  const followMutation = useMutation((userId) => followUser(userId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['profiles', profile.user._id]);
-    },
-  });
-  const unfollowMutation = useMutation((userId) => unfollowUser(userId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['profiles', profile.user._id]);
-    },
-  });
+  const followMutation = useProfileFollowMutation();
+  const unfollowMutation = useProfileUnfollowMutation();
 
   const isFollowing = user && profile.followers.includes(user._id);
   const isProfileOwner = !!(user && user._id === profile.user._id);
 
-  function handleFollowButtonClick() {
+  const handleFollowButtonClick = () => {
     if (!user) {
       return history.push('/signin');
     }
+
     if (isFollowing) {
-      unfollowMutation.mutate(profile.user._id, {
-        onError: (err) => {
-          setAlert({ type: 'error', msg: 'Something went wrong...' });
-        },
-      });
+      unfollowMutation.mutate(profile.user._id);
     } else {
-      followMutation.mutate(profile.user._id, {
-        onError: (err) => {
-          setAlert({ type: 'error', msg: 'Something went wrong...' });
-        },
-      });
+      followMutation.mutate(profile.user._id);
     }
-  }
+  };
 
   const {
     user: { name, username, avatar },
