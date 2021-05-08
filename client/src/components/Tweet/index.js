@@ -106,7 +106,7 @@ function DisplayTweet({ tweetId }) {
 
         <TweetContent>
           <TweetText>{text}</TweetText>
-          <TweetDate>{format(new Date(createdAt), 'MMMM yyyy')}</TweetDate>
+          <TweetDate>{format(new Date(createdAt), 'dd MMMM yyyy')}</TweetDate>
 
           <SocialGroup>
             <ItemGroup>

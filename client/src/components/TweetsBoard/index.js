@@ -83,7 +83,7 @@ function SingleTweet({ tweet, queryKey }) {
             @<TweetUserUsername>{tweet.author.username}</TweetUserUsername>
           </ItemGroup>
           <ItemGroup>
-            <span>{format(new Date(tweet.createdAt), 'MMMM yyyy')}</span>
+            <span>{format(new Date(tweet.createdAt), 'dd MMMM yyyy')}</span>
           </ItemGroup>
         </TweetUserGroup>
         <div>
