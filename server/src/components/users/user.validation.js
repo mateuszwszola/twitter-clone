@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
       username: Joi.string().min(3).max(30).custom(username),
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      avatar: Joi.string().custom(url).max(255),
+      avatar: Joi.string().custom(url).max(255).allow(''),
     },
   };
 

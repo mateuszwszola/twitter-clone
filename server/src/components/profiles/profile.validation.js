@@ -25,11 +25,11 @@ const updateProfile = {
   }),
   body: Joi.object()
     .keys({
-      bio: Joi.string().max(255),
-      location: Joi.string().max(255),
-      website: Joi.string().custom(url).max(255),
-      birthday: Joi.date(),
-      backgroundImage: Joi.string().custom(url).max(255),
+      bio: Joi.string().max(255).allow(''),
+      location: Joi.string().max(255).allow(''),
+      website: Joi.string().custom(url).max(255).allow(''),
+      birthday: Joi.date().allow(''),
+      backgroundImage: Joi.string().custom(url).max(255).allow(''),
     })
     .min(1),
 };
