@@ -10,6 +10,7 @@ export const ProfilesList = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   ${queries.phone} {
     flex-direction: row;

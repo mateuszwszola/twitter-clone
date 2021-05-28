@@ -2,11 +2,15 @@ import { queries } from 'shared/layout';
 import styled from 'styled-components/macro';
 
 export const Container = styled.li`
-  flex: 1;
+  flex: 0 1 1;
   padding: 10px;
 
   ${queries.phone} {
-    flex: 50%;
+    flex: 0 1 50%;
+  }
+
+  ${queries.desktop} {
+    flex: 0 1 33%;
   }
 `;
 
