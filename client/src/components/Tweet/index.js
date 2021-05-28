@@ -147,17 +147,14 @@ export function TweetModal() {
   const history = useHistory();
   const { tweetId } = useParams();
 
-  function back() {
-    if (history.length > 1) {
-      history.goBack();
-    } else {
-      history.push('/');
-    }
-  }
+  const back = (e) => {
+    if (e) e.stopPropagation();
+    history.goBack();
+  };
 
   return (
     <DialogOverlay onDismiss={back}>
-      <CloseButton />
+      <CloseButton onClick={back} />
       <DialogContent
         aria-label="Tweet"
         css={`

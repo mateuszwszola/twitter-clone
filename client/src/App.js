@@ -4,7 +4,7 @@ import { Wrapper, Content } from 'shared/layout';
 
 import SignInPage from 'pages/SignIn';
 import SignUpPage from 'pages/SignUp';
-import Home from 'pages/Home';
+import Homepage from 'pages/Homepage';
 import ProfilesPage from 'pages/Profiles';
 import ProfilePage from 'pages/Profile';
 import SettingsPage from 'pages/Settings';
@@ -14,6 +14,8 @@ import PrivateRoute from 'components/PrivateRoute';
 import Alert from 'components/Alert';
 import ModalSwitch from 'components/ModalSwitch';
 import NotFoundPage from 'components/NotFoundPage';
+import TweetPage from 'pages/Tweet';
+import CreateTweetPage from 'pages/CreateTweet';
 
 function App() {
   return (
@@ -23,15 +25,21 @@ function App() {
           <Alert />
           <Header />
           <ModalSwitch>
+            <Route exact path="/">
+              <Homepage />
+            </Route>
+            <Route path="/compose/tweet">
+              <CreateTweetPage />
+            </Route>
+            <Route path="/:userId/status/:tweetId">
+              <TweetPage />
+            </Route>
             <PrivateRoute exact path="/edit-profile">
               <EditProfilePage />
             </PrivateRoute>
             <PrivateRoute exact path="/settings">
               <SettingsPage />
             </PrivateRoute>
-            <Route exact path="/">
-              <Home />
-            </Route>
             <Route exact path="/signin">
               <SignInPage />
             </Route>

@@ -70,207 +70,221 @@ function Profile({ profile }) {
 
   return (
     <Container>
-      <BackgroundContainer>
-        {profile.backgroundImage ? (
-          <Background
-            alt={`${profile.user.name}'s background`}
-            src={profile.backgroundImage}
-          />
-        ) : (
-          <>
-            {isProfileOwner && (
-              <AddBackground>
-                <span>Add background picture</span>{' '}
-                <AddBackgroundButton as={Link} to="/edit-profile">
-                  <FiPlusCircle />
-                </AddBackgroundButton>
-              </AddBackground>
-            )}
-          </>
-        )}
-      </BackgroundContainer>
-
       <div
         css={`
-          padding: 0 15px;
+          border: 1px solid #eee;
         `}
       >
-        <div>
-          <div
-            css={`
-              display: flex;
-              justify-content: space-between;
-            `}
-          >
-            <div
-              css={`
-                position: relative;
-                transform: translateY(-75px);
-              `}
-            >
-              <UserAvatar
-                css={`
-                  border: 2px solid #eee;
-                  margin: 0;
-                  background-color: white;
-                `}
-                src={avatar || portraitPlaceholder}
-                alt={`${name}'s avatar`}
-              />
-              <span
-                css={`
-                  font-size: 1.25rem;
-                  font-weight: bold;
-                  display: block;
-                `}
-              >
-                {name}
-              </span>
-              <span
-                css={`
-                  color: ${(props) => props.theme.colors.gray};
-                  display: block;
-                `}
-              >
-                @{username}
-              </span>
-            </div>
-
-            <div>
-              {isProfileOwner ? (
-                <EditProfileButton
-                  css={`
-                    display: block;
-                  `}
-                  as={Link}
-                  primary="true"
-                  to="/edit-profile"
-                >
-                  Edit Profile
-                </EditProfileButton>
-              ) : (
-                <FollowProfileButton primary onClick={handleFollowButtonClick}>
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </FollowProfileButton>
+        <BackgroundContainer>
+          {profile.backgroundImage ? (
+            <Background
+              alt={`${profile.user.name}'s background`}
+              src={profile.backgroundImage}
+            />
+          ) : (
+            <>
+              {isProfileOwner && (
+                <AddBackground>
+                  <span>Add background picture</span>{' '}
+                  <AddBackgroundButton as={Link} to="/edit-profile">
+                    <FiPlusCircle />
+                  </AddBackgroundButton>
+                </AddBackground>
               )}
-            </div>
-          </div>
+            </>
+          )}
+        </BackgroundContainer>
 
-          <div
-            css={`
-              margin-top: -60px;
-            `}
-          >
-            {bio && <div>{bio}</div>}
-
+        <div
+          css={`
+            padding: 0 15px;
+          `}
+        >
+          <div>
             <div
               css={`
                 display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin: 30px 0;
-
-                div {
-                  margin-top: 15px;
-                  &:first-child {
-                    margin-top: 0;
-                  }
-                }
-
-                ${queries.phone} {
-                  flex-direction: row;
-
-                  div {
-                    margin-top: 0;
-                    margin-left: 20px;
-                    &:first-child {
-                      margin-left: 0;
-                    }
-                  }
-                }
+                justify-content: space-between;
               `}
             >
-              {location && (
-                <div>
-                  <FiMapPin /> {location}
-                </div>
-              )}
-              {website && (
-                <div>
-                  <FiLink /> {website}
-                </div>
-              )}
+              <div
+                css={`
+                  position: relative;
+                  transform: translateY(-75px);
+                `}
+              >
+                <UserAvatar
+                  css={`
+                    border: 2px solid #eee;
+                    margin: 0;
+                    background-color: white;
+                  `}
+                  src={avatar || portraitPlaceholder}
+                  alt={`${name}'s avatar`}
+                />
+                <span
+                  css={`
+                    font-size: 1.25rem;
+                    font-weight: bold;
+                    display: block;
+                  `}
+                >
+                  {name}
+                </span>
+                <span
+                  css={`
+                    color: ${(props) => props.theme.colors.gray};
+                    display: block;
+                  `}
+                >
+                  @{username}
+                </span>
+              </div>
+
               <div>
-                <FiCalendar /> Joined {format(new Date(createdAt), 'MMMM yyyy')}
+                {isProfileOwner ? (
+                  <EditProfileButton
+                    css={`
+                      display: block;
+                    `}
+                    as={Link}
+                    primary="true"
+                    to="/edit-profile"
+                  >
+                    Edit Profile
+                  </EditProfileButton>
+                ) : (
+                  <FollowProfileButton
+                    primary
+                    onClick={handleFollowButtonClick}
+                  >
+                    {isFollowing ? 'Unfollow' : 'Follow'}
+                  </FollowProfileButton>
+                )}
               </div>
             </div>
 
             <div
               css={`
-                color: ${(props) => props.theme.colors.darkGray};
-                display: flex;
-                justify-content: center;
-                margin: 30px 0;
-
-                a {
-                  margin-left: 10px;
-                  &:first-child {
-                    margin-left: 0;
-                  }
-                }
-
-                ${queries.phone} {
-                  justify-content: flex-start;
-                  margin-left: 15px;
-                }
+                margin-top: -60px;
               `}
             >
-              <Link to={`/profile/${profile.user._id}/following`}>
-                <span
-                  css={`
-                    color: black;
-                    font-weight: bold;
-                  `}
-                >
-                  {profile.following.length}
-                </span>
-                <span> Following</span>
-              </Link>
-              <Link to={`/profile/${profile.user._id}/followers`}>
-                <span
-                  css={`
-                    color: black;
-                    font-weight: bold;
-                  `}
-                >
-                  {profile.followers.length}
-                </span>
-                <span> Followers</span>
-              </Link>
+              {bio && <div>{bio}</div>}
+
+              <div
+                css={`
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  margin: 30px 0;
+
+                  div {
+                    margin-top: 15px;
+                    &:first-child {
+                      margin-top: 0;
+                    }
+                  }
+
+                  ${queries.phone} {
+                    flex-direction: row;
+
+                    div {
+                      margin-top: 0;
+                      margin-left: 20px;
+                      &:first-child {
+                        margin-left: 0;
+                      }
+                    }
+                  }
+                `}
+              >
+                {location && (
+                  <div>
+                    <FiMapPin /> {location}
+                  </div>
+                )}
+                {website && (
+                  <div>
+                    <FiLink /> {website}
+                  </div>
+                )}
+                <div>
+                  <FiCalendar /> Joined{' '}
+                  {format(new Date(createdAt), 'MMMM yyyy')}
+                </div>
+              </div>
+
+              <div
+                css={`
+                  color: ${(props) => props.theme.colors.darkGray};
+                  display: flex;
+                  justify-content: center;
+                  margin: 30px 0;
+
+                  a {
+                    margin-left: 10px;
+                    &:first-child {
+                      margin-left: 0;
+                    }
+                  }
+
+                  ${queries.phone} {
+                    justify-content: flex-start;
+                    margin-left: 15px;
+                  }
+                `}
+              >
+                <Link to={`/profile/${profile.user._id}/following`}>
+                  <span
+                    css={`
+                      color: black;
+                      font-weight: bold;
+                    `}
+                  >
+                    {profile.following.length}
+                  </span>
+                  <span> Following</span>
+                </Link>
+                <Link to={`/profile/${profile.user._id}/followers`}>
+                  <span
+                    css={`
+                      color: black;
+                      font-weight: bold;
+                    `}
+                  >
+                    {profile.followers.length}
+                  </span>
+                  <span> Followers</span>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <ProfileHeaderMenu>
-        <HeaderMenuList>
-          <ListItem as={Link} to={`/profile/${profile.user._id}`}>
-            <Key>Tweets</Key>
-          </ListItem>
+        <ProfileHeaderMenu>
+          <HeaderMenuList>
+            <ListItem as={Link} to={`/profile/${profile.user._id}`}>
+              <Key>Tweets</Key>
+            </ListItem>
 
-          <ListItem as={Link} to={`/profile/${profile.user._id}/likes`}>
-            <Key>Likes</Key>
-          </ListItem>
-        </HeaderMenuList>
-      </ProfileHeaderMenu>
+            <ListItem as={Link} to={`/profile/${profile.user._id}/likes`}>
+              <Key>Likes</Key>
+            </ListItem>
+          </HeaderMenuList>
+        </ProfileHeaderMenu>
 
-      <div>
-        <Switch>
-          <Route exact path={`${match.path}`} component={ProfileTweets} />
-          <Route path={`${match.path}/following`} component={Following} />
-          <Route path={`${match.path}/followers`} component={Followers} />
-          <Route path={`${match.path}/likes`} component={Likes} />
-        </Switch>
+        <div
+          css={`
+            border-top: 1px solid #eee;
+          `}
+        >
+          <Switch>
+            <Route exact path={`${match.path}`} component={ProfileTweets} />
+            <Route path={`${match.path}/following`} component={Following} />
+            <Route path={`${match.path}/followers`} component={Followers} />
+            <Route path={`${match.path}/likes`} component={Likes} />
+          </Switch>
+        </div>
       </div>
     </Container>
   );

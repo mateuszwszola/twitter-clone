@@ -65,5 +65,8 @@ export const Button = styled(UIButton)`
     props.disabled &&
     css`
       background-color: #9fd8fb;
+      &:hover {
+        background-color: #9fd8fb;
+      }
     `}
 `;

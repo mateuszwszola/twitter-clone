@@ -21,7 +21,14 @@ function Homepage() {
       {error ? (
         <DisplayError error={error} />
       ) : (
-        <>
+        <div
+          css={`
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #eee;
+          `}
+        >
           <TweetsBoard
             queryKey={['tweets', {}]}
             loading={status === 'loading'}
@@ -31,7 +38,7 @@ function Homepage() {
             hasNextPage={hasNextPage}
             fetchNextPage={fetchNextPage}
           />
-        </>
+        </div>
       )}
     </Container>
   );

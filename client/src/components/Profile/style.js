@@ -8,7 +8,6 @@ export const Container = styled.div`
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  border: 1px solid #eee;
 `;
 
 export const BackgroundContainer = styled.div`
@@ -58,7 +57,6 @@ export const ProfileHeaderMenu = styled.div`
   justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #eee;
 `;
 
 export const HeaderMenuList = styled.ul`

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { format } from 'date-fns';
 import { FaRegComment, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
@@ -36,6 +36,7 @@ import 'styled-components/macro';
 function SingleTweet({ tweet, queryKey }) {
   const user = useUser();
   const history = useHistory();
+  const location = useLocation();
   const removeTweetMutation = useRemoveTweet(queryKey);
   const likeTweetMutation = useTweetLike(queryKey);
   const unlikeTweetMutation = useTweetUnlike(queryKey);
@@ -46,7 +47,7 @@ function SingleTweet({ tweet, queryKey }) {
 
     history.push({
       pathname: `/${author._id}/status/${tweetId}`,
-      state: { modal: true },
+      state: { background: location },
     });
   };
 

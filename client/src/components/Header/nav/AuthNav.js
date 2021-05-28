@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { keyframes } from 'styled-components/macro';
 import {
   Menu,
@@ -29,6 +29,7 @@ const slideDown = keyframes`
 function AuthNav() {
   const { user, logout } = useAuth();
   const history = useHistory();
+  const location = useLocation();
 
   return (
     <MainNav>
@@ -39,7 +40,12 @@ function AuthNav() {
         <Button
           primary
           type="text"
-          onClick={() => history.push('/compose/tweet')}
+          onClick={() =>
+            history.push({
+              pathname: '/compose/tweet',
+              state: { background: location },
+            })
+          }
         >
           Tweet
         </Button>

@@ -20,13 +20,10 @@ import { IoMdClose } from 'react-icons/io';
 export function CreateTweetModal() {
   const history = useHistory();
 
-  function close() {
-    if (history.length > 1) {
-      history.goBack();
-    } else {
-      history.push('/');
-    }
-  }
+  const close = (e) => {
+    if (e) e.stopPropagation();
+    history.goBack();
+  };
 
   return (
     <DialogOverlay onDismiss={close}>
@@ -72,7 +69,7 @@ function CreateTweetForm({ onCreate }) {
     if (validateTweet(tweet)) {
       createTweetMutation.mutate(tweet, {
         onSuccess: () => {
-          onCreate();
+          if (onCreate) onCreate();
         },
         onError: (err) => {
           setErrors(
@@ -115,7 +112,7 @@ function CreateTweetForm({ onCreate }) {
 }
 
 CreateTweetForm.propTypes = {
-  onCreate: PropTypes.func.isRequired,
+  onCreate: PropTypes.func,
 };
 
 export default CreateTweetForm;
