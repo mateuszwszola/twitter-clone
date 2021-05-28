@@ -7,7 +7,10 @@ function Error({ error }) {
     return null;
   }
 
-  const errorMessage = error.response?.data?.message || error.message;
+  const errorMessage =
+    error.response?.data?.message ||
+    error.message ||
+    'Something went wrong. Sorry...';
 
   return (
     <div
@@ -22,7 +25,7 @@ function Error({ error }) {
           font-size: 1em;
         `}
       >
-        An error has occurred: {errorMessage}
+        {errorMessage}
       </p>
     </div>
   );

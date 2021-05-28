@@ -2,6 +2,7 @@ const { pick } = require('lodash');
 const { ErrorHandler } = require('../../utils/error');
 const { User } = require('./');
 const Profile = require('../profiles/profile.model');
+const Tweet = require('../tweets/tweet.model');
 
 exports.getUsers = async (req, res) => {
   const filters = pick(req.query, ['name', 'role']);
@@ -78,7 +79,11 @@ exports.deleteUser = async (req, res) => {
     throw new ErrorHandler(404, 'User not found');
   }
 
-  await Promise.all([user.remove(), Profile.findOneAndRemove({ user: user._id })]);
+  await Promise.all([
+    user.remove(),
+    Profile.findOneAndRemove({ user: user._id }),
+    Tweet.deleteMany({ author: user._id }),
+  ]);
 
   res.json({ user });
 };

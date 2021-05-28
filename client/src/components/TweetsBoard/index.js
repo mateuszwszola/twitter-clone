@@ -42,6 +42,8 @@ function SingleTweet({ tweet, queryKey }) {
 
   const handleTweetClick = (tweet) => {
     const { author, _id: tweetId } = tweet;
+    if (!author) return;
+
     history.push({
       pathname: `/${author._id}/status/${tweetId}`,
       state: { modal: true },
@@ -50,6 +52,8 @@ function SingleTweet({ tweet, queryKey }) {
 
   const handleActionClick = (action, tweetId) => (e) => {
     e.stopPropagation();
+    if (!tweet.author) return;
+
     if (!user) {
       return history.push({
         pathname: '/signin',
@@ -64,23 +68,26 @@ function SingleTweet({ tweet, queryKey }) {
       removeTweetMutation.mutate(tweetId);
     }
   };
-  const owner = user && user._id === tweet.author._id;
+  const owner = user && user._id === tweet.author?._id;
   const liked = !!(user && tweet.likes.includes(user._id));
 
   return (
     <ListItem key={tweet._id} onClick={() => handleTweetClick(tweet)}>
       <UserAvatar
         small
-        src={tweet.author.avatar || portraitPlaceholder}
+        src={tweet.author?.avatar || portraitPlaceholder}
         alt="User Avatar"
       />
       <ListItemContent>
         <TweetUserGroup>
           <ItemGroup>
-            <TweetUserName>{tweet.author.name}</TweetUserName>
+            <TweetUserName>{tweet.author?.name || 'unknown'}</TweetUserName>
           </ItemGroup>
           <ItemGroup>
-            @<TweetUserUsername>{tweet.author.username}</TweetUserUsername>
+            @
+            <TweetUserUsername>
+              {tweet.author?.username || 'unknown'}
+            </TweetUserUsername>
           </ItemGroup>
           <ItemGroup>
             <span>{format(new Date(tweet.createdAt), 'dd MMMM yyyy')}</span>
@@ -90,11 +97,12 @@ function SingleTweet({ tweet, queryKey }) {
           <TweetText>{tweet.text}</TweetText>
         </div>
         <TweetBottomGroup>
-          <button>
+          <button disabled={!tweet.author}>
             <Icon as={FaRegComment} /> <span>{tweet.repliesCount}</span>
           </button>
           <button
             onClick={handleActionClick(liked ? 'unlike' : 'like', tweet._id)}
+            disabled={!tweet.author}
           >
             <LikeIcon liked={liked}>
               {liked ? <FaHeart /> : <FaRegHeart />}
@@ -106,7 +114,7 @@ function SingleTweet({ tweet, queryKey }) {
       {owner ? (
         <DeleteButton
           onClick={handleActionClick('remove', tweet._id)}
-          disabled={removeTweetMutation.isLoading}
+          disabled={removeTweetMutation.isLoading || !tweet.author}
         >
           <IoMdClose />
         </DeleteButton>
@@ -150,7 +158,7 @@ function TweetsBoard({
         <Header>{headerText}</Header>
       </HeaderWrapper>
       {loading ? (
-        <Loading isFixed={false} />
+        <Loading isSmall isFixed={false} />
       ) : (
         <>
           <List>

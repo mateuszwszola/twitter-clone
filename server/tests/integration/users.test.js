@@ -7,6 +7,7 @@ const { admin, userOne, insertUsers, userTwo } = require('../fixtures/user.fixtu
 const { formatUsername } = require('../../src/utils/helpers');
 const { User } = require('../../src/components/users');
 const Profile = require('../../src/components/profiles/profile.model');
+const Tweet = require('../../src/components/tweets/tweet.model');
 
 setupTestDB();
 
@@ -546,9 +547,15 @@ describe('Users routes', () => {
   });
 
   describe('DELETE /api/users/:userId', () => {
-    it('When owner is deleting, should delete user, profile and return 200', async () => {
+    it('When owner is deleting, should delete user, their profile and tweets, and return 200', async () => {
       await insertUsers([userOne]);
       await Profile.create({ user: userOne._id });
+      await Tweet.insertMany([
+        {
+          author: userOne._id,
+          text: faker.random.words(10),
+        },
+      ]);
 
       const res = await request(app)
         .delete(`/api/users/${userOne._id}`)
@@ -556,13 +563,15 @@ describe('Users routes', () => {
 
       expect(res.statusCode).toBe(200);
 
-      const [dbUser, dbProfile] = await Promise.all([
+      const [dbUser, dbProfile, dbTweets] = await Promise.all([
         User.findById(userOne._id),
         Profile.findOne({ user: userOne._id }),
+        Tweet.find({ author: userOne._id }),
       ]);
 
       expect(dbUser).toBeNull();
       expect(dbProfile).toBeNull();
+      expect(dbTweets).toHaveLength(0);
     });
 
     it('When admin is deleting another user, should delete and return 200', async () => {
