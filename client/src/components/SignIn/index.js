@@ -44,8 +44,7 @@ function SignIn({ username, password, onSubmit, errors }) {
           <Link
             to="/signup"
             css={`
-              margin-left: 5px;
-              display: flex;
+              display: inline-flex;
               align-items: center;
             `}
           >

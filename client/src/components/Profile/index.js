@@ -85,7 +85,7 @@ function Profile({ profile }) {
             <>
               {isProfileOwner && (
                 <AddBackground>
-                  <span>Add background picture</span>{' '}
+                  <span>Add background</span>{' '}
                   <AddBackgroundButton as={Link} to="/edit-profile">
                     <FiPlusCircle />
                   </AddBackgroundButton>
@@ -110,7 +110,7 @@ function Profile({ profile }) {
               <div
                 css={`
                   position: relative;
-                  transform: translateY(-75px);
+                  transform: translateY(-50%);
                 `}
               >
                 <UserAvatar
@@ -118,6 +118,10 @@ function Profile({ profile }) {
                     border: 2px solid #eee;
                     margin: 0;
                     background-color: white;
+                    ${[queries.tiny]} {
+                      width: 100px;
+                      height: 100px;
+                    }
                   `}
                   src={avatar || portraitPlaceholder}
                   alt={`${name}'s avatar`}

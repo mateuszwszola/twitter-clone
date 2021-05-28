@@ -12,7 +12,7 @@ import {
 import '@reach/menu-button/styles.css';
 import { useAuth } from 'context/AuthContext';
 import { Button, StyledNavLink } from 'shared/components';
-import { MainNav, NavAvatar, NavItem } from './style';
+import { NavAvatar, NavItem } from './style';
 import { FaUserCircle, FaCog, FaSignOutAlt } from 'react-icons/fa';
 
 const slideDown = keyframes`
@@ -32,9 +32,11 @@ function AuthNav() {
   const location = useLocation();
 
   return (
-    <MainNav>
+    <>
       <NavItem>
-        <StyledNavLink to="/">Home</StyledNavLink>
+        <StyledNavLink exact to="/">
+          Home
+        </StyledNavLink>
       </NavItem>
       <NavItem>
         <Button
@@ -119,7 +121,7 @@ function AuthNav() {
           </MenuPopover>
         </Menu>
       </NavItem>
-    </MainNav>
+    </>
   );
 }
 

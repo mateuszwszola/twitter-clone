@@ -29,6 +29,7 @@ import {
   UserInfo,
 } from './style';
 import { FaHeart, FaRegComment, FaRegHeart } from 'react-icons/fa';
+import { queries } from 'shared/layout';
 
 function DisplayTweet({ tweetId }) {
   const history = useHistory();
@@ -161,6 +162,9 @@ export function TweetModal() {
           width: 100%;
           max-width: 600px;
           border-radius: 5px;
+          ${[queries.tiny]} {
+            padding: 1rem;
+          }
         `}
       >
         <DisplayTweet tweetId={tweetId} />

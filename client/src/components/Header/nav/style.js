@@ -1,23 +1,32 @@
 import styled from 'styled-components/macro';
 import { FaUserCircle } from 'react-icons/fa';
+import { queries } from 'shared/layout';
 
 export const MainNav = styled.nav`
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1300px;
+
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    ${[queries.tiny]} {
+      justify-content: center;
+    }
+
+    div {
+      display: flex;
+    }
+  }
 `;
 
-export const NavItem = styled.li`
+export const NavItem = styled.div`
   color: #67757f;
   margin-right: 5px;
-`;
-
-export const StyledDropdown = styled.div`
-  position: relative;
-  display: inline-block;
 `;
 
 export const NavAvatar = styled(FaUserCircle)`

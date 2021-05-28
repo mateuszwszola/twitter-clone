@@ -23,7 +23,7 @@ export const AddBackground = styled.div`
   left: 50%;
   text-align: center;
   transform: translate(-50%, -50%);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 200;
   color: #fff;
   display: flex;

@@ -99,6 +99,11 @@ export const StyledNavLink = styled(NavLink)`
   padding: 15px;
   border-bottom: 2px solid transparent;
   font-weight: bold;
+  color: #67757f;
+
+  &.active {
+    border-color: ${(props) => props.theme.colors.blue};
+  }
 
   &:hover {
     border-color: ${(props) => props.theme.colors.blue};
@@ -116,7 +121,7 @@ export const DropdownLink = styled(StyledNavLink)`
 
 export const FeedbackMessage = styled(Alert)`
   color: ${(props) =>
-    props.isSuccess ? props.theme.colors.green : props.theme.colors.red};
+    props.$isSuccess ? props.theme.colors.green : props.theme.colors.red};
   padding: 10px;
   font-size: 0.8rem;
 

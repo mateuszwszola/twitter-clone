@@ -11,6 +11,7 @@ function ProfilePage() {
   const { isLoading, isError, error, data: profile } = useProfile(userId);
 
   if (isError) {
+    // TODO: Use react-error-boundary
     return (
       <DisplayError>
         An error has occurred: {error.response?.data?.message}

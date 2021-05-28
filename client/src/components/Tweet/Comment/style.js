@@ -8,9 +8,9 @@ export const CommentContainer = styled.div`
   max-height: 70px;
   display: flex;
   flex-direction: row;
-  justify-content: stretch;
+  justify-content: space-between;
   align-items: center;
-  padding: 40px;
+  padding: 10px 15px;
   border-top: 1px solid #cadae4;
   border-bottom: 1px solid #cadae4;
 `;

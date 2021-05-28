@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import 'styled-components/macro';
 import InputGroup from 'components/InputGroup';
 import { Button } from 'shared/components';
 import { Container } from 'shared/layout';
@@ -11,6 +12,7 @@ import {
   StyledLink,
   ErrorMessage,
 } from './style';
+import { FaAngleDoubleRight } from 'react-icons/fa';
 
 function SignUp({
   name,
@@ -81,8 +83,19 @@ function SignUp({
         </Form>
         <Helper>
           Already have an account?
-          <StyledLink to="/signin">
-            Sign In now <i className="fas fa-angle-double-right" />
+          <StyledLink
+            css={`
+              display: inline-flex;
+              align-items: center;
+            `}
+            to="/signin"
+          >
+            Sign In now{' '}
+            <FaAngleDoubleRight
+              css={`
+                margin-left: 2px;
+              `}
+            />
           </StyledLink>
         </Helper>
       </SignUpContainer>

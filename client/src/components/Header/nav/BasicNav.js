@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyledNavLink } from 'shared/components';
-import { MainNav, NavItem } from './style';
+import { NavItem } from './style';
 
 export default function BasicNav() {
   return (
-    <MainNav>
+    <>
       <NavItem>
-        <StyledNavLink to="/">Home</StyledNavLink>
+        <StyledNavLink exact to="/">
+          Home
+        </StyledNavLink>
       </NavItem>
       <NavItem>
         <StyledNavLink data-cy="nav-signin-link" to="/signin">
@@ -18,6 +20,6 @@ export default function BasicNav() {
           Sign Up
         </StyledNavLink>
       </NavItem>
-    </MainNav>
+    </>
   );
 }

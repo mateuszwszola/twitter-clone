@@ -113,7 +113,7 @@ function EditProfileContainer() {
             </FeedbackMessage>
           </>
         ) : updateUserMutation.isSuccess || updateProfileMutation.isSuccess ? (
-          <FeedbackMessage isSuccess>
+          <FeedbackMessage $isSuccess>
             Profile successfully updated!
           </FeedbackMessage>
         ) : (
