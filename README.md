@@ -81,3 +81,7 @@ To run tests with Cypress first, copy the `client/.env` file to a `client/.env.l
 ```bash
 $ npm run cypress:open
 ```
+
+## Inspirations
+
+- https://github.com/hagopj13/node-express-boilerplate (server)
