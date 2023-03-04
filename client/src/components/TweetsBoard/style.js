@@ -62,6 +62,7 @@ export const TweetUserGroup = styled.div`
 
 export const TweetText = styled.p`
   margin: 5px;
+  word-break: break-all;
 `;
 
 export const TweetBottomGroup = styled.div`
