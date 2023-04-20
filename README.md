@@ -6,8 +6,6 @@
 
 A full-stack Twitter clone app built using Node.js, Express.js, React.js, and MongoDB.
 
-https://mw-twitter-clone.vercel.app/
-
 ### Background
 
 The project was originally created a few years ago and as I have learned a lot since then I recently decided to update it and create the base for developing new features.
